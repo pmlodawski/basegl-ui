@@ -1,0 +1,169 @@
+:root {
+    --ui-zoom: 1;
+    --ui-font-size: 12;
+    --ul-total-zoom: calc(var(--ui-font-size) / 12 * var(--ui-zoom));
+  }
+  .luna-studio-window--has-searcher .luna-studio-window__center {
+    z-index: 100000004;
+  }
+  .luna-port-sidebar .luna-searcher__input {
+    padding: 0 10px;
+    position: relative;
+    left: -10px;
+  }
+  .luna-node__name,
+  .luna-node__expression {
+    min-height: calc(var(--ul-total-zoom) * 16px);
+  }
+  .luna-searcher {
+    z-index: 100000004;
+    position: absolute;
+  }
+  .luna-searcher__body {
+    width: 0;
+  }
+  .luna-searcher--node ~ .luna-node--selected .luna-node__expression {
+    display: none;
+  }
+  .luna-searcher--node-name+.luna-ctrl-icon {
+    display: none;
+  }
+  .luna-searcher--node-name .luna-searcher__input {
+    border: calc(var(--ul-total-zoom) * 2px) solid #070706;
+    top: calc(var(--ul-total-zoom) * -7px);
+    position: relative;
+  }
+  .luna-searcher__preview {
+    display: none;
+  }
+  .luna-searcher__input,
+  .luna-node__name--input {
+    background: transparent;
+    border-radius: 14.2px;
+    color: #abb2bf;
+    font-family: 'hasklig-regular', 'hasklig', monospace;
+    font-size: calc(var(--ul-total-zoom) * 12px);
+    font-weight: 300;
+    height: calc(var(--ul-total-zoom) * 24px);
+    line-height: calc(var(--ul-total-zoom) * 24px);
+    letter-spacing: 0.5px;
+    overflow: inherit;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+  .luna-searcher__input:focus,
+  .luna-node__name--input:focus {
+    outline: 0;
+  }
+  .luna-node__expression .luna-searcher__input {
+    box-shadow: 0 0 0 2px #070706;
+    padding: 0 6px;
+    transform: translate(-50%,calc(var(--ul-total-zoom) * -4px));
+    width: calc(var(--ul-total-zoom) * 388px);
+  }
+  .luna-searcher__results {
+    display: flex;
+    flex-direction: column-reverse;
+    bottom: calc(var(--ul-total-zoom) * 28px);
+    position: absolute;
+    left: calc(var(--ul-total-zoom) * -200px);
+    width: calc(var(--ul-total-zoom) * 402px);
+    border: calc(var(--ul-total-zoom) * 2.2px) solid transparent;
+    transform: translateX(-2.2px);
+    height: calc(var(--ul-total-zoom) * 240px);
+    overflow: hidden;
+  }
+  .luna-searcher__results~ .luna-searcher__input {
+    border-radius: 0 0 12px 12px;
+  }
+  .luna-searcher__results__list {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column-reverse;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+    padding: 0;
+    width: calc(var(--ul-total-zoom) * 400px);
+    max-height: calc(var(--ul-total-zoom) * 240px);
+  }
+  .luna-searcher__doc {
+    font-size: calc(var(--ul-total-zoom) * 10px);
+    border-radius: 12px 12px 12px 0 !important;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 30px;
+    left: calc(var(--ul-total-zoom) * 202px);
+    height: calc(var(--ul-total-zoom) * 240px);
+    width: calc(var(--ul-total-zoom) * 200px);
+    white-space: normal;
+  }
+  .luna-searcher__doc .luna-visualization-container {
+    background: inherit !important;
+    width: 200px;
+  }
+  .luna-searcher__doc iframe {
+    width: 100%;
+    height: calc(var(--ul-total-zoom) * 240px);
+  }
+  .luna-searcher__results__item {
+    line-height: calc(var(--ul-total-zoom) * 24px);
+  }
+  .luna-searcher__results__item--selected .luna-searcher__hl {
+    color: #a76624;
+    opacity: 1;
+  }
+  .luna-searcher__results__item::before {
+    position: absolute;
+    left: calc(var(--ul-total-zoom) * 7px);
+    opacity: .5;
+  }
+  .luna-searcher__results__item:nth-of-type(1)::before {
+    content: "⌘1";
+  }
+  .luna-searcher__results__item:nth-of-type(2)::before {
+    content: "⌘2";
+  }
+  .luna-searcher__results__item:nth-of-type(3)::before {
+    content: "⌘3";
+  }
+  .luna-searcher__results__item:nth-of-type(4)::before {
+    content: "⌘4";
+  }
+  .luna-searcher__results__item:nth-of-type(5)::before {
+    content: "⌘5";
+  }
+  .luna-searcher__results__item:nth-of-type(6)::before {
+    content: "⌘6";
+  }
+  .luna-searcher__results__item:nth-of-type(7)::before {
+    content: "⌘7";
+  }
+  .luna-searcher__results__item:nth-of-type(8)::before {
+    content: "⌘8";
+  }
+  .luna-searcher__results__item:nth-of-type(9)::before {
+    content: "⌘9";
+  }
+  .luna-searcher__results__item:nth-of-type(10)::before {
+    content: "⌘0";
+  }
+  .luna-searcher__pre,
+  .luna-searcher__pre + span {
+    height: calc(var(--ul-total-zoom) * 24px);
+    display: block;
+    text-align: left;
+    width: 50%;
+    float: left;
+  }
+  .luna-searcher__pre {
+    opacity: .5;
+    text-align: right;
+  }
+  .luna-searcher__pre + span::before {
+    content: ".";
+    opacity: 0;
+  }
+  .luna-searcher__hl {
+    color: #a76624;
+    opacity: 1;
+  }
