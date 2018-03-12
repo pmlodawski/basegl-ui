@@ -11,6 +11,7 @@ export class Searcher extends Component
                   , input: @input = @input
                   , selected: @selected = @selected or 0
                   , entries: @entries = @entries or []}) =>
+        @entries.forEach (entry) => entry.highlights ?= []
         unless @def?
             root = document.createElement 'div'
             root.className = ['native-key-bindings'].concat style.luna ['input', 'searcher', 'searcher--node']
@@ -27,11 +28,8 @@ export class Searcher extends Component
         @view.domElement.innerHTML = ''
 
         input = document.createElement 'input'
-        inputClasses = \
-            if @selected == 0
-                ['searcher__input', 'searcher__input-selected']
-            else
-                ['searcher__input']
+        inputClasses = ['searcher__input']
+        inputClasses.push ['searcher__input-selected'] if @selected == 0
         input.className = style.luna inputClasses
         @view.domElement.appendChild input
 
@@ -46,7 +44,7 @@ export class Searcher extends Component
             @view.domElement.appendChild results
 
             i = 0
-            for entry in @entries.slice @selected
+            @entries.slice(@selected).forEach (entry) =>
                 resultName = document.createElement 'div'
                 resultName.className = style.luna ['searcher__results__item__name']
 
@@ -60,8 +58,7 @@ export class Searcher extends Component
 
                 name = entry.name
                 last = 0
-                if entry.highlights instanceof Array
-                    for highlight in entry.highlights
+                entry.highlights.forEach (highlight) =>
                         normName = name.slice last, highlight.start
                         highName = name.slice highlight.start, highlight.end
                         last = highlight.end
@@ -79,7 +76,11 @@ export class Searcher extends Component
                 nameSpan.appendChild normSpan
 
                 result = document.createElement 'div'
-                result.className = style.luna if i == 0 then ['searcher__results__item', 'searcher__results__item--selected'] else ['searcher__results__item']
+
+                resultClasses = ['searcher__results__item']
+                resultClasses.push ['searcher__results__item--selected'] if i == 0
+                result.className = style.luna resultClasses
+
                 result.appendChild resultName
                 resultsList.appendChild result
                 i++
