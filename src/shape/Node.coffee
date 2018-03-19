@@ -39,8 +39,10 @@ export nodeShape = basegl.expr ->
 
 export expandedNodeShape = basegl.expr ->
     border       = 0
-    bodyWidth    = 200
-    bodyHeight   = 300
+    bodyWidth    = 'foo'
+    bodyHeight   = 'bar'
+    # bodyWidth    = 200
+    # bodyHeight   = 300
     slope        = 20
     headerOffset = arrowOffset
     r1    = nodeRadius + border

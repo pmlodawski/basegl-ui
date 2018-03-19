@@ -54,11 +54,14 @@ makeSelectable = (a) ->
 
 expandedNodeShape = basegl.symbol shape.expandedNodeShape
 expandedNodeShape.variables.selected = 0
-expandedNodeShape.bbox.xy = [shape.width + 2*shape.nodeSelectionBorderMaxSize, shape.height + 2*shape.nodeSelectionBorderMaxSize]
+expandedNodeShape.variables.foo = 200
+expandedNodeShape.variables.bar = 300
 
-nodeShape = basegl.symbol shape.nodeShape
-nodeShape.variables.selected = 0
-nodeShape.bbox.xy = [shape.width, shape.height]
+# expandedNodeShape.bbox.xy = [shape.width + 2*shape.nodeSelectionBorderMaxSize, shape.height + 2*shape.nodeSelectionBorderMaxSize]
+
+compactNodeShape = basegl.symbol shape.nodeShape
+compactNodeShape.variables.selected = 0
+compactNodeShape.bbox.xy = [shape.width, shape.height]
 
 
 export class ExpressionNode extends Component
@@ -74,14 +77,15 @@ export class ExpressionNode extends Component
         @setInPorts inPorts
         @setOutPorts outPorts
         if @expanded != expanded
+            txtDef = basegl.text
+                str: @name
+                fontFamily: 'DejaVuSansMono'
             if expanded
-                @def = expandedNodeShape
+                nodeShape = expandedNodeShape
             else
-                txtDef = basegl.text
-                    str: @name
-                    fontFamily: 'DejaVuSansMono'
-                @def = [{name: 'node', def: nodeShape}
-                       ,{name: 'name', def: txtDef}]
+                nodeShape = compactNodeShape
+            @def = [{name: 'node', def: nodeShape}
+                   ,{name: 'name', def: txtDef}]
             @expanded = expanded
             if @view?
                 @reatach()
@@ -122,11 +126,15 @@ export class ExpressionNode extends Component
             portView.attach()
 
     updateView: =>
-        @view.node.position.xy = [-shape.width/2, -shape.height/2]
-        textWidth = util.textWidth @view.name
-        @view.name.position.xy = [-textWidth/2, shape.width/2]
-        @group.position.xy = @position.slice()
-        @view.node.variables.selected = if @selected then 1 else 0
+        if @expanded
+            # @view.node.variables.bodyHeight = 200
+            # @view.node.variables.bodyWidth = 200
+        else
+            @view.node.position.xy = [-shape.width/2, -shape.height/2]
+            textWidth = util.textWidth @view.name
+            @view.name.position.xy = [-textWidth/2, shape.width/2]
+            @group.position.xy = @position.slice()
+            @view.node.variables.selected = if @selected then 1 else 0
 
         @drawInPorts()
         @drawOutPorts()

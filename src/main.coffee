@@ -62,7 +62,7 @@ runExample = -> main (nodeEditor) ->
                      ,{key: 2}]
             outPorts: [{key: 1}]
             position: [500, 300]
-            expanded: false
+            expanded: true
             selected: false
         new ExpressionNode
             key: 4
