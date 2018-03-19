@@ -47,8 +47,8 @@ export class Connection extends Component
         y = dstPos[1] - srcPos[1]
         length = Math.sqrt(x*x + y*y) - leftOffset - rightOffset
         @view.position.x = leftOffset
-        @view.position.y = -shape.width/4
-        @view.bbox.x = 2 * length
+        @view.position.y = -shape.width/2
+        @view.bbox.x = length
         @group.position.xy = srcPos.slice()
         rotation = Math.atan2 y, x
         @view.rotation.z = rotation

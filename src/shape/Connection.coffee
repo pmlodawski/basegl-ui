@@ -5,8 +5,9 @@ import * as Color     from 'basegl/display/Color'
 import {circle, pie, rect}  from 'basegl/display/Shape'
 import {nodeSelectionBorderMaxSize} from 'shape/Node'
 
-export width     = 5
+export width     = 2
 
 export connectionShape = basegl.expr ->
     r = rect 'bbox.x', width
+    r.move 'bbox.x'/2, 'bbox.y'/2
 
