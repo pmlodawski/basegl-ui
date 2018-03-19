@@ -70,10 +70,9 @@ export class ExpressionNode extends Component
                   , expression: @expression = @expression
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
-                  , position:    position   = @position
+                  , position:   @position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
-        @emitProperty 'position', position
         @setInPorts inPorts
         @setOutPorts outPorts
         if @expanded != expanded
@@ -89,6 +88,9 @@ export class ExpressionNode extends Component
             @expanded = expanded
             if @view?
                 @reatach()
+
+        @updateInPorts()
+        @updateOutPorts()
 
     setInPorts: (inPorts) =>
         @inPorts ?= {}
@@ -139,33 +141,40 @@ export class ExpressionNode extends Component
         @group.position.xy = @position.slice()
         @view.node.variables.selected = if @selected then 1 else 0
 
-        @drawInPorts()
-        @drawOutPorts()
-
-    drawInPorts: =>
+    updateInPorts: =>
         inPortNumber = 0
         inPortKeys = Object.keys @inPorts
         for inPortKey in inPortKeys
             inPort = @inPorts[inPortKey]
+            values = {}
             unless inPort.angle?
-                if inPortKeys.length == 1
-                    angle = Math.PI/2
+                if @expanded or inPortKeys.length == 1
+                    values.angle = Math.PI/2
                 else
-                    angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
-                inPort.set angle: angle
+                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+            if @expanded
+                values.position = [@position[0] - shape.height/2, @position[1] - shape.height/2 - inPortNumber * 50]
+                values.radius = 0
+            else
+                values.position = @position.slice()
+                values.radius = shape.height/2
+            inPort.set values
             inPortNumber++
 
-    drawOutPorts: =>
+    updateOutPorts: =>
         outPortNumber = 0
         outPortKeys = Object.keys @outPorts
         for outPortKey in outPortKeys
             outPort = @outPorts[outPortKey]
+            values = {}
             unless outPort.angle?
                 if outPortKeys.length == 1
-                    angle = Math.PI*3/2
+                    values.angle = Math.PI*3/2
                 else
-                    angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
-                outPort.set angle: angle
+                    values.angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
+                values.radius = shape.height/2
+            values.position = @position.slice()
+            outPort.set values
             outPortNumber++
 
     registerEvents: =>

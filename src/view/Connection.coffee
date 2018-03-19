@@ -30,19 +30,17 @@ export class Connection extends Component
     updateView: =>
         @connectSources()
         srcNode = @parent.node @srcNode
-        dstNode = @parent.node @dstNode
+        srcPort = srcNode.outPorts[@srcPort]
+        dstPort = @parent.node(@dstNode).inPorts[@dstPort]
+
+        srcPos = srcPort.position
+        dstPos = dstPort.position
         if srcNode instanceof InputNode
-            srcPos = srcNode.outPorts[@srcPort].position
-            leftOffset = 0
+            leftOffset = srcPort.radius
         else
-            srcPos = srcNode.position
-            leftOffset = nodeShape.height/2 + 1/4 * portShape.length
-        if dstNode instanceof OutputNode
-            dstPos = dstNode.inPorts[@dstPort].position
-            rightOffset = 0
-        else
-            dstPos = dstNode.position
-            rightOffset = nodeShape.height/2 + 1/2 * portShape.length
+            leftOffset = srcPort.radius + 1/2*portShape.length
+        rightOffset = dstPort.radius
+
         x = dstPos[0] - srcPos[0]
         y = dstPos[1] - srcPos[1]
         length = Math.sqrt(x*x + y*y) - leftOffset - rightOffset
@@ -52,20 +50,19 @@ export class Connection extends Component
         @group.position.xy = srcPos.slice()
         rotation = Math.atan2 y, x
         @view.rotation.z = rotation
-        unless srcNode instanceof InputNode
-            srcNode.outPorts[@srcPort]?.set angle: rotation - Math.PI/2
-        dstNode.inPorts[@dstPort]?.set angle: rotation + Math.PI/2
+        srcPort?.set angle: rotation - Math.PI/2
+        dstPort?.set angle: rotation + Math.PI/2
 
     connectSources: =>
         unless @srcConnected?
             srcNode = @parent.node @srcNode
             if srcNode?
-                srcNode.addEventListener 'position', => @updateView()
+                srcNode.outPorts[@srcPort].addEventListener 'position', => @updateView()
                 @srcConnected = true
         unless @dstConnected
             dstNode = @parent.node @dstNode
             if dstNode?
-                dstNode.addEventListener 'position', => @updateView()
+                dstNode.inPorts[@dstPort].addEventListener 'position', => @updateView()
                 @dstConnected = true
 
     registerEvents: =>

@@ -10,8 +10,8 @@ windowLength = 1000
 export class OutputNode extends Component
     updateModel: ({ key:      @key      = @key
                   , inPorts:  inPorts   = @inPorts
-                  , position: position  = @position or [0,0]}) =>
-        @emitProperty 'position', position
+                  , position: @position  = @position or [0,0]
+                  }) =>
         @setInPorts inPorts
 
         i = 0

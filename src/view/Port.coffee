@@ -12,13 +12,17 @@ inPortShape.bbox.xy = [shape.width,shape.length]
 
 export class InPort extends Component
     updateModel: ({ key:   @key   = @key
-                  , angle: @angle = @angle}) =>
+                  , angle: @angle = @angle
+                  , position: position = @position or [0,0]
+                  , radius: @radius = @radius or 0
+                  }) =>
+        @emitProperty 'position', position
         unless @def?
             @def = inPortShape
 
     updateView: =>
-        @group.position.xy = @parent.position.slice()
-        @view.position.xy = [-shape.width/2, nodeShape.height/2]
+        @group.position.xy = @position
+        @view.position.xy = [-shape.width/2, @radius]
         @view.rotation.z = @angle
 
     registerEvents: =>
@@ -29,13 +33,17 @@ outPortShape.bbox.xy = [shape.width,shape.length]
 
 export class OutPort extends Component
     updateModel: ({ key:   @key   = @key
-                  , angle: @angle = @angle}) =>
+                  , angle: @angle = @angle
+                  , position: position = @position or [0,0]
+                  , radius: @radius = @radius or 0
+                  }) =>
+        @emitProperty 'position', position
         unless @def?
             @def = outPortShape
 
     updateView: =>
-        @group.position.xy = @parent.position.slice()
-        @view.position.xy = [-shape.width/2, nodeShape.height/2]
+        @group.position.xy = @position
+        @view.position.xy = [-shape.width/2, @radius]
         @view.rotation.z = @angle
 
     registerEvents: =>
@@ -51,12 +59,13 @@ export class FlatPort extends Component
 
     updateModel: ({ key:      @key      = @key
                   , name:     @name     = @name
-                  , position: @position = @position
+                  , position:  position = @position or [0,0]
+                  , radius:   @radius   = @radius or 0
                   , output:   @output   = @output}) =>
+        @emitProperty 'position', position
         unless @def?
             @def = flatPortShape
 
     updateView: =>
-        if @position
-            x = if @output then @position[0] else @position[0] - shape.length
-            @view.position.xy = [x, @position[1] - shape.width/2]
+        x = if @output then @position[0] else @position[0] - shape.length
+        @view.position.xy = [x, @position[1] - shape.width/2]
