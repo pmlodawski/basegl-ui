@@ -127,14 +127,17 @@ export class ExpressionNode extends Component
 
     updateView: =>
         if @expanded
+            bodyWidth = 200
+            bodyHeight = 300
+            @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
             # @view.node.variables.bodyHeight = 200
             # @view.node.variables.bodyWidth = 200
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
-            textWidth = util.textWidth @view.name
-            @view.name.position.xy = [-textWidth/2, shape.width/2]
-            @group.position.xy = @position.slice()
-            @view.node.variables.selected = if @selected then 1 else 0
+        textWidth = util.textWidth @view.name
+        @view.name.position.xy = [-textWidth/2, shape.width/2]
+        @group.position.xy = @position.slice()
+        @view.node.variables.selected = if @selected then 1 else 0
 
         @drawInPorts()
         @drawOutPorts()
