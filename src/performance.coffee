@@ -73,53 +73,53 @@ generateConnections = (count, maxNode) =>
     return connections
 
 export runPerformance = (nodeEditor) ->
-    # nodeEditor.setBreadcrumbs new Breadcrumbs
-    #     moduleName: 'Foo'
-    #     items: ['bar', 'baz']
+    nodeEditor.setBreadcrumbs new Breadcrumbs
+        moduleName: 'Foo'
+        items: ['bar', 'baz']
 
-    nodesCount = 10000
-    connectionsCount = 100
+    nodesCount = 1000
+    connectionsCount = 500
 
     nodeEditor.setNodes generateNodes nodesCount
 
-    # nodeEditor.setInputNode new InputNode
-    #     key: 'in'
-    #     outPorts: [ {key: 1}
-    #               , {key: 2}
-    #               , {key: 3}]
+    nodeEditor.setInputNode new InputNode
+        key: 'in'
+        outPorts: [ {key: 1}
+                  , {key: 2}
+                  , {key: 3}]
 
-    # nodeEditor.setOutputNode new OutputNode
-    #     key: 'out'
-    #     inPorts: [ {key: 1}
-    #              , {key: 2}]
+    nodeEditor.setOutputNode new OutputNode
+        key: 'out'
+        inPorts: [ {key: 1}
+                 , {key: 2}]
     nodeEditor.setConnections generateConnections connectionsCount, nodesCount
-    # nodeEditor.setSearcher new Searcher
-    #     key: 4
-    #     mode: 'node'
-    #     selected: 0
-    #     entries: [
-    #         name: 'bar'
-    #         doc:  'bar description'
-    #         className: 'Bar'
-    #         highlights:
-    #             [
-    #                 start: 1
-    #                 end: 2
-    #             ]
-    #     ,
-    #         name: 'foo'
-    #         doc:  'foo multiline\ndescription'
-    #         className: 'Foo'
-    #     ,
-    #         name: 'baz'
-    #         doc:  'baz description'
-    #         className: 'Test'
-    #         highlights:
-    #             [
-    #                 start: 1
-    #                 end: 3
-    #             ]
-    #     ]
+    nodeEditor.setSearcher new Searcher
+        key: 4
+        mode: 'node'
+        selected: 0
+        entries: [
+            name: 'bar'
+            doc:  'bar description'
+            className: 'Bar'
+            highlights:
+                [
+                    start: 1
+                    end: 2
+                ]
+        ,
+            name: 'foo'
+            doc:  'foo multiline\ndescription'
+            className: 'Foo'
+        ,
+            name: 'baz'
+            doc:  'baz description'
+            className: 'Test'
+            highlights:
+                [
+                    start: 1
+                    end: 3
+                ]
+        ]
 
 
     subscribeEvents (path, event) =>
