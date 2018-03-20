@@ -5,9 +5,11 @@ const env   = require('yargs').argv.env;
 let libPath         = path.resolve(__dirname, 'src')
 let localBaseGLPath = path.join(__dirname, '../basegl/src')
 
+let devtool = undefined
 let aliases = {}
 if (env == 'localdev') {
-    aliases = {'basegl': localBaseGLPath}
+    aliases = {'basegl': localBaseGLPath};
+    devtool = "eval-source-map";
 }
 
 module.exports =
@@ -25,7 +27,7 @@ module.exports =
     { __filename: true
     , __dirname:  true
     }
-  , devtool: "eval-source-map"
+  , devtool: devtool
   , devServer:
     { contentBase: path.resolve(__dirname, 'dist')
     }
