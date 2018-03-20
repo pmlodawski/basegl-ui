@@ -69,10 +69,3 @@ export expandedNodeShape = basegl.expr ->
     border        = border.fill sc
 
     border + node
-
-
-# console.log "!!!!"
-# console.log THREE
-# console.log THREE.CSS3DRenderer
-# a = new THREE.CSS3DRenderer
-# console.log a

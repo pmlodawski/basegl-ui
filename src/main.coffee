@@ -10,8 +10,9 @@ import {NodeEditor}      from 'view/NodeEditor'
 import {OutputNode}      from 'view/OutputNode'
 import {Searcher}        from 'view/Searcher'
 import {subscribeEvents} from 'view/Component'
+import {runPerformance}  from './performance'
 
-export install = (name, fontRootPath = "", f) ->
+export install = (name, fontRootPath = "", callback) ->
     scene = basegl.scene {domElement: name}
     basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
     fontSettings =
@@ -20,11 +21,11 @@ export install = (name, fontRootPath = "", f) ->
     basegl.fontManager.load('DejaVuSansMono', fontSettings).then =>
         nodeEditor = new NodeEditor scene
         nodeEditor.initialize()
-        f nodeEditor
+        callback nodeEditor
 
 export onEvent = subscribeEvents
 
-main = (f) -> install 'basegl-root', 'rsc/', f
+main = (callback) -> install 'basegl-root', 'rsc/', callback
 
 window.run = main
 
@@ -149,3 +150,4 @@ runExample = -> main (nodeEditor) ->
     window.n = nodeEditor
 
 if NODE_EDITOR_EXAMPLE? then runExample()
+else if NODE_EDITOR_PERFORMANCE? then main runPerformance
