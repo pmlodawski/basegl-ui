@@ -6,6 +6,7 @@ import {world}        from 'basegl/display/World'
 import {Component}    from 'view/Component'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
 
+# require('three/CSS3DRenderer')
 
 nodeRadius     = 30
 gridElemOffset = 18
@@ -70,3 +71,10 @@ export expandedNodeShape = basegl.expr ->
     border        = border.fill sc
 
     border + node
+
+
+# console.log "!!!!"
+# console.log THREE
+# console.log THREE.CSS3DRenderer
+# a = new THREE.CSS3DRenderer
+# console.log a

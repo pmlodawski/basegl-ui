@@ -42,7 +42,7 @@ export class OutputNode extends Component
 
     registerEvents: =>
         @withScene (scene) =>
-            scene.domElement.addEventListener 'mousemove', (e) =>
+            scene.camera.addEventListener 'move', () =>
                 campos = scene.camera.position
                 @set position: [ scene.width/2 + campos.x + scene.width/2*campos.z
                                , scene.height/2 + campos.y - height/2]

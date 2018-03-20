@@ -1,10 +1,18 @@
 var webpack = require('webpack');
+const path  = require('path');
+const env   = require('yargs').argv.env;
 
-const path = require('path');
+let libPath         = path.resolve(__dirname, 'src')
+let localBaseGLPath = path.join(__dirname, '../basegl/src')
+
+let aliases = {}
+if (env == 'localdev') {
+    aliases = {'basegl': localBaseGLPath}
+}
 
 module.exports =
-  { entry:  ['babel-polyfill', './main.coffee']
-  , context: path.resolve(__dirname, "src")
+  { entry:  ['./main.coffee']
+  , context: libPath
   , output:
     { path: path.resolve(__dirname, 'dist', 'js')
     , publicPath: '/js/'
@@ -13,35 +21,28 @@ module.exports =
     , libraryTarget: 'umd'
     , strictModuleExceptionHandling: true
     }
-  , node: {
-      __filename: true,
-      __dirname: true,
-  },
-
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist')
-  },
-
-  resolve: {
-      extensions: ['.js', '.coffee'],
-      modules: [
-        path.resolve(__dirname, "src"),
-        "node_modules"
-      ],
-      alias: {
-        'three/CSS3DRenderer': path.join(__dirname, 'node_modules/three/examples/js/renderers/CSS3DRenderer.js')
-      }
-  },
-
-  module:
+  , node: 
+    { __filename: true
+    , __dirname:  true
+    }
+  , devtool: "eval-source-map"
+  , devServer:
+    { contentBase: path.resolve(__dirname, 'dist')
+    }
+  , resolve: 
+    { extensions: ['.js', '.coffee', '.glsl', '.vert', '.frag']
+    , modules: 
+      [ libPath
+      , "node_modules"
+      ]
+    , alias: aliases 
+    }
+  , module:
     { strictExportPresence: true
     , rules:
       [ { test: /\.(coffee)$/
         , use:
-          [ { loader: 'babel-loader'
-            // , options: { presets: ['env'] }
-            }
-          , { loader: path.resolve('./basegl-loader.js')}
+          [ { loader: path.resolve('./basegl-loader.js')}
           , 'coffee-loader'
           ]
         }

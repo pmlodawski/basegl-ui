@@ -45,5 +45,5 @@ export class InputNode extends Component
 
     registerEvents: =>
         @withScene (scene) =>
-            scene.domElement.addEventListener 'mousemove', (e) =>
+            scene.camera.addEventListener 'move', () =>
                 @set position: @getPosition scene
