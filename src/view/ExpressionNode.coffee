@@ -54,8 +54,8 @@ makeSelectable = (a) ->
 
 expandedNodeShape = basegl.symbol shape.expandedNodeShape
 expandedNodeShape.variables.selected = 0
-expandedNodeShape.variables.foo = 200
-expandedNodeShape.variables.bar = 300
+expandedNodeShape.variables.bodyWidth = 200
+expandedNodeShape.variables.bodyHeight = 300
 
 # expandedNodeShape.bbox.xy = [shape.width + 2*shape.nodeSelectionBorderMaxSize, shape.height + 2*shape.nodeSelectionBorderMaxSize]
 
@@ -131,9 +131,9 @@ export class ExpressionNode extends Component
         if @expanded
             bodyWidth = 200
             bodyHeight = 300
+            @view.node.variables.bodyHeight = bodyHeight
+            @view.node.variables.bodyWidth  = bodyWidth
             @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
-            # @view.node.variables.bodyHeight = 200
-            # @view.node.variables.bodyWidth = 200
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
         textWidth = util.textWidth @view.name
