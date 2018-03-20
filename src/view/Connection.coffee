@@ -12,6 +12,9 @@ import {OutputNode} from 'view/OutputNode'
 
 connectionShape = basegl.symbol shape.connectionShape
 connectionShape.bbox.y = shape.width
+connectionShape.variables.color_r = 1
+connectionShape.variables.color_g = 0
+connectionShape.variables.color_b = 0
 
 export class Connection extends Component
     constructor: (values, parent) ->
@@ -23,7 +26,9 @@ export class Connection extends Component
                   , srcNode: @srcNode = @srcNode
                   , srcPort: @srcPort = @srcPort
                   , dstNode: @dstNode = @dstNode
-                  , dstPort: @dstPort = @dstPort}) =>
+                  , dstPort: @dstPort = @dstPort
+                  , color: @color = @color or [0, 1, 0]
+                  }) =>
         unless @def?
             @def = connectionShape
 
@@ -52,6 +57,10 @@ export class Connection extends Component
         @view.rotation.z = rotation
         srcPort?.set angle: rotation - Math.PI/2
         dstPort?.set angle: rotation + Math.PI/2
+
+        @view.variables.color_r = @color[0]
+        @view.variables.color_g = @color[1]
+        @view.variables.color_b = @color[2]
 
     connectSources: =>
         unless @srcConnected?

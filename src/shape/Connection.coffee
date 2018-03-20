@@ -11,7 +11,7 @@ lineWidth = 2
 
 export connectionShape = basegl.expr ->
     eye         = 'scaledEye.z'
-    scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7) / 10
+    scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     r = rect 'bbox.x', scaledWidth
-    r.move 'bbox.x'/2, 'bbox.y'/2
-
+    r = r.move 'bbox.x'/2, 'bbox.y'/2
+    r.fill Color.rgb ['color_r', 'color_g', 'color_b']
