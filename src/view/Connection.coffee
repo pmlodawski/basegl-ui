@@ -10,6 +10,8 @@ import {InputNode}  from 'view/InputNode'
 import {OutputNode} from 'view/OutputNode'
 
 
+connectionShape = basegl.symbol shape.connectionShape
+connectionShape.bbox.y = shape.width
 
 export class Connection extends Component
     constructor: (values, parent) ->
@@ -23,8 +25,6 @@ export class Connection extends Component
                   , dstNode: @dstNode = @dstNode
                   , dstPort: @dstPort = @dstPort}) =>
         unless @def?
-            connectionShape = basegl.symbol shape.connectionShape
-            connectionShape.bbox.y = shape.width
             @def = connectionShape
 
     updateView: =>
