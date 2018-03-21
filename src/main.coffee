@@ -9,6 +9,7 @@ import {InputNode}       from 'view/InputNode'
 import {NodeEditor}      from 'view/NodeEditor'
 import {OutputNode}      from 'view/OutputNode'
 import {Searcher}        from 'view/Searcher'
+import {Slider}          from 'view/Slider'
 import {subscribeEvents} from 'view/Component'
 import {runPerformance}  from './performance'
 
@@ -27,6 +28,10 @@ main = (callback) -> install 'basegl-root', 'rsc/', callback
 window.run = main
 
 runExample = -> main (nodeEditor) ->
+    nodeEditor.setSlider new Slider
+        min: 1
+        max: 100
+        value: 49
     nodeEditor.setBreadcrumbs new Breadcrumbs
         moduleName: 'Foo'
         items: ['bar', 'baz']

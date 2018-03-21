@@ -7,6 +7,7 @@ import {InputNode}      from 'view/InputNode'
 import {OutputNode}     from 'view/OutputNode'
 import {Port}           from 'view/Port'
 import {Searcher}       from 'view/Searcher'
+import {Slider}       from 'view/Slider'
 
 
 export class NodeEditor
@@ -48,6 +49,7 @@ export class NodeEditor
     setInputNode:   (inputNode)   => @genericSetComponent 'inputNode',   InputNode,   inputNode
     setOutputNode:  (outputNode)  => @genericSetComponent 'outputNode',  OutputNode,  outputNode
     setSearcher:    (searcher)    => @genericSetComponent 'searcher',    Searcher,    searcher
+    setSlider:    (slider)    => @genericSetComponent 'slider',    Slider,    slider
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?
