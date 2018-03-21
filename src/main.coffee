@@ -15,10 +15,7 @@ import {runPerformance}  from './performance'
 export install = (name, fontRootPath = "", callback) ->
     scene = basegl.scene {domElement: name}
     basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
-    fontSettings =
-        glyphSize: 20
-        spread: 32
-    basegl.fontManager.load('DejaVuSansMono', fontSettings).then =>
+    basegl.fontManager.load('DejaVuSansMono').then =>
         nodeEditor = new NodeEditor scene
         nodeEditor.initialize()
         callback nodeEditor

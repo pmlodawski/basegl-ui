@@ -79,6 +79,7 @@ export class ExpressionNode extends Component
             txtDef = basegl.text
                 str: @name
                 fontFamily: 'DejaVuSansMono'
+                size: 14
             if expanded
                 nodeShape = expandedNodeShape
             else
