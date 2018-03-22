@@ -44,10 +44,15 @@ export class Component extends Composable
 
     detach: => @withScene (scene) =>
         if @view?
-            scene.delete @view
+            if @def instanceof Array
+                for def in @def
+                    console.log @view[def.name]
+                    @view[def.name].dispose()
+            else
+                @view.dispose()
             @view = null
 
-    reatach: =>
+    reattach: =>
         @detach()
         @attach()
 

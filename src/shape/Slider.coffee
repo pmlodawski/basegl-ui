@@ -11,10 +11,10 @@ bgColor       = bg.mix white, 0.1
 sliderColor    = bg.mix white, 0.2
 
 export sliderShape = basegl.expr ->
-    topLeft     = 'bbox.y'/2
-    topRight    = 'bbox.y'/2
-    bottomLeft  = 'bbox.y'/2
-    bottomRight = 'bbox.y'/2
+    topLeft     = 'bbox.y'/2 * 'topLeft'
+    topRight    = 'bbox.y'/2 * 'topRight'
+    bottomLeft  = 'bbox.y'/2 * 'bottomLeft'
+    bottomRight = 'bbox.y'/2 * 'bottomRight'
     valueWidth  = 'bbox.x' * 'level'
     background = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
     background = background.move 'bbox.x'/2, 'bbox.y'/2

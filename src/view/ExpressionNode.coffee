@@ -88,7 +88,7 @@ export class ExpressionNode extends Component
                    ,{name: 'name', def: txtDef}]
             @expanded = expanded
             if @view?
-                @reatach()
+                @reattach()
 
         @updateInPorts()
         @updateOutPorts()
