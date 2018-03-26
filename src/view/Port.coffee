@@ -19,6 +19,7 @@ export class InPort extends Component
                   , position: position = @position or [0,0]
                   , radius: @radius = @radius or 0
                   , color: @color = @color or [0, 1, 0]
+                  , widgets: @widgets = @widgets or []
                   }) =>
         @emitProperty 'position', position
         unless @def?

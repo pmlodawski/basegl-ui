@@ -73,8 +73,6 @@ export class ExpressionNode extends Component
                   , position:   @position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
-        @setInPorts inPorts
-        @setOutPorts outPorts
         if @expanded != expanded
             txtDef = basegl.text
                 str: @name
@@ -89,7 +87,9 @@ export class ExpressionNode extends Component
             @expanded = expanded
             if @view?
                 @reattach()
-
+        @widgets ?= {}
+        @setInPorts inPorts
+        @setOutPorts outPorts
         @updateInPorts()
         @updateOutPorts()
 
@@ -109,7 +109,6 @@ export class ExpressionNode extends Component
             portView = new InPort inPort, @
             @inPorts[inPort.key] = portView
             portView.attach()
-
 
     setOutPorts: (outPorts) =>
         @outPorts ?= {}
@@ -135,6 +134,12 @@ export class ExpressionNode extends Component
             @view.node.variables.bodyHeight = bodyHeight
             @view.node.variables.bodyWidth  = bodyWidth
             @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
+            Object.keys(@inPorts).forEach (inPortKey) =>
+                widgets = @widgets[inPortKey]
+                console.log widgets
+                if widgets?
+                    widgets.forEach (widget) =>
+                        widget.set position: @position.slice()
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
         textWidth = util.textWidth @view.name
@@ -156,7 +161,17 @@ export class ExpressionNode extends Component
             if @expanded
                 values.position = [@position[0] - shape.height/2, @position[1] - shape.height/2 - inPortNumber * 50]
                 values.radius = 0
+                unless @widgets[inPortKey]?
+                    @widgets[inPortKey] = []
+                    inPort.widgets.forEach (widgetCreate) =>
+                        widget = widgetCreate @parent
+                        widget.attach()
+                        @widgets[inPortKey].push widget
             else
+                if @widgets[inPortKey]?
+                    @widgets[inPortKey].forEach (widget) =>
+                        widget.detach()
+                    delete @widgets[inPortKey]
                 values.position = @position.slice()
                 values.radius = shape.height/2
             inPort.set values

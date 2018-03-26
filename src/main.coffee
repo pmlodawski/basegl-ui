@@ -9,6 +9,7 @@ import {InputNode}       from 'view/InputNode'
 import {NodeEditor}      from 'view/NodeEditor'
 import {OutputNode}      from 'view/OutputNode'
 import {Searcher}        from 'view/Searcher'
+import {Slider}          from 'view/Slider'
 import {subscribeEvents} from 'view/Component'
 import {runPerformance}  from './performance'
 
@@ -25,6 +26,8 @@ export onEvent = subscribeEvents
 main = (callback) -> install 'basegl-root', 'rsc/', callback
 
 window.run = main
+
+mkWidget  = (cons, args) -> (parent) -> new cons args, parent
 
 runExample = -> main (nodeEditor) ->
     nodeEditor.setBreadcrumbs new Breadcrumbs
@@ -56,8 +59,31 @@ runExample = -> main (nodeEditor) ->
         new ExpressionNode
             key: 3
             name: "foo bar baz"
-            inPorts: [{key: 1}
-                     ,{key: 2}]
+            inPorts:
+                [
+                    key: 1
+                    widgets:
+                        [
+                            mkWidget Slider,
+                                min: 0
+                                max: 100
+                                value: 49
+                        ,
+                            mkWidget Slider,
+                                min: -50
+                                max: 50
+                                value: 11
+                        ]
+                ,
+                    key: 2
+                    widgets:
+                        [
+                            mkWidget Slider,
+                                min: -10
+                                max: 10
+                                value: 5
+                        ]
+                ]
             outPorts: [{key: 1}]
             position: [500, 300]
             expanded: true

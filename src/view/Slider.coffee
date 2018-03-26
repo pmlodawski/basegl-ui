@@ -24,6 +24,7 @@ export class Slider extends Widget
     updateModel: ({ min:   @min   = @min
                   , max:   @max   = @max
                   , value: value  = @value
+                  , position: @position = @position or [0,0]
                   }) =>
         if @def?
             if value != @value
@@ -51,5 +52,6 @@ export class Slider extends Widget
         @view.slider.bbox.xy = [@width, @height]
         textSize = util.textSize @view.value
         @view.value.position.xy = [@width/2 - textSize[0]/2 , @height/2 - textSize[1]/2]
+        @group.position.xy = @position
 
     registerEvents: =>
