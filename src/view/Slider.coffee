@@ -52,6 +52,6 @@ export class Slider extends Widget
         @view.slider.bbox.xy = [@width, @height]
         textSize = util.textSize @view.value
         @view.value.position.xy = [@width/2 - textSize[0]/2 , @height/2 - textSize[1]/2]
-        @group.position.xy = @position
+        @group.position.xy = [@position[0] + 250, @position[1] - @height/2]
 
     registerEvents: =>
