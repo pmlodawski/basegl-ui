@@ -127,6 +127,36 @@ export class ExpressionNode extends Component
             @outPorts[outPort.key] = portView
             portView.attach()
 
+    drawWidgets: (widgets, startPoint, width) =>
+        return unless widgets.length > 0
+        ws = []
+        minWidth = 0
+        for i in [0..widgets.length - 1]
+            ws.push
+                index  : i
+                widget : widgets[i]
+                width : widgets[i].minWidth
+            minWidth += widgets[i].minWidth
+            widgets[i].configure siblings:
+                left:  ! (i == 0)
+                right: ! (i == widgets.length - 1)
+        offset = 3
+        free = width - minWidth - offset * (widgets.length - 1)
+        ws.sort (a, b) -> a.widget.maxWidth - b.widget.maxWidth
+        for i in [0..ws.length - 1]
+            w = ws[i]
+            wfree = free / (ws.length - i)
+            if (! w.widget.maxWidth?) or w.widget.maxWidth > w.width + wfree
+                free -= wfree
+                w.width += wfree
+            else
+                free -= w.widget.maxWidth - w.width
+                w.width = w.widget.maxWidth
+        ws.forEach (w) ->
+            widgets[w.index].set position: startPoint.slice()
+            widgets[w.index].configure width: w.width
+            startPoint[0] += w.width + offset
+
     updateView: =>
         if @expanded
             bodyWidth = 200
@@ -136,10 +166,9 @@ export class ExpressionNode extends Component
             @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
             Object.keys(@inPorts).forEach (inPortKey) =>
                 widgets = @widgets[inPortKey]
-                console.log widgets
                 if widgets?
-                    widgets.forEach (widget) =>
-                        widget.set position: @position.slice()
+                    inPort = @inPorts[inPortKey]
+                    @drawWidgets widgets, inPort.position.slice(), bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
         textWidth = util.textWidth @view.name

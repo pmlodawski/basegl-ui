@@ -83,6 +83,25 @@ runExample = -> main (nodeEditor) ->
                                 max: 10
                                 value: 5
                         ]
+                ,
+                    key: 3
+                    widgets:
+                        [
+                            mkWidget Slider,
+                                min: -10
+                                max: 10
+                                value: 5
+                        ,
+                            mkWidget Slider,
+                                min: -10
+                                max: 10
+                                value: 5
+                        ,
+                            mkWidget Slider,
+                                min: -10
+                                max: 10
+                                value: 5
+                        ]
                 ]
             outPorts: [{key: 1}]
             position: [500, 300]
