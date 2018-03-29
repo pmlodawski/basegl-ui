@@ -39,10 +39,11 @@ export class OutputNode extends Component
             portView = new FlatPort inPort, @
             @inPorts[inPort.key] = portView
             portView.attach()
+            @onDispose => portView.dispose()
 
     registerEvents: =>
         @withScene (scene) =>
-            scene.camera.addEventListener 'move', () =>
+            @addDisposableListener scene.camera, 'move', =>
                 campos = scene.camera.position
                 @set position: [ scene.width/2 + campos.x + scene.width/2*campos.z
                                , scene.height/2 + campos.y - height/2]

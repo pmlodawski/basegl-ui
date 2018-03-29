@@ -109,6 +109,7 @@ export class ExpressionNode extends Component
             portView = new InPort inPort, @
             @inPorts[inPort.key] = portView
             portView.attach()
+            @onDispose => portView.dispose()
 
     setOutPorts: (outPorts) =>
         @outPorts ?= {}
@@ -126,6 +127,7 @@ export class ExpressionNode extends Component
             portView = new OutPort outPort, @
             @outPorts[outPort.key] = portView
             portView.attach()
+            @onDispose => portView.dispose()
 
     drawWidgets: (widgets, startPoint, width) =>
         return unless widgets.length > 0
@@ -195,6 +197,7 @@ export class ExpressionNode extends Component
                     inPort.widgets.forEach (widgetCreate) =>
                         widget = widgetCreate @parent
                         widget.attach()
+                        @onDispose => widget.dispose()
                         @widgets[inPortKey].push widget
             else
                 if @widgets[inPortKey]?

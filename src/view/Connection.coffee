@@ -21,6 +21,7 @@ export class Connection extends Component
         super values, parent
         @srcNodeSubscirbed = false
         @dstNodeSubscribed = false
+        @disposables = []
 
     updateModel: ({ key: @key = @key
                   , srcNode: @srcNode = @srcNode
@@ -55,8 +56,8 @@ export class Connection extends Component
         @group.position.xy = srcPos.slice()
         rotation = Math.atan2 y, x
         @view.rotation.z = rotation
-        srcPort?.set angle: rotation - Math.PI/2
-        dstPort?.set angle: rotation + Math.PI/2
+        srcPort?.set follow: rotation - Math.PI/2
+        dstPort?.set follow: rotation + Math.PI/2
 
         @view.variables.color_r = @color[0]
         @view.variables.color_g = @color[1]
@@ -66,12 +67,16 @@ export class Connection extends Component
         unless @srcConnected?
             srcNode = @parent.node @srcNode
             if srcNode?
-                srcNode.outPorts[@srcPort].addEventListener 'position', => @updateView()
+                srcPort = srcNode.outPorts[@srcPort]
+                @addDisposableListener srcPort, 'position', => @updateView()
+                @onDispose => srcPort.set follow: null
                 @srcConnected = true
         unless @dstConnected
             dstNode = @parent.node @dstNode
             if dstNode?
-                dstNode.inPorts[@dstPort].addEventListener 'position', => @updateView()
+                dstPort = dstNode.inPorts[@dstPort]
+                @addDisposableListener dstPort, 'position', => @updateView()
+                @onDispose => dstPort.set follow: null
                 @dstConnected = true
 
     registerEvents: =>

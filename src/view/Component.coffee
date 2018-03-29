@@ -10,6 +10,7 @@ export subscribeEvents = (listener) =>
 export class Component extends Composable
     cons: (values, @parent) ->
         @mixin eventDispatcherMixin, @
+        @disposables = []
         @propertyListeners = {}
         @set values
         # @attach()
@@ -42,7 +43,7 @@ export class Component extends Composable
             @updateView()
         @registerEvents?()
 
-    detach: => @withScene (scene) =>
+    _detach: => @withScene (scene) =>
         if @view?
             if @def instanceof Array
                 for def in @def
@@ -53,7 +54,7 @@ export class Component extends Composable
             @view = null
 
     reattach: =>
-        @detach()
+        @_detach()
         @attach()
 
     emitProperty: (name, property) =>
@@ -61,3 +62,16 @@ export class Component extends Composable
             @[name] = property
             propertyEvent = new CustomEvent name, value: property
             @dispatchEvent propertyEvent if @dispatchEvent?
+
+    dispose: =>
+        @disposables.forEach (disposable) =>
+            console.log 'disposable'
+            disposable()
+        @_detach()
+
+    addDisposableListener: (target, name, handler) =>
+        target.addEventListener name, handler
+        @onDispose => target.removeEventListener name, handler
+
+    onDispose: (finalizer) =>
+        @disposables.push finalizer

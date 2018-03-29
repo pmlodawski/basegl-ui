@@ -28,7 +28,7 @@ export class NodeEditor
 
     unsetNode: (node) =>
         if @nodes[node.key]?
-            @nodes[node.key].detach()
+            @nodes[node.key].dispose()
             delete @nodes[node.key]
 
     setNode: (node) =>
@@ -40,6 +40,12 @@ export class NodeEditor
             nodeView.attach()
 
     setNodes: (nodes) =>
+        nodeKeys = new Set
+        for node in nodes
+            nodeKeys.add node.key
+        for nodeKey in Object.keys @nodes
+            unless nodeKeys.has nodeKey
+                @unsetNode @nodes[nodeKey]
         for node in nodes
             @setNode node
         undefined
@@ -51,7 +57,7 @@ export class NodeEditor
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?
-            @connections[connection.key].detach()
+            @connections[connection.key].dispose()
             delete @connections[connection.key]
 
     setConnection: (connection) =>
@@ -63,6 +69,12 @@ export class NodeEditor
             connectionView.attach()
 
     setConnections: (connections) =>
+        connectionKeys = new Set
+        for connection in connections
+            connectionKeys.add connection.key
+        for connectionKey in Object.keys @connections
+            unless connectionKeys.has connectionKey
+                @unsetConnection @connections[connectionKey]
         for connection in connections
             @setConnection connection
         undefined
@@ -76,5 +88,15 @@ export class NodeEditor
                 @[name].attach()
         else
             if @[name]?
-                @[name].detach()
+                @[name].dispose()
                 @[name] = null
+
+    dispose: =>
+        @breadcrumbs?.dispose()
+        @inputNode?.dispose()
+        @outputNode?.dispose()
+        @searcher?.dispose()
+        for connectionKey in Object.keys @connections
+            @connections[connectionKey].dispose()
+        for nodeKey in Object.keys @nodes
+            @nodes[nodeKey].dispose()

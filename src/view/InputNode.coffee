@@ -38,6 +38,7 @@ export class InputNode extends Component
             portView = new FlatPort outPort, @
             @outPorts[outPort.key] = portView
             portView.attach()
+            @onDispose => portView.dispose()
 
     getPosition: (scene) =>
         campos = scene.camera.position
@@ -46,5 +47,4 @@ export class InputNode extends Component
 
     registerEvents: =>
         @withScene (scene) =>
-            scene.camera.addEventListener 'move', () =>
-                @set position: @getPosition scene
+            @addDisposableListener scene.camera, 'move', => @set position: @getPosition scene

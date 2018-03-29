@@ -41,5 +41,5 @@ export class Breadcrumbs extends Component
 
     registerEvents: =>
         @withScene (scene) =>
-            scene.camera.addEventListener 'move', (e) =>
+            @addDisposableListener scene.camera, 'move', =>
                 @set position: @getPosition scene

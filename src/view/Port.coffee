@@ -16,6 +16,7 @@ inPortShape.variables.color_b = 0
 export class InPort extends Component
     updateModel: ({ key:   @key   = @key
                   , angle: @angle = @angle
+                  , follow: @follow = @follow
                   , position: position = @position or [0,0]
                   , radius: @radius = @radius or 0
                   , color: @color = @color or [0, 1, 0]
@@ -31,7 +32,7 @@ export class InPort extends Component
         @view.variables.color_r = @color[0]
         @view.variables.color_g = @color[1]
         @view.variables.color_b = @color[2]
-        @view.rotation.z = @angle
+        @view.rotation.z = @follow or @angle
 
     registerEvents: =>
 
@@ -45,6 +46,7 @@ outPortShape.variables.color_b = 0
 export class OutPort extends Component
     updateModel: ({ key:   @key   = @key
                   , angle: @angle = @angle
+                  , follow: @follow = @follow
                   , position: position = @position or [0,0]
                   , radius: @radius = @radius or 0
                   , color: @color = @color or [0, 1, 0]
@@ -56,7 +58,7 @@ export class OutPort extends Component
     updateView: =>
         @group.position.xy = @position
         @view.position.xy = [-shape.width/2, @radius]
-        @view.rotation.z = @angle
+        @view.rotation.z = @follow or @angle
         @view.variables.color_r = @color[0]
         @view.variables.color_g = @color[1]
         @view.variables.color_b = @color[2]
