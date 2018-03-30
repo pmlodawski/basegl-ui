@@ -28,7 +28,6 @@ export class Connection extends Component
                   , srcPort: @srcPort = @srcPort
                   , dstNode: @dstNode = @dstNode
                   , dstPort: @dstPort = @dstPort
-                  , color: @color = @color or [0, 1, 0]
                   }) =>
         unless @def?
             @def = connectionShape
@@ -59,9 +58,9 @@ export class Connection extends Component
         srcPort?.set follow: rotation - Math.PI/2
         dstPort?.set follow: rotation + Math.PI/2
 
-        @view.variables.color_r = @color[0]
-        @view.variables.color_g = @color[1]
-        @view.variables.color_b = @color[2]
+        @view.variables.color_r = srcPort.color[0]
+        @view.variables.color_g = srcPort.color[1]
+        @view.variables.color_b = srcPort.color[2]
 
     connectSources: =>
         unless @srcConnected?
