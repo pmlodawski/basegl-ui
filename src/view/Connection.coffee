@@ -35,9 +35,9 @@ export class Connection extends Component
     updateView: =>
         @connectSources()
         srcNode = @parent.node @srcNode
+        dstNode = @parent.node @dstNode
         srcPort = srcNode.outPorts[@srcPort]
-        dstPort = @parent.node(@dstNode).inPorts[@dstPort]
-
+        dstPort = dstNode.inPorts[@dstPort]
         srcPos = srcPort.position
         dstPos = dstPort.position
         if srcNode instanceof InputNode

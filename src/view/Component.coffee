@@ -47,7 +47,6 @@ export class Component extends Composable
         if @view?
             if @def instanceof Array
                 for def in @def
-                    console.log @view[def.name]
                     @view[def.name].dispose()
             else
                 @view.dispose()
@@ -65,7 +64,6 @@ export class Component extends Composable
 
     dispose: =>
         @disposables.forEach (disposable) =>
-            console.log 'disposable'
             disposable()
         @_detach()
 

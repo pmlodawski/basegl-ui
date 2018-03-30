@@ -23,8 +23,8 @@ export class NodeEditor
     node: (nodeKey) =>
         node = @nodes[nodeKey]
         if node? then node
-        else if @inputNode?  and (@inputNode.key  == nodeKey) then @inputNode
-        else if @outputNode? and (@outputNode.key == nodeKey) then @outputNode
+        else if @inputNode?  and (@inputNode.key  is nodeKey) then @inputNode
+        else if @outputNode? and (@outputNode.key is nodeKey) then @outputNode
 
     unsetNode: (node) =>
         if @nodes[node.key]?
