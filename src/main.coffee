@@ -1,5 +1,5 @@
-require "babel-core/register"
-require "babel-polyfill"
+require 'babel-core/register'
+require 'babel-polyfill'
 import * as basegl from 'basegl'
 
 import {Breadcrumbs}     from 'view/Breadcrumbs'
@@ -37,7 +37,8 @@ runExample = -> main (nodeEditor) ->
     nodeEditor.setNodes [
         new ExpressionNode
             key: 1
-            name: "foo"
+            name: 'foo'
+            expression: '1'
             inPorts: [{key: 1}]
             outPorts: [{key: 1}
                       ,{key: 2}]
@@ -46,7 +47,7 @@ runExample = -> main (nodeEditor) ->
             selected: false
         new ExpressionNode
             key: 2
-            name: "bar"
+            name: 'bar'
             inPorts: [{key: 1}
                      ,{key: 2}
                      ,{key: 3}
@@ -58,7 +59,8 @@ runExample = -> main (nodeEditor) ->
             selected: false
         new ExpressionNode
             key: 3
-            name: "foo bar baz"
+            name: 'baz'
+            expression: 'foo bar baz'
             inPorts:
                 [
                     key: 1
@@ -109,7 +111,7 @@ runExample = -> main (nodeEditor) ->
             selected: false
         new ExpressionNode
             key: 4
-            name: "node1"
+            name: 'node1'
             inPorts: [{key: 1}]
             outPorts: [{key: 1}]
             position: [500, 600]

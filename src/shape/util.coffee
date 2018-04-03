@@ -1,3 +1,5 @@
+import * as basegl    from 'basegl'
+
 
 export textWidth = (textGroup) =>
     textMinX = undefined
@@ -24,10 +26,8 @@ export textSize = (textGroup) =>
         textMinY = b unless b > textMinY
         textMaxY = t unless t < textMaxY
     [textMaxX - textMinX, textMaxY - textMinY]
-# addCaptureListener      'mousemove', (e) =>
-#     @screenMouse.x = e.clientX
-#     @screenMouse.y = e.clientY
-#     campos = @camera.position
-#     @mouse.x = (@screenMouse.x-@width/2 ) * campos.z + campos.x
-#     @mouse.y = (@screenMouse.y-@height/2) * campos.z - campos.y
-#     @_mouseBaseEvent = e
+
+export text = (attrs) =>
+    addToScene: (scene) =>
+        attrs.scene = scene
+        basegl.text attrs

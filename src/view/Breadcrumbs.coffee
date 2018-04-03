@@ -37,7 +37,7 @@ export class Breadcrumbs extends Component
     getPosition: (scene) =>
         campos = scene.camera.position
         return [ scene.width/2 + campos.x - scene.width/2*campos.z
-               , scene.height + campos.y]
+               , scene.height/2 + campos.y + scene.height/2*campos.z]
 
     registerEvents: =>
         @withScene (scene) =>

@@ -74,16 +74,22 @@ export class ExpressionNode extends Component
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
         if @expanded != expanded
-            txtDef = basegl.text
-                str: @name
+            nameDef = util.text
+                str: @name or ''
+                fontFamily: 'DejaVuSansMono'
+                size: 14
+            exprDef = util.text
+                str: @expression or ''
                 fontFamily: 'DejaVuSansMono'
                 size: 14
             if expanded
                 nodeShape = expandedNodeShape
             else
                 nodeShape = compactNodeShape
-            @def = [{name: 'node', def: nodeShape}
-                   ,{name: 'name', def: txtDef}]
+            @def = [{ name: 'node', def: nodeShape }
+                   ,{ name: 'name', def: nameDef }
+                   ,{ name: 'expression', def: exprDef }
+                   ]
             @expanded = expanded
             if @view?
                 @reattach()
@@ -173,8 +179,10 @@ export class ExpressionNode extends Component
                     @drawWidgets widgets, inPort.position.slice(), bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
-        textWidth = util.textWidth @view.name
-        @view.name.position.xy = [-textWidth/2, shape.width/2]
+        nameSize = util.textSize @view.name
+        exprWidth = util.textWidth @view.expression
+        @view.name.position.xy = [-nameSize[0]/2, shape.width/2 + nameSize[1]*2]
+        @view.expression.position.xy = [-exprWidth/2, shape.width/2]
         @group.position.xy = @position.slice()
         @view.node.variables.selected = if @selected then 1 else 0
 

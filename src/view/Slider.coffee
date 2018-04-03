@@ -36,19 +36,19 @@ export class Slider extends Widget
             @createDef()
 
     createDef: =>
-            valueShape = basegl.text
-                str: @value.toString()
-                fontFamily: 'DejaVuSansMono'
-                size: 14
-            @def = [ {name: 'slider', def: sliderShape}
-                   , {name: 'value',  def: valueShape}]
+        valueShape = util.text
+            str: @value.toString()
+            fontFamily: 'DejaVuSansMono'
+            size: 14
+        @def = [ {name: 'slider', def: sliderShape}
+               , {name: 'value',  def: valueShape} ]
 
     updateView: =>
         @view.slider.variables.level = (@value - @min)/(@max - @min)
-        @view.slider.variables.topLeft     = not (@siblings.top or @siblings.left)
-        @view.slider.variables.topRight    = not (@siblings.top or @siblings.right)
-        @view.slider.variables.bottomLeft  = not (@siblings.bottom or @siblings.left)
-        @view.slider.variables.bottomRight = not (@siblings.bottom or @siblings.right)
+        @view.slider.variables.topLeft     = Number not (@siblings.top or @siblings.left)
+        @view.slider.variables.topRight    = Number not (@siblings.top or @siblings.right)
+        @view.slider.variables.bottomLeft  = Number not (@siblings.bottom or @siblings.left)
+        @view.slider.variables.bottomRight = Number not (@siblings.bottom or @siblings.right)
         @view.slider.bbox.xy = [@width, @height]
         textSize = util.textSize @view.value
         @view.value.position.xy = [@width/2 - textSize[0]/2 , @height/2 - textSize[1]/2]
