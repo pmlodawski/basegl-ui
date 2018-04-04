@@ -24,8 +24,9 @@ export class Component extends Composable
 
     set: (values) =>
         @updateModel values
-        if @view?
-            @updateView()
+        @withScene =>
+            if @view?
+                @updateView()
 
     attach: => @withScene (scene) =>
         if @def?
