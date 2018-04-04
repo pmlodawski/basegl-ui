@@ -17,8 +17,8 @@ connectionShape.variables.color_g = 0
 connectionShape.variables.color_b = 0
 
 export class Connection extends Component
-    constructor: (values, parent) ->
-        super values, parent
+    constructor: (args...) ->
+        super args...
         @srcNodeSubscirbed = false
         @dstNodeSubscribed = false
         @disposables = []

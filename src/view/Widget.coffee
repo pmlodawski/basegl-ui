@@ -5,9 +5,6 @@ import {Component}  from 'view/Component'
 
 
 export class Widget extends Component
-    constructor: (values, parent) ->
-        super values, parent
-
     configure: ({ minWidth:  @minWidth  = @minWidth or 0
                 , minHeight: @minHeight = @minHeight or 0
                 , maxWidth:  @maxWidth  = @maxWidth

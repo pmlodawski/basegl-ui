@@ -236,6 +236,4 @@ export class ExpressionNode extends Component
     registerEvents: =>
         makeDraggable @, => @updateView()
         makeSelectable @view.node
-        window.view = @view
-        window.push = @pushEvent
         @group.addEventListener 'click', (e) => @pushEvent ['node-editor', 'node'], e

@@ -14,8 +14,8 @@ sliderShape.variables.bottomLeft  = 0
 sliderShape.variables.bottomRight = 0
 
 export class Slider extends Widget
-    constructor: (values, parent) ->
-        super values, parent
+    constructor: (args...) ->
+        super args...
         @configure
             minWidth: 40
             minHeight: 20

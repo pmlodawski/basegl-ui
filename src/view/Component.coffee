@@ -13,7 +13,6 @@ export class Component extends Composable
         @disposables = []
         @propertyListeners = {}
         @set values
-        # @attach()
 
     withScene: (fun) => @parent.withScene fun if @parent?
 

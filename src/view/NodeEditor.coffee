@@ -13,9 +13,24 @@ export class NodeEditor
     constructor: (@_scene) ->
         @nodes ?= {}
         @connections ?= {}
+        @inTransaction = false
+        @pending = []
 
-    withScene: (fun) => fun @_scene if @_scene?
-    
+    withScene: (fun) =>
+        action = => fun @_scene if @_scene?
+        if @inTransaction
+            @pending.push action
+        else
+            action()
+
+    beginTransaction: => @inTransaction = true
+
+    commitTransaction: =>
+        @inTransaction = false
+        for pending in @pending
+            pending()
+        @pending = []
+
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
