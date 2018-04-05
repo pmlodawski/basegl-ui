@@ -5,7 +5,9 @@ import {Composable} from 'basegl/object/Property'
 
 import * as shape       from 'shape/Port'
 import * as nodeShape   from 'shape/Node'
-import {Component} from 'view/Component'
+import * as util        from 'shape/util'
+import {Component}      from 'view/Component'
+
 
 inPortShape = basegl.symbol shape.inPortShape
 inPortShape.bbox.xy = [shape.width,shape.length]
@@ -78,19 +80,30 @@ export class FlatPort extends Component
         @output ?= false
 
     updateModel: ({ key:      @key      = @key
-                  , name:     @name     = @name
+                  , name:      name     = @name
                   , position:  position = @position or [0,0]
                   , radius:   @radius   = @radius or 0
                   , output:   @output   = @output
                   , color: @color = @color or [0, 1, 0]
                   }) =>
         @emitProperty 'position', position
-        unless @def?
-            @def = flatPortShape
+        if @name != name
+            @name = name
+            nameDef = util.text
+                str: @name or ''
+                fontFamily: 'DejaVuSansMono'
+                size: 14
+            @def = [{ name: 'port', def: flatPortShape }
+                   ,{ name: 'name', def: nameDef }
+                   ]
+            if @view?
+                @reattach()
 
     updateView: =>
         x = if @output then @position[0] else @position[0] - shape.length
-        @view.position.xy = [x, @position[1] - shape.width/2]
-        @view.variables.color_r = @color[0]
-        @view.variables.color_g = @color[1]
-        @view.variables.color_b = @color[2]
+        @group.position.xy = [x, @position[1] - shape.width/2]
+        nameHeight = util.textHeight @view.name
+        @view.name.position.xy = [2* shape.length, nameHeight/2]
+        @view.port.variables.color_r = @color[0]
+        @view.port.variables.color_g = @color[1]
+        @view.port.variables.color_b = @color[2]

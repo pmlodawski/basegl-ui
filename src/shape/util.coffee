@@ -11,6 +11,17 @@ export textWidth = (textGroup) =>
         textMaxX = r unless r < textMaxX
     textMaxX - textMinX
 
+
+export textHeight = (textGroup) =>
+    textMinY = undefined
+    textMaxY = undefined
+    textGroup.children.forEach (child) =>
+        b = child.position.y
+        t = child.position.y + child.bbox.y
+        textMinY = b unless b > textMinY
+        textMaxY = t unless t < textMaxY
+    textMaxY - textMinY
+
 export textSize = (textGroup) =>
     textMinX = undefined
     textMaxX = undefined

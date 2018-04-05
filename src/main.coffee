@@ -18,6 +18,7 @@ export install = (name, fontRootPath = "", callback) ->
     basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
     basegl.fontManager.load('DejaVuSansMono').then =>
         nodeEditor = new NodeEditor scene
+        window.n = nodeEditor
         nodeEditor.initialize()
         callback nodeEditor
 
@@ -37,8 +38,8 @@ runExample = -> main (nodeEditor) ->
     nodeEditor.setNodes [
         new ExpressionNode
             key: 1
-            name: 'foo'
-            expression: '1'
+            name: 'number1'
+            expression: '12'
             inPorts: [{key: 1}]
             outPorts: [{key: 1}
                       ,{key: 2}]
@@ -121,9 +122,17 @@ runExample = -> main (nodeEditor) ->
 
     nodeEditor.setInputNode new InputNode
         key: 'in'
-        outPorts: [ {key: 1}
-                  , {key: 2}
-                  , {key: 3}]
+        outPorts:
+            [
+                key: 1
+                name: 'a'
+            ,
+                key: 2
+                name: 'b'
+            ,
+                key: 3
+                name: 'c'
+            ]
     nodeEditor.setOutputNode new OutputNode
         key: 'out'
         inPorts: [ {key: 1}
@@ -191,7 +200,6 @@ runExample = -> main (nodeEditor) ->
 
     subscribeEvents (path, event) =>
         console.warn {path: path, base: event}
-    window.n = nodeEditor
 
 if NODE_EDITOR_EXAMPLE? then runExample()
 else if NODE_EDITOR_PERFORMANCE? then main runPerformance
