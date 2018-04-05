@@ -41,4 +41,7 @@ export textSize = (textGroup) =>
 export text = (attrs) =>
     addToScene: (scene) =>
         attrs.scene = scene
+        attrs.str        ?= ''
+        attrs.fontFamily ?= 'DejaVuSansMono'
+        attrs.size       ?= 14
         basegl.text attrs

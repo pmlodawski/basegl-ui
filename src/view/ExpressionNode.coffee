@@ -66,22 +66,18 @@ compactNodeShape.bbox.xy = [shape.width, shape.height]
 
 export class ExpressionNode extends Component
     updateModel: ({ key:        @key        = @key
-                  , name:       @name       = @name
-                  , expression: @expression = @expression
+                  , name:        name       = @name
+                  , expression:  expression = @expression
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
                   , position:   @position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
-        if @expanded != expanded
-            nameDef = util.text
-                str: @name or ''
-                fontFamily: 'DejaVuSansMono'
-                size: 14
-            exprDef = util.text
-                str: @expression or ''
-                fontFamily: 'DejaVuSansMono'
-                size: 14
+        if @expanded != expanded or @name != name or @expression != expression
+            @name = name
+            @expression = expression
+            nameDef = util.text str: @name
+            exprDef = util.text str: @expression
             if expanded
                 nodeShape = expandedNodeShape
             else

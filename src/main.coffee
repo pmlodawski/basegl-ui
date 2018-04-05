@@ -40,7 +40,7 @@ runExample = -> main (nodeEditor) ->
             key: 1
             name: 'number1'
             expression: '12'
-            inPorts: [{key: 1}]
+            inPorts: [{key: 1, name: 'onlyPort'}]
             outPorts: [{key: 1}
                       ,{key: 2}]
             position: [200, 300]
@@ -49,11 +49,20 @@ runExample = -> main (nodeEditor) ->
         new ExpressionNode
             key: 2
             name: 'bar'
-            inPorts: [{key: 1}
-                     ,{key: 2}
-                     ,{key: 3}
-                     ,{key: 4}
-                     ]
+            inPorts:
+                [
+                    key: 1
+                    name: 'port1'
+                ,
+                    key: 2
+                    name: 'port2'
+                ,
+                    key: 3
+                    name: 'port3'
+                ,
+                    key: 4
+                    name: 'port4'
+                ]
             outPorts: [{key: 1}]
             position: [200, 600]
             expanded: false
@@ -65,6 +74,7 @@ runExample = -> main (nodeEditor) ->
             inPorts:
                 [
                     key: 1
+                    name: 'port1'
                     widgets:
                         [
                             mkWidget Slider,
@@ -79,6 +89,7 @@ runExample = -> main (nodeEditor) ->
                         ]
                 ,
                     key: 2
+                    name: 'port2'
                     widgets:
                         [
                             mkWidget Slider,
@@ -88,6 +99,7 @@ runExample = -> main (nodeEditor) ->
                         ]
                 ,
                     key: 3
+                    name: 'port3'
                     widgets:
                         [
                             mkWidget Slider,
@@ -113,7 +125,7 @@ runExample = -> main (nodeEditor) ->
         new ExpressionNode
             key: 4
             name: 'node1'
-            inPorts: [{key: 1}]
+            inPorts: [{key: 1, name: 'onlyPort'}]
             outPorts: [{key: 1}]
             position: [500, 600]
             expanded: false
