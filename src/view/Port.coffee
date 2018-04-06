@@ -28,7 +28,6 @@ export class InPort extends Component
                   }) =>
         @emitProperty 'position', position
         unless @def? and @name == name
-            console.log 'fooo', @
             @name = name
             nameDef = util.text str: @name
             @def = [{ name: 'port', def: inPortShape }

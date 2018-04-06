@@ -57,35 +57,45 @@ expandedNodeShape.variables.selected = 0
 expandedNodeShape.variables.bodyWidth = 200
 expandedNodeShape.variables.bodyHeight = 300
 
-# expandedNodeShape.bbox.xy = [shape.width + 2*shape.nodeSelectionBorderMaxSize, shape.height + 2*shape.nodeSelectionBorderMaxSize]
+expandedNodeErrorShape = basegl.symbol shape.expandedNodeErrorShape
+expandedNodeErrorShape.variables.selected = 0
+expandedNodeErrorShape.variables.bodyWidth = 200
+expandedNodeErrorShape.variables.bodyHeight = 300
 
-compactNodeShape = basegl.symbol shape.nodeShape
+compactNodeShape = basegl.symbol shape.compactNodeShape
 compactNodeShape.variables.selected = 0
 compactNodeShape.bbox.xy = [shape.width, shape.height]
+
+compactNodeErrorShape = basegl.symbol shape.compactNodeErrorShape
+compactNodeErrorShape.variables.selected = 0
+compactNodeErrorShape.bbox.xy = [shape.errorWidth, shape.errorHeight]
 
 
 export class ExpressionNode extends Component
     updateModel: ({ key:        @key        = @key
                   , name:        name       = @name
                   , expression:  expression = @expression
+                  , error:       error      = @error
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
                   , position:   @position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
-        if @expanded != expanded or @name != name or @expression != expression
+        if @expanded != expanded or @name != name or @expression != expression or @error != error
             @name = name
             @expression = expression
+            @error = error
             nameDef = util.text str: @name
             exprDef = util.text str: @expression
-            if expanded
-                nodeShape = expandedNodeShape
-            else
-                nodeShape = compactNodeShape
+            nodeShape = if expanded then expandedNodeShape else compactNodeShape
             @def = [{ name: 'node', def: nodeShape }
                    ,{ name: 'name', def: nameDef }
                    ,{ name: 'expression', def: exprDef }
                    ]
+            if @error?
+                errorFrame = if expanded then expandedNodeErrorShape else compactNodeErrorShape
+                errorText  = util.text str: @error
+                @def.splice 0, 0, {name: 'errorFrame', def: errorFrame}, {name: 'errorText', def: errorText}
             @expanded = expanded
             if @view?
                 @reattach()
@@ -168,6 +178,12 @@ export class ExpressionNode extends Component
             @view.node.variables.bodyHeight = bodyHeight
             @view.node.variables.bodyWidth  = bodyWidth
             @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
+            if @error?
+                @view.errorFrame.variables.bodyHeight = bodyHeight
+                @view.errorFrame.variables.bodyWidth  = bodyWidth
+                @view.errorFrame.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
+                errorSize = util.textSize @view.errorText
+                @view.errorText.position.y = -bodyHeight - shape.height/2 - errorSize[1]/2
             Object.keys(@inPorts).forEach (inPortKey) =>
                 widgets = @widgets[inPortKey]
                 if widgets?
@@ -175,6 +191,10 @@ export class ExpressionNode extends Component
                     @drawWidgets widgets, inPort.position.slice(), bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
+            if @error?
+                @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
+                errorSize = util.textSize @view.errorText
+                @view.errorText.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
         nameSize = util.textSize @view.name
         exprWidth = util.textWidth @view.expression
         @view.name.position.xy = [-nameSize[0]/2, shape.width/2 + nameSize[1]*2]
@@ -193,6 +213,7 @@ export class ExpressionNode extends Component
                     values.angle = Math.PI/2
                 else
                     values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+            values.locked = @expanded
             if @expanded
                 values.position = [@position[0] - shape.height/2, @position[1] - shape.height/2 - inPortNumber * 50]
                 values.radius = 0

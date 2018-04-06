@@ -14,22 +14,22 @@ outArrowRadius    = distanceFromCenter
 
 export inPortShape = basegl.expr ->
     r = inArrowRadius
-    c =  circle r
-    c = c.move width/2, -distanceFromCenter
+    c = circle r
+       .move width/2, -distanceFromCenter
     p = pie angle
-    p = p.rotate Math.PI
-    p = p.move width/2, 0
-    p = p.fill Color.rgb ['color_r', 'color_g', 'color_b']
+       .rotate Math.PI
+       .move width/2, 0
+       .fill Color.rgb ['color_r', 'color_g', 'color_b']
     port = c * p
 
 export outPortShape = basegl.expr ->
     r = outArrowRadius
     c = circle r
-    c = c.move width/2, 0
-    p = pie angle
+       .move width/2, 0
     h2 = length - r + r * Math.cos Math.asin ((2*length*Math.tan (angle/2))/r )
-    p = p.move width/2, h2 + r
-    p = p.fill Color.rgb ['color_r', 'color_g', 'color_b']
+    p = pie angle
+       .move width/2, h2 + r
+       .fill Color.rgb ['color_r', 'color_g', 'color_b']
     port = p - c
     port.move 0, -r+length-h2
 
