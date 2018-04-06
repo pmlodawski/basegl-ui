@@ -47,7 +47,7 @@ export class Component extends Composable
         if @view?
             if @def instanceof Array
                 for def in @def
-                    @view[def.name].dispose()
+                    @view[def.name].dispose() if @view[def.name]?
             else
                 @view.dispose()
             @view = null

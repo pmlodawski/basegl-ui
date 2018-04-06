@@ -67,15 +67,17 @@ export class Connection extends Component
             srcNode = @parent.node @srcNode
             if srcNode?
                 srcPort = srcNode.outPorts[@srcPort]
-                @addDisposableListener srcPort, 'position', => @updateView()
-                @onDispose => srcPort.set follow: null
-                @srcConnected = true
+                if srcPort?
+                    @addDisposableListener srcPort, 'position', => @updateView()
+                    @onDispose => srcPort.set follow: null
+                    @srcConnected = true
         unless @dstConnected
             dstNode = @parent.node @dstNode
             if dstNode?
                 dstPort = dstNode.inPorts[@dstPort]
-                @addDisposableListener dstPort, 'position', => @updateView()
-                @onDispose => dstPort.set follow: null
-                @dstConnected = true
+                if dstPort?
+                    @addDisposableListener dstPort, 'position', => @updateView()
+                    @onDispose => dstPort.set follow: null
+                    @dstConnected = true
 
     registerEvents: =>

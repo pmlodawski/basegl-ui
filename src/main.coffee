@@ -46,7 +46,8 @@ runExample = -> main (nodeEditor) ->
             position: [200, 300]
             expanded: false
             selected: false
-            error: 'Another error description'
+            error: true
+            value: 'Another error description'
         new ExpressionNode
             key: 2
             name: 'bar'
@@ -68,6 +69,7 @@ runExample = -> main (nodeEditor) ->
             position: [200, 600]
             expanded: false
             selected: false
+            value: '54'
         new ExpressionNode
             key: 3
             name: 'baz'
@@ -122,7 +124,8 @@ runExample = -> main (nodeEditor) ->
             outPorts: [{key: 1}]
             position: [500, 300]
             expanded: true
-            error: 'Error description'
+            error: true
+            value: 'Error description'
             selected: false
         new ExpressionNode
             key: 4

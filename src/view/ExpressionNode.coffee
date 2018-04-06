@@ -75,16 +75,18 @@ export class ExpressionNode extends Component
     updateModel: ({ key:        @key        = @key
                   , name:        name       = @name
                   , expression:  expression = @expression
-                  , error:       error      = @error
+                  , error:       error      = @error or false
+                  , value:       value      = @value
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
                   , position:   @position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
-        if @expanded != expanded or @name != name or @expression != expression or @error != error
+        if @expanded != expanded or @name != name or @expression != expression or @error != error or @value != value
             @name = name
             @expression = expression
             @error = error
+            @value = value
             nameDef = util.text str: @name
             exprDef = util.text str: @expression
             nodeShape = if expanded then expandedNodeShape else compactNodeShape
@@ -92,10 +94,12 @@ export class ExpressionNode extends Component
                    ,{ name: 'name', def: nameDef }
                    ,{ name: 'expression', def: exprDef }
                    ]
-            if @error?
+            if @error
                 errorFrame = if expanded then expandedNodeErrorShape else compactNodeErrorShape
-                errorText  = util.text str: @error
-                @def.splice 0, 0, {name: 'errorFrame', def: errorFrame}, {name: 'errorText', def: errorText}
+                @def.splice 0, 0, {name: 'errorFrame', def: errorFrame}
+            if @value?
+                value = util.text str: @value
+                @def.splice 0, 0, {name: 'value', def: value}
             @expanded = expanded
             if @view?
                 @reattach()
@@ -178,12 +182,13 @@ export class ExpressionNode extends Component
             @view.node.variables.bodyHeight = bodyHeight
             @view.node.variables.bodyWidth  = bodyWidth
             @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
-            if @error?
+            if @error
                 @view.errorFrame.variables.bodyHeight = bodyHeight
                 @view.errorFrame.variables.bodyWidth  = bodyWidth
                 @view.errorFrame.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
-                errorSize = util.textSize @view.errorText
-                @view.errorText.position.y = -bodyHeight - shape.height/2 - errorSize[1]/2
+            if @value?
+                errorSize = util.textSize @view.value
+                @view.value.position.y = -bodyHeight - shape.height/2 - errorSize[1]/2
             Object.keys(@inPorts).forEach (inPortKey) =>
                 widgets = @widgets[inPortKey]
                 if widgets?
@@ -191,10 +196,11 @@ export class ExpressionNode extends Component
                     @drawWidgets widgets, inPort.position.slice(), bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
-            if @error?
+            if @error
                 @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
-                errorSize = util.textSize @view.errorText
-                @view.errorText.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
+            if @value?
+                errorSize = util.textSize @view.value
+                @view.value.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
         nameSize = util.textSize @view.name
         exprWidth = util.textWidth @view.expression
         @view.name.position.xy = [-nameSize[0]/2, shape.width/2 + nameSize[1]*2]
@@ -208,11 +214,10 @@ export class ExpressionNode extends Component
         for inPortKey in inPortKeys
             inPort = @inPorts[inPortKey]
             values = {}
-            unless inPort.angle?
-                if @expanded or inPortKeys.length == 1
-                    values.angle = Math.PI/2
-                else
-                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+            if @expanded or inPortKeys.length == 1
+                values.angle = Math.PI/2
+            else unless inPort.angle?
+                values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
             values.locked = @expanded
             if @expanded
                 values.position = [@position[0] - shape.height/2, @position[1] - shape.height/2 - inPortNumber * 50]
