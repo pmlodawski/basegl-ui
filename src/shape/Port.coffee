@@ -11,6 +11,9 @@ export width     = length * Math.tan angle
 distanceFromCenter = nodeSelectionBorderMaxSize
 inArrowRadius    = length + distanceFromCenter
 outArrowRadius    = distanceFromCenter
+selfPortRadius = length
+export selfPortWidth = 2 * selfPortRadius
+export selfPortHeight = 2 * selfPortRadius
 
 export inPortShape = basegl.expr ->
     r = inArrowRadius
@@ -36,6 +39,12 @@ export outPortShape = basegl.expr ->
 export flatPortShape = basegl.expr ->
     r = outArrowRadius
     p = pie -angle
-    p = p.rotate -Math.PI /2
-    p = p.move length + 1, width/2
-    p = p.fill Color.rgb ['color_r', 'color_g', 'color_b']
+       .rotate -Math.PI /2
+       .move length + 1, width/2
+       .fill Color.rgb ['color_r', 'color_g', 'color_b']
+
+export selfPortShape = basegl.expr ->
+    r = selfPortRadius
+    c = circle r
+       .move selfPortRadius, selfPortRadius
+       .fill Color.rgb ['color_r', 'color_g', 'color_b']

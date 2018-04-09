@@ -53,6 +53,10 @@ runExample = -> main (nodeEditor) ->
             name: 'bar'
             inPorts:
                 [
+                    key: 0
+                    name: 'self'
+                    mode: 'self'
+                ,
                     key: 1
                     name: 'port1'
                 ,
@@ -166,7 +170,7 @@ runExample = -> main (nodeEditor) ->
             srcNode: 1
             srcPort: 1
             dstNode: 2
-            dstPort: 1
+            dstPort: 0
         new Connection
             key: 2
             srcNode: 2

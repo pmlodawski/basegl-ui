@@ -16,10 +16,18 @@ inPortShape.variables.color_g = 0
 inPortShape.variables.color_b = 0
 nameOffset = shape.width
 
+selfPortShape = basegl.symbol shape.selfPortShape
+selfPortShape.bbox.xy = [shape.selfPortWidth, shape.selfPortHeight]
+selfPortShape.variables.color_r = 1
+selfPortShape.variables.color_g = 0
+selfPortShape.variables.color_b = 0
+nameOffset = shape.width
+
 export class InPort extends Component
     updateModel: ({ key:      @key      = @key
                   , name:      name     = @name
                   , angle:    @angle    = @angle
+                  , mode:     @mode     = @mode or 'in'
                   , follow:   @follow   = @follow
                   , position:  position = @position or [0,0]
                   , radius:   @radius   = @radius or 0
@@ -27,10 +35,16 @@ export class InPort extends Component
                   , widgets:  @widgets  = @widgets or []
                   }) =>
         @emitProperty 'position', position
+        if @mode == 'self'
+            @radius = shape.selfPortWidth/2
         unless @def? and @name == name
             @name = name
             nameDef = util.text str: @name
-            @def = [{ name: 'port', def: inPortShape }
+            if @mode == 'self'
+                portShape = selfPortShape
+            else
+                portShape = inPortShape
+            @def = [{ name: 'port', def: portShape }
                    ,{ name: 'name', def: nameDef }
                    ]
             if @view?
@@ -38,14 +52,20 @@ export class InPort extends Component
 
     updateView: =>
         @group.position.xy = @position
-        @view.port.position.xy = [-shape.width/2, @radius]
-        @view.port.variables.color_r = @color[0]
-        @view.port.variables.color_g = @color[1]
-        @view.port.variables.color_b = @color[2]
-        @view.port.rotation.z = @follow or @angle
-        nameSize = util.textSize @view.name
-        @view.name.rotation.z = (@follow or @angle) - Math.PI/2
-        @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
+        if @mode == 'self'
+            @view.port.position.xy = [-shape.selfPortWidth/2, -shape.selfPortHeight/2]
+            @view.port.variables.color_r = @color[0]
+            @view.port.variables.color_g = @color[1]
+            @view.port.variables.color_b = @color[2]
+        else
+            @view.port.position.xy = [-shape.width/2, @radius]
+            @view.port.variables.color_r = @color[0]
+            @view.port.variables.color_g = @color[1]
+            @view.port.variables.color_b = @color[2]
+            @view.port.rotation.z = @follow or @angle
+            nameSize = util.textSize @view.name
+            @view.name.rotation.z = (@follow or @angle) - Math.PI/2
+            @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
 
     registerEvents: =>
 
