@@ -18,7 +18,6 @@ export class Breadcrumbs extends Component
             @def = basegl.symbol root
 
     updateView: =>
-        @view.position.xy = @position.slice()
         @view.domElement.innerHTML = ''
         container = document.createElement 'div'
         container.className = style.luna ['breadcrumbs', 'noselect']
@@ -36,10 +35,17 @@ export class Breadcrumbs extends Component
 
     getPosition: (scene) =>
         campos = scene.camera.position
-        return [ scene.width/2 + campos.x - scene.width/2*campos.z
-               , scene.height/2 + campos.y + scene.height/2*campos.z]
+        return [ (campos.x + scene.width  / 2) / campos.z - scene.width/2
+               , (campos.y + scene.height / 2) / campos.z + scene.height/2]
+
+    align: (position, scale) =>
+        if position != @position or scale != @scale
+            @position = position
+            @scale = scale
+            @view.position.xy = @position.slice()
+            @group.scale.xy = [@scale, @scale]
 
     registerEvents: =>
         @withScene (scene) =>
             @addDisposableListener scene.camera, 'move', =>
-                @set position: @getPosition scene
+                @align @getPosition(scene), scene.camera.position.z
