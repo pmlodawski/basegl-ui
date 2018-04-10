@@ -17,13 +17,10 @@ export class Searcher extends Component
             root.id = searcherRoot
             root.style.width = 100 + 'px'
             root.style.height = 200 + 'px'
+            # root.style.backgroundColor = '#FF0000'
             @def = basegl.symbol root
 
     updateView: =>
-        node = @parent.node(@key)
-        if node?
-            @view.position.xy = node.position
-
         @view.domElement.innerHTML = ''
 
         container = document.createElement 'div'
@@ -93,3 +90,16 @@ export class Searcher extends Component
         inputClasses.push ['searcher__input-selected'] if @selected == 0
         input.className = style.luna inputClasses
         return input
+
+    align: (scale) =>
+        if @scale != scale
+            @scale = scale
+        node = @parent.node(@key)
+        if node?
+            @group.position.xy = node.position.slice()
+            @view.scale.xy = [@scale, @scale]
+
+    registerEvents: =>
+        @withScene (scene) =>
+            @addDisposableListener scene.camera, 'move', =>
+                @align scene.camera.position.z
