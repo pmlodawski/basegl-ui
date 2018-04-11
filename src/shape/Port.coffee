@@ -2,7 +2,7 @@ import * as basegl    from 'basegl'
 import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
-import {circle, pie}  from 'basegl/display/Shape'
+import {circle, pie, rect}  from 'basegl/display/Shape'
 import {nodeSelectionBorderMaxSize} from 'shape/Node'
 
 angle = Math.PI/3
@@ -11,9 +11,7 @@ export width     = length * Math.tan angle
 distanceFromCenter = nodeSelectionBorderMaxSize
 inArrowRadius    = length + distanceFromCenter
 outArrowRadius    = distanceFromCenter
-selfPortRadius = length
-export selfPortWidth = 2 * selfPortRadius
-export selfPortHeight = 2 * selfPortRadius
+
 
 export inPortShape = basegl.expr ->
     r = inArrowRadius
@@ -43,8 +41,30 @@ export flatPortShape = basegl.expr ->
        .move length + 1, width/2
        .fill Color.rgb ['color_r', 'color_g', 'color_b']
 
+
+selfPortRadius = length
+export selfPortWidth = 2 * selfPortRadius
+export selfPortHeight = 2 * selfPortRadius
+
 export selfPortShape = basegl.expr ->
-    r = selfPortRadius
-    c = circle r
+    c = circle selfPortRadius
        .move selfPortRadius, selfPortRadius
        .fill Color.rgb ['color_r', 'color_g', 'color_b']
+
+
+addPortRadius = length
+export addPortWidth = 2 * addPortRadius
+export addPortHeight = 2 * addPortRadius
+plusLength = addPortWidth / 2
+plusThickness = plusLength/4
+
+export addPortShape = basegl.expr ->
+    c = circle addPortRadius
+       .move addPortRadius, addPortRadius
+       .fill Color.rgb [0.2, 0.2, 0.2]
+    horizontal = rect plusLength, plusThickness
+                .move addPortRadius, addPortRadius
+    vertical = rect plusThickness, plusLength
+              .move addPortRadius, addPortRadius
+    plus = horizontal + vertical
+    c - plus

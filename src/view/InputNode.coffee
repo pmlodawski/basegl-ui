@@ -4,6 +4,9 @@ import * as basegl from 'basegl'
 import {FlatPort}  from 'view/Port'
 
 
+addPortShape = basegl.symbol shape.addPortShape
+addPortShape.bbox.xy = [shape.addPortWidth, shape.addPortHeight]
+
 height = 100
 
 export class InputNode extends Component
@@ -14,13 +17,26 @@ export class InputNode extends Component
         @emitProperty 'position', position
         @setOutPorts outPorts
 
+        unless @def?
+            @def = addPortShape
+            console.log @def
         i = 0
         keys = Object.keys @outPorts
         portOffset = height / keys.length
+        newPosition = =>
+            pos = [ @position[0] + shape.length
+                  , @position[1] + portOffset * keys.length - i * portOffset]
+            i++
+            return pos
         for key in keys
             outPort = @outPorts[key]
-            outPort.set position: [@position[0] + shape.length, @position[1] + i * portOffset]
-            i++
+            outPort.set position: newPosition()
+        @addPortPosition = newPosition()
+
+    updateView: =>
+        @view.position.xy = [ @addPortPosition[0] - shape.addPortWidth/2
+                            , @addPortPosition[1] - shape.addPortHeight/2
+                            ]
 
     setOutPorts: (outPorts) =>
         @outPorts ?= {}
