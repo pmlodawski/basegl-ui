@@ -181,14 +181,15 @@ export class ExpressionNode extends Component
             bodyHeight = 300
             @view.node.variables.bodyHeight = bodyHeight
             @view.node.variables.bodyWidth  = bodyWidth
-            @view.node.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
+            nodePosition = [-shape.width/2, -bodyHeight - shape.height/2 - shape.slope]
+            @view.node.position.xy = nodePosition
             if @error
                 @view.errorFrame.variables.bodyHeight = bodyHeight
                 @view.errorFrame.variables.bodyWidth  = bodyWidth
-                @view.errorFrame.position.xy = [-shape.width/2, -bodyHeight - shape.height/2]
+                @view.errorFrame.position.xy = nodePosition
             if @value?
                 errorSize = util.textSize @view.value
-                @view.value.position.y = -bodyHeight - shape.height/2 - errorSize[1]/2
+                @view.value.position.y = nodePosition[1] - errorSize[1]/2
             Object.keys(@inPorts).forEach (inPortKey) =>
                 widgets = @widgets[inPortKey]
                 if widgets?

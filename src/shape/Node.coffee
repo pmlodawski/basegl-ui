@@ -17,6 +17,7 @@ export nodeSelectionBorderMaxSize = 40
 
 export width = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export height = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
+export slope = 20
 
 export basicNodeShape = basegl.expr ->
     border = 0
@@ -28,7 +29,6 @@ export basicExpandedNodeShape = basegl.expr ->
     border       = 0
     bodyWidth    = 'bodyWidth'
     bodyHeight   = 'bodyHeight'
-    slope        = 20
     headerOffset = arrowOffset
     r1    = nodeRadius + border
     r2    = nodeRadius + headerOffset + slope - border

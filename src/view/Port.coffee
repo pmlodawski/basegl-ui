@@ -40,12 +40,11 @@ export class InPort extends Component
             @name = name
             nameDef = util.text str: @name
             if @mode == 'self'
-                portShape = selfPortShape
+                @def = [{ name: 'port', def: selfPortShape }]
             else
-                portShape = inPortShape
-            @def = [{ name: 'port', def: portShape }
-                   ,{ name: 'name', def: nameDef }
-                   ]
+                @def = [{ name: 'port', def: inPortShape }
+                       ,{ name: 'name', def: nameDef }
+                       ]
             if @view?
                 @reattach()
 
