@@ -41,10 +41,15 @@ export class InputNode extends Component
             @onDispose => portView.dispose()
 
     getPosition: (scene) =>
-        campos = scene.camera.position
-        return [ scene.width/2 + campos.x - scene.width/2*campos.z
-               , scene.height/2 + campos.y - height/2]
+
+    align: (x, y) =>
+        unless x == @position[0] and y == @position[1]
+            @set position: [x, y]
 
     registerEvents: =>
         @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', => @set position: @getPosition scene
+            @addDisposableListener scene.camera, 'move', =>
+                campos = scene.camera.position
+                x = scene.width/2 + campos.x - scene.width/2*campos.z
+                y = scene.height/2 + campos.y - height/2
+                @align x, y

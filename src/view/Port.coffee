@@ -29,14 +29,13 @@ export class InPort extends Component
                   , angle:    @angle    = @angle
                   , mode:     @mode     = @mode or 'in'
                   , follow:   @follow   = @follow
+                  , locked:   @locked   = @locked or false
                   , position:  position = @position or [0,0]
                   , radius:   @radius   = @radius or 0
                   , color:    @color    = @color or [0, 1, 0]
                   , widgets:  @widgets  = @widgets or []
                   }) =>
         @emitProperty 'position', position
-        if @mode == 'self'
-            @radius = shape.selfPortWidth/2
         unless @def? and @name == name
             @name = name
             nameDef = util.text str: @name
@@ -51,7 +50,11 @@ export class InPort extends Component
                 @reattach()
 
     updateView: =>
-        @group.position.xy = @position
+        @group.position.xy =
+            if @locked
+                [@position[0] + shape.length, @position[1]]
+            else
+                @position
         if @mode == 'self'
             @view.port.position.xy = [-shape.selfPortWidth/2, -shape.selfPortHeight/2]
             @view.port.variables.color_r = @color[0]
@@ -62,9 +65,10 @@ export class InPort extends Component
             @view.port.variables.color_r = @color[0]
             @view.port.variables.color_g = @color[1]
             @view.port.variables.color_b = @color[2]
-            @view.port.rotation.z = @follow or @angle
+            rotation = if @follow? and not @locked then @follow else @angle
+            @view.port.rotation.z = rotation
             nameSize = util.textSize @view.name
-            @view.name.rotation.z = (@follow or @angle) - Math.PI/2
+            @view.name.rotation.z = rotation - Math.PI/2
             @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
 
     registerEvents: =>
@@ -91,7 +95,8 @@ export class OutPort extends Component
     updateView: =>
         @group.position.xy = @position
         @view.position.xy = [-shape.width/2, @radius]
-        @view.rotation.z = @follow or @angle
+        rotation = if @follow? then @follow else @angle
+        @view.rotation.z = rotation
         @view.variables.color_r = @color[0]
         @view.variables.color_g = @color[1]
         @view.variables.color_b = @color[2]

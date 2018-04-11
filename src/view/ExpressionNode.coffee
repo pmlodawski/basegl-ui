@@ -214,14 +214,29 @@ export class ExpressionNode extends Component
         for inPortKey in inPortKeys
             inPort = @inPorts[inPortKey]
             values = {}
-            if @expanded or inPortKeys.length == 1
-                values.angle = Math.PI/2
-            else unless inPort.angle?
-                values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
             values.locked = @expanded
-            if @expanded
-                values.position = [@position[0] - shape.height/2, @position[1] - shape.height/2 - inPortNumber * 50]
+            if inPort.mode == 'self'
                 values.radius = 0
+                values.angle = Math.PI/2
+                values.position = @position.slice()
+            else if @expanded
+                values.radius = 0
+                values.angle = Math.PI/2
+                values.position =
+                    [ @position[0] - shape.height/2
+                    , @position[1] - shape.height/2 - inPortNumber * 50
+                    ]
+                inPortNumber++
+            else
+                values.radius = shape.height/2
+                if inPortKeys.length == 1
+                    values.angle = Math.PI/2
+                else
+                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+                values.position = @position.slice()
+                inPortNumber++
+
+            if @expanded
                 unless @widgets[inPortKey]?
                     @widgets[inPortKey] = []
                     inPort.widgets.forEach (widgetCreate) =>
@@ -234,10 +249,7 @@ export class ExpressionNode extends Component
                     @widgets[inPortKey].forEach (widget) =>
                         widget.detach()
                     delete @widgets[inPortKey]
-                values.position = @position.slice()
-                values.radius = shape.height/2
             inPort.set values
-            inPortNumber++
 
     updateOutPorts: =>
         outPortNumber = 0

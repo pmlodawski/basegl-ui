@@ -80,6 +80,10 @@ runExample = -> main (nodeEditor) ->
             expression: 'foo bar baz'
             inPorts:
                 [
+                    key: 0
+                    name: 'self'
+                    mode: 'self'
+                ,
                     key: 1
                     name: 'port1'
                     widgets:
@@ -189,6 +193,12 @@ runExample = -> main (nodeEditor) ->
             srcPort: 1
             dstNode: 'out'
             dstPort: 2
+        new Connection
+            key: 5
+            srcNode: 1
+            srcPort: 2
+            dstNode: 3
+            dstPort: 0
         ]
     nodeEditor.setSearcher new Searcher
         key: 4

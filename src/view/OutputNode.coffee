@@ -41,9 +41,14 @@ export class OutputNode extends Component
             portView.attach()
             @onDispose => portView.dispose()
 
+    align: (x, y) =>
+        unless x == @position[0] and y == @position[1]
+            @set position: [x, y]
+
     registerEvents: =>
         @withScene (scene) =>
             @addDisposableListener scene.camera, 'move', =>
                 campos = scene.camera.position
-                @set position: [ scene.width/2 + campos.x + scene.width/2*campos.z
-                               , scene.height/2 + campos.y - height/2]
+                x = scene.width/2 + campos.x + scene.width/2*campos.z
+                y = scene.height/2 + campos.y - height/2
+                @align x, y

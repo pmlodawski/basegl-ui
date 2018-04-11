@@ -37,7 +37,7 @@ export class Connection extends Component
         dstNode = @parent.node @dstNode
         srcPort = srcNode.outPorts[@srcPort]
         dstPort = dstNode.inPorts[@dstPort]
-        return unless srcPort? and dstPort
+        return unless srcPort? and dstPort?
         @connectSources srcPort, dstPort
         srcPos = srcPort.position
         dstPos = dstPort.position
@@ -56,8 +56,8 @@ export class Connection extends Component
         @group.position.xy = srcPos.slice()
         rotation = Math.atan2 y, x
         @view.rotation.z = rotation
-        srcPort?.set follow: rotation - Math.PI/2
-        dstPort?.set follow: rotation + Math.PI/2
+        srcPort.set follow: rotation - Math.PI/2
+        dstPort.set follow: rotation + Math.PI/2
 
         @view.variables.color_r = srcPort.color[0]
         @view.variables.color_g = srcPort.color[1]
