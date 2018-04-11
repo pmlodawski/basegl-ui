@@ -33,11 +33,12 @@ export class Connection extends Component
             @def = connectionShape
 
     updateView: =>
-        @connectSources()
         srcNode = @parent.node @srcNode
         dstNode = @parent.node @dstNode
         srcPort = srcNode.outPorts[@srcPort]
         dstPort = dstNode.inPorts[@dstPort]
+        return unless srcPort? and dstPort
+        @connectSources srcPort, dstPort
         srcPos = srcPort.position
         dstPos = dstPort.position
         if srcNode instanceof InputNode
@@ -62,22 +63,14 @@ export class Connection extends Component
         @view.variables.color_g = srcPort.color[1]
         @view.variables.color_b = srcPort.color[2]
 
-    connectSources: =>
+    connectSources: (srcPort, dstPort) =>
         unless @srcConnected?
-            srcNode = @parent.node @srcNode
-            if srcNode?
-                srcPort = srcNode.outPorts[@srcPort]
-                if srcPort?
-                    @addDisposableListener srcPort, 'position', => @updateView()
-                    @onDispose => srcPort.set follow: null
-                    @srcConnected = true
+            @addDisposableListener srcPort, 'position', => @updateView()
+            @onDispose => srcPort.set follow: null
+            @srcConnected = true
         unless @dstConnected
-            dstNode = @parent.node @dstNode
-            if dstNode?
-                dstPort = dstNode.inPorts[@dstPort]
-                if dstPort?
-                    @addDisposableListener dstPort, 'position', => @updateView()
-                    @onDispose => dstPort.set follow: null
-                    @dstConnected = true
+            @addDisposableListener dstPort, 'position', => @updateView()
+            @onDispose => dstPort.set follow: null
+            @dstConnected = true
 
     registerEvents: =>
