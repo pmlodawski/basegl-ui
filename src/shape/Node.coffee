@@ -19,13 +19,13 @@ export width = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export height = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export slope = 20
 
-export basicNodeShape = basegl.expr ->
+basicNodeShape = -> basegl.expr ->
     border = 0
     r1     = nodeRadius + border
     node   = circle r1
     node   = node.move width/2, height/2
 
-export basicExpandedNodeShape = basegl.expr ->
+basicExpandedNodeShape = -> basegl.expr ->
     border       = 0
     bodyWidth    = 'bodyWidth'
     bodyHeight   = 'bodyHeight'
@@ -54,7 +54,7 @@ selectionColor = bg.mix (Color.hsl [50, 1, 0.6]), 0.8
 nodeBg         = bg.mix white, 0.04
 
 export compactNodeShape = basegl.expr ->
-    node = basicNodeShape
+    node = basicNodeShape()
     node   = node.fill nodeBg
 
     eye    = 'scaledEye.z'
@@ -67,7 +67,7 @@ export compactNodeShape = basegl.expr ->
     border + node
 
 export expandedNodeShape = basegl.expr ->
-    node   = basicExpandedNodeShape
+    node   = basicExpandedNodeShape()
     node   = node.fill nodeBg
 
     eye    = 'scaledEye.z'
@@ -89,7 +89,7 @@ rotation = Math.PI * 3 / 4
 start = errorFrame/3
 
 export expandedNodeErrorShape = basegl.expr ->
-    frame = basicExpandedNodeShape.grow 20
+    frame = basicExpandedNodeShape().grow 20
            .fill Color.rgb [1,0,0]
     stripe = rect 1000, stripeWidth
             .repeat vector(0, 1), stripeWidth
@@ -99,7 +99,7 @@ export expandedNodeErrorShape = basegl.expr ->
 
 
 export compactNodeErrorShape = basegl.expr ->
-    frame = basicNodeShape.grow errorFrame
+    frame = basicNodeShape().grow errorFrame
            .fill Color.rgb [1,0,0]
     stripe = rect 1000, stripeWidth
             .repeat vector(0, 1), stripeWidth

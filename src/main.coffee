@@ -12,6 +12,7 @@ import {Searcher}        from 'view/Searcher'
 import {Slider}          from 'view/Slider'
 import {subscribeEvents} from 'view/Component'
 import {runPerformance}  from './performance'
+import * as test         from './test'
 
 export install = (name, fontRootPath = "", callback) ->
     scene = basegl.scene {domElement: name}
@@ -230,7 +231,8 @@ runExample = -> main (nodeEditor) ->
 
 
     subscribeEvents (path, event) =>
-        console.warn {path: path, base: event}
+        console.log path.join('.'), event
 
 if NODE_EDITOR_EXAMPLE? then runExample()
 else if NODE_EDITOR_PERFORMANCE? then main runPerformance
+else if NODE_EDITOR_TEST? then test.main()
