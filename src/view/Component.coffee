@@ -16,9 +16,9 @@ export class Component extends Composable
 
     withScene: (fun) => @parent.withScene fun if @parent?
 
-    pushEvent: (path, event) =>
+    pushEvent: (args...) =>
         for listener in eventListeners
-            listener path, event
+            listener args...
 
     redraw: => @set @
 
