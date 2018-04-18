@@ -13,7 +13,6 @@ export class Breadcrumbs extends Component
                   }) =>
         unless @def?
             root = document.createElement 'div'
-            root.className = 'foo bar'
             root.id = breadcrumbsId
             @def = basegl.symbol root
 

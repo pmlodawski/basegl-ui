@@ -14,7 +14,13 @@ import {subscribeEvents} from 'view/Component'
 import {runPerformance}  from './performance'
 import * as test         from './test'
 
-export install = (name, fontRootPath = "", callback) ->
+removeChildren = (name) =>
+    element = document.getElementById(name).innerHTML = ''
+    while element.firstChild
+        element.removeChild element.firstChild
+
+export install = (name, fontRootPath = '', callback) ->
+    removeChildren name
     scene = basegl.scene {domElement: name}
     basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
     basegl.fontManager.load('DejaVuSansMono').then =>

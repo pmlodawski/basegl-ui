@@ -1,6 +1,7 @@
 import {Navigator}      from 'basegl/navigation/Navigator'
 
 import {Breadcrumbs}    from 'view/Breadcrumbs'
+import {pushEvent}      from 'view/Component'
 import {Connection}     from 'view/Connection'
 import {ExpressionNode} from 'view/ExpressionNode'
 import {InputNode}      from 'view/InputNode'
@@ -34,6 +35,13 @@ export class NodeEditor
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
+            scene.addEventListener 'click',      (e) => pushEvent ['node-editor', 'node'], e, @key
+            scene.addEventListener 'mousemove',  (e) => pushEvent ['node-editor', 'node'], e, @key
+            scene.addEventListener 'mousedown',  (e) => pushEvent ['node-editor', 'node'], e, @key
+            scene.addEventListener 'mouseup',    (e) => pushEvent ['node-editor', 'node'], e, @key
+            scene.addEventListener 'mouseenter', (e) => pushEvent ['node-editor', 'node'], e, @key
+            scene.addEventListener 'mouseleave', (e) => pushEvent ['node-editor', 'node'], e, @key
+
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]

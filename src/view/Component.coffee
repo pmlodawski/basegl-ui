@@ -7,6 +7,10 @@ eventListeners = []
 export subscribeEvents = (listener) =>
     eventListeners.push listener
 
+export pushEvent = (args...) =>
+    for listener in eventListeners
+        listener args...
+
 export class Component extends Composable
     cons: (values, @parent) ->
         @mixin eventDispatcherMixin, @
@@ -16,9 +20,7 @@ export class Component extends Composable
 
     withScene: (fun) => @parent.withScene fun if @parent?
 
-    pushEvent: (args...) =>
-        for listener in eventListeners
-            listener args...
+    pushEvent: pushEvent
 
     redraw: => @set @
 
