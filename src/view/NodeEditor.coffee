@@ -37,12 +37,6 @@ export class NodeEditor
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
-            scene.addEventListener 'click',      (e) => pushEvent ['node-editor', 'node'], e, @key
-            scene.addEventListener 'mousemove',  (e) => pushEvent ['node-editor', 'node'], e, @key
-            scene.addEventListener 'mousedown',  (e) => pushEvent ['node-editor', 'node'], e, @key
-            scene.addEventListener 'mouseup',    (e) => pushEvent ['node-editor', 'node'], e, @key
-            scene.addEventListener 'mouseenter', (e) => pushEvent ['node-editor', 'node'], e, @key
-            scene.addEventListener 'mouseleave', (e) => pushEvent ['node-editor', 'node'], e, @key
 
 
     node: (nodeKey) =>

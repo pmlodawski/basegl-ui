@@ -7,9 +7,10 @@ eventListeners = []
 export subscribeEvents = (listener) =>
     eventListeners.push listener
 
-export pushEvent = (args...) =>
+export pushEvent = (path, base, key) =>
+    unless base.tag? then base.tag = base.constructor.name
     for listener in eventListeners
-        listener args...
+        listener path, base, key
 
 export class Component extends Composable
     cons: (values, @parent) ->
@@ -20,7 +21,7 @@ export class Component extends Composable
 
     withScene: (fun) => @parent.withScene fun if @parent?
 
-    pushEvent: pushEvent
+    pushEvent: (e) => pushEvent @eventPath, e, @key
 
     redraw: => @set @
 

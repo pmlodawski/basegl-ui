@@ -13,18 +13,6 @@ import * as util         from 'shape/util'
 
 ### Utils ###
 
-makeDraggable = (a) ->
-    a.group.addEventListener 'mousedown', (e) ->
-        if e.button != 0 then return
-        s = basegl.world.activeScene
-        fmove = (e) ->
-            x = a.position[0] + e.movementX * s.camera.zoomFactor
-            y = a.position[1] - e.movementY * s.camera.zoomFactor
-            a.set position: [x, y]
-        window.addEventListener 'mousemove', fmove
-        window.addEventListener 'mouseup', () =>
-          window.removeEventListener 'mousemove', fmove
-
 applySelectAnimation = (symbol, rev=false) ->
     if symbol.selectionAnimation?
     then symbol.selectionAnimation.reverse()
@@ -271,8 +259,22 @@ export class ExpressionNode extends Component
             outPortNumber++
 
     registerEvents: =>
-        makeDraggable @, => @updateView()
-        makeSelectable @view.node
-        @group.addEventListener 'click',      (e) => @pushEvent ['node-editor', 'node'], e, @key
-        @group.addEventListener 'mouseenter', (e) => @pushEvent ['node-editor', 'node'], e, @key
-        @group.addEventListener 'mouseleave', (e) => @pushEvent ['node-editor', 'node'], e, @key
+        @makeDraggable()
+
+    eventPath: ['node-editor', 'node']
+    makeDraggable: =>
+        @group.addEventListener 'mousedown', (e) =>
+            moveNodes = (e) =>
+                @withScene (scene) =>
+                    x = @position[0] + e.movementX * scene.camera.zoomFactor
+                    y = @position[1] - e.movementY * scene.camera.zoomFactor
+                    @set position: [x, y]
+
+            dragFinish = =>
+                @pushEvent
+                    tag: 'NodeMove'
+                    position: @position
+                window.removeEventListener 'mouseup', dragFinish
+                window.removeEventListener 'mousemove', moveNodes
+            window.addEventListener 'mouseup', dragFinish
+            window.addEventListener 'mousemove', moveNodes
