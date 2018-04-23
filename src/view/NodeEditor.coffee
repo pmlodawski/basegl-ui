@@ -8,12 +8,14 @@ import {InputNode}      from 'view/InputNode'
 import {OutputNode}     from 'view/OutputNode'
 import {Port}           from 'view/Port'
 import {Searcher}       from 'view/Searcher'
+import {Visualization}  from 'view/Visualization'
 
 
 export class NodeEditor
     constructor: (@_scene) ->
         @nodes ?= {}
         @connections ?= {}
+        @visualizations ?= {}
         @inTransaction = false
         @pending = []
 
@@ -77,6 +79,22 @@ export class NodeEditor
     setInputNode:   (inputNode)   => @genericSetComponent 'inputNode',   InputNode,   inputNode
     setOutputNode:  (outputNode)  => @genericSetComponent 'outputNode',  OutputNode,  outputNode
     setSearcher:    (searcher)    => @genericSetComponent 'searcher',    Searcher,    searcher
+    setVisualization: (nodeVis)   =>
+        for vis in nodeVis.visualizations
+            vis.nodeKey     = nodeVis.nodeKey
+            vis.visualizers = nodeVis.visualizers
+            if @visualizations[vis.key]?
+                @visualizations[vis.key].set vis
+            else
+                visView = new Visualization vis, @
+                @visualizations[vis.key] = visView
+                visView.attach()
+
+    unsetVisualization: (vis) =>
+        if @visualizations[vis.key]?
+            @visualizations[vis.key].dispose()
+            delete @visualizations[vis.key]
+
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?

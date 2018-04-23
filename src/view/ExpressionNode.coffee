@@ -79,9 +79,10 @@ export class ExpressionNode extends Component
                   , value:       value      = @value
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
-                  , position:   @position   = @position
+                  , position:    position   = @position
                   , selected:   @selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
+        @emitProperty 'position', position
         if @expanded != expanded or @name != name or @expression != expression or @error != error or @value != value
             @name = name
             @expression = expression
@@ -177,15 +178,13 @@ export class ExpressionNode extends Component
 
     updateView: =>
         if @expanded
-            bodyWidth = 200
-            bodyHeight = 300
-            @view.node.variables.bodyHeight = bodyHeight
-            @view.node.variables.bodyWidth  = bodyWidth
-            nodePosition = [-shape.width/2, -bodyHeight - shape.height/2 - shape.slope]
+            @view.node.variables.bodyHeight = @bodyHeight
+            @view.node.variables.bodyWidth  = @bodyWidth
+            nodePosition = [-shape.width/2, -@bodyHeight - shape.height/2 - shape.slope]
             @view.node.position.xy = nodePosition
             if @error
-                @view.errorFrame.variables.bodyHeight = bodyHeight
-                @view.errorFrame.variables.bodyWidth  = bodyWidth
+                @view.errorFrame.variables.bodyHeight = @bodyHeight
+                @view.errorFrame.variables.bodyWidth  = @bodyWidth
                 @view.errorFrame.position.xy = nodePosition
             if @value?
                 errorSize = util.textSize @view.value
@@ -194,7 +193,7 @@ export class ExpressionNode extends Component
                 widgets = @widgets[inPortKey]
                 if widgets?
                     inPort = @inPorts[inPortKey]
-                    @drawWidgets widgets, inPort.position.slice(), bodyWidth
+                    @drawWidgets widgets, inPort.position.slice(), @bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
             if @error
@@ -251,6 +250,9 @@ export class ExpressionNode extends Component
                         widget.detach()
                     delete @widgets[inPortKey]
             inPort.set values
+        # Those values should be calculated based on informations about port widgets
+        @bodyWidth = 200
+        @bodyHeight = 300
 
     updateOutPorts: =>
         outPortNumber = 0
@@ -271,6 +273,6 @@ export class ExpressionNode extends Component
     registerEvents: =>
         makeDraggable @, => @updateView()
         makeSelectable @view.node
-        @group.addEventListener 'click', (e) => @pushEvent ['node-editor', 'node'], e, @key
+        @group.addEventListener 'click',      (e) => @pushEvent ['node-editor', 'node'], e, @key
         @group.addEventListener 'mouseenter', (e) => @pushEvent ['node-editor', 'node'], e, @key
         @group.addEventListener 'mouseleave', (e) => @pushEvent ['node-editor', 'node'], e, @key
