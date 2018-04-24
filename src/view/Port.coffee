@@ -71,8 +71,6 @@ export class InPort extends Component
             @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
 
     registerEvents: =>
-        @group.addEventListener 'mousedown', (e) => @pushEvent ['node-editor', 'node', 'port', 'in'], e
-        @group.addEventListener 'mouseup', (e) => @pushEvent ['node-editor', 'node', 'port', 'in'], e
 
 
 outPortShape = basegl.symbol shape.outPortShape

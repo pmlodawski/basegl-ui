@@ -251,6 +251,9 @@ export class ExpressionNode extends Component
             outPortNumber++
 
     registerEvents: =>
+        @group.addEventListener 'dblclick',  @pushEvent
+        @group.addEventListener 'mouseover', @pushEvent
+        @group.addEventListener 'mouseout',  @pushEvent
         @makeDraggable()
         @makeSelectable()
 
