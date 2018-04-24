@@ -257,8 +257,6 @@ export class ExpressionNode extends Component
         @makeDraggable()
         @makeSelectable()
 
-    eventPath: ['node-editor', 'node']
-
     makeSelectable: =>
         @withScene (scene) =>
             performSelect = (select) =>

@@ -37,7 +37,7 @@ export class NodeEditor
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
-
+            scene.addEventListener 'dblclick', @pushEvent
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]

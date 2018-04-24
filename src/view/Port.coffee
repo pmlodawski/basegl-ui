@@ -9,6 +9,11 @@ import * as util        from 'shape/util'
 import {Component}      from 'view/Component'
 
 
+class Port extends Component
+    registerEvents: =>
+        @group.addEventListener 'mousedown', @pushEvent
+        @group.addEventListener 'mouseup',  @pushEvent
+
 inPortShape = basegl.symbol shape.inPortShape
 inPortShape.bbox.xy = [shape.width,shape.length]
 inPortShape.variables.color_r = 1
@@ -23,7 +28,8 @@ selfPortShape.variables.color_g = 0
 selfPortShape.variables.color_b = 0
 nameOffset = shape.width
 
-export class InPort extends Component
+
+export class InPort extends Port
     updateModel: ({ key:      @key      = @key
                   , name:      name     = @name
                   , angle:    @angle    = @angle
@@ -70,8 +76,6 @@ export class InPort extends Component
             @view.name.rotation.z = rotation - Math.PI/2
             @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
 
-    registerEvents: =>
-
 
 outPortShape = basegl.symbol shape.outPortShape
 outPortShape.bbox.xy = [shape.width,shape.length]
@@ -79,7 +83,7 @@ outPortShape.variables.color_r = 1
 outPortShape.variables.color_g = 0
 outPortShape.variables.color_b = 0
 
-export class OutPort extends Component
+export class OutPort extends Port
     updateModel: ({ key:   @key   = @key
                   , angle: @angle = @angle
                   , follow: @follow = @follow
@@ -100,8 +104,6 @@ export class OutPort extends Component
         @view.variables.color_g = @color[1]
         @view.variables.color_b = @color[2]
 
-    registerEvents: =>
-
 
 flatPortShape = basegl.symbol shape.flatPortShape
 flatPortShape.bbox.xy = [shape.length, shape.width]
@@ -109,7 +111,7 @@ flatPortShape.variables.color_r = 1
 flatPortShape.variables.color_g = 0
 flatPortShape.variables.color_b = 0
 
-export class FlatPort extends Component
+export class FlatPort extends Port
     constructor: (args...) ->
         super(args...)
         @output ?= false

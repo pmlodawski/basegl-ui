@@ -21,7 +21,14 @@ export class Component extends Composable
 
     withScene: (fun) => @parent.withScene fun if @parent?
 
-    pushEvent: (e) => pushEvent @eventPath, e, @key
+    eventPath: =>
+        path = if @parent?
+                    @parent.eventPath?() or [@parent.constructor.name]
+               else []
+        path.push @constructor.name
+        path
+
+    pushEvent: (e) => pushEvent @eventPath(), e, @key
 
     redraw: => @set @
 
