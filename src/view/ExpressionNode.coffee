@@ -12,6 +12,7 @@ import * as shape        from 'shape/Node'
 import * as util         from 'shape/util'
 
 ### Utils ###
+selectedNode = null
 
 applySelectAnimation = (symbol, rev=false) ->
     if symbol.selectionAnimation?
@@ -26,19 +27,6 @@ applySelectAnimation = (symbol, rev=false) ->
         anim.start()
         symbol.selectionAnimation = anim
         anim
-
-selectedComponent = null
-makeSelectable = (a) ->
-    a.addEventListener 'mousedown', (e) ->
-        if e.button != 0 then return
-        symbol = e.symbol
-        if selectedComponent == symbol then return
-        applySelectAnimation symbol
-        if selectedComponent
-            applySelectAnimation selectedComponent, true
-            selectedComponent.variables.zIndex = 1
-        selectedComponent = symbol
-        selectedComponent.variables.zIndex = -10
 
 expandedNodeShape = basegl.symbol shape.expandedNodeShape
 expandedNodeShape.variables.selected = 0
@@ -68,7 +56,7 @@ export class ExpressionNode extends Component
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
                   , position:    position   = @position
-                  , selected:   @selected   = @selected
+                  , selected:    selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
         @emitProperty 'position', position
         if @expanded != expanded or @name != name or @expression != expression or @error != error or @value != value
@@ -92,6 +80,10 @@ export class ExpressionNode extends Component
             @expanded = expanded
             if @view?
                 @reattach()
+        if selected != @selected
+            @selected = selected
+            if @view?
+                applySelectAnimation @view.node, not @selected
         @widgets ?= {}
         @setInPorts inPorts
         @setOutPorts outPorts
@@ -260,10 +252,36 @@ export class ExpressionNode extends Component
 
     registerEvents: =>
         @makeDraggable()
+        @makeSelectable()
 
     eventPath: ['node-editor', 'node']
+
+    makeSelectable: =>
+        @withScene (scene) =>
+            performSelect = (select) =>
+                target = selectedNode or @
+                target.pushEvent
+                    tag: 'NodeSelect'
+                    select: select
+                target.set selected: select
+                selectedNode = if select then @ else null
+
+            unselect = (e) =>
+                scene.removeEventListener 'mousedown', unselect
+                performSelect false
+
+            @group.addEventListener 'mousedown', (e) =>
+                if e.button != 0 then return
+                if selectedNode == @
+                    return
+                else if selectedNode?
+                    performSelect false
+                performSelect true
+                scene.addEventListener 'mousedown', unselect
+
     makeDraggable: =>
         @group.addEventListener 'mousedown', (e) =>
+            if e.button != 0 then return
             moveNodes = (e) =>
                 @withScene (scene) =>
                     x = @position[0] + e.movementX * scene.camera.zoomFactor
