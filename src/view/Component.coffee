@@ -28,7 +28,12 @@ export class Component extends Composable
         path.push @constructor.name
         path
 
-    pushEvent: (e) => pushEvent @eventPath(), e, @key
+    eventKey: =>
+        key = @parent?.eventKey?() or []
+        key.push @key if @key?
+        key
+
+    pushEvent: (e) => pushEvent @eventPath(), e, @eventKey()
 
     redraw: => @set @
 
