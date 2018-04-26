@@ -1,6 +1,7 @@
 import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
 import {group}                  from 'basegl/display/Symbol'
-import {Composable, fieldMixin} from "basegl/object/Property"
+import {fieldMixin}             from "basegl/object/Property"
+import {Disposable}             from "view/Disposable"
 
 eventListeners = []
 
@@ -12,10 +13,10 @@ export pushEvent = (path, base, key) =>
     for listener in eventListeners
         listener path, base, key
 
-export class Component extends Composable
+export class Component extends Disposable
     cons: (values, @parent) ->
+        super()
         @mixin eventDispatcherMixin, @
-        @disposables = []
         @propertyListeners = {}
         @set values
 
@@ -77,14 +78,4 @@ export class Component extends Composable
             propertyEvent = new CustomEvent name, value: property
             @dispatchEvent propertyEvent if @dispatchEvent?
 
-    dispose: =>
-        @disposables.forEach (disposable) =>
-            disposable()
-        @_detach()
-
-    addDisposableListener: (target, name, handler) =>
-        target.addEventListener name, handler
-        @onDispose => target.removeEventListener name, handler
-
-    onDispose: (finalizer) =>
-        @disposables.push finalizer
+    destruct: => @_detach()

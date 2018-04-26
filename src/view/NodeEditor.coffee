@@ -3,6 +3,7 @@ import {Navigator}      from 'basegl/navigation/Navigator'
 import {Breadcrumbs}    from 'view/Breadcrumbs'
 import {pushEvent}      from 'view/Component'
 import {Connection}     from 'view/Connection'
+import {Disposable}     from 'view/Disposable'
 import {ExpressionNode} from 'view/ExpressionNode'
 import {InputNode}      from 'view/InputNode'
 import {OutputNode}     from 'view/OutputNode'
@@ -11,8 +12,9 @@ import {Searcher}       from 'view/Searcher'
 import {Visualization}  from 'view/Visualization'
 
 
-export class NodeEditor
+export class NodeEditor extends Disposable
     constructor: (@_scene) ->
+        super()
         @nodes ?= {}
         @connections ?= {}
         @visualizations ?= {}
@@ -37,7 +39,7 @@ export class NodeEditor
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
-            scene.addEventListener 'dblclick', @pushEvent
+            @addDisposableListener scene, 'dblclick', @pushEvent
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]
@@ -126,7 +128,7 @@ export class NodeEditor
                 @[name].dispose()
                 @[name] = null
 
-    dispose: =>
+    destruct: =>
         @breadcrumbs?.dispose()
         @inputNode?.dispose()
         @outputNode?.dispose()
