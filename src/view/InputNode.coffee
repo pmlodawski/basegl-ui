@@ -19,7 +19,6 @@ export class InputNode extends Component
 
         unless @def?
             @def = addPortShape
-            console.log @def
         i = 0
         keys = Object.keys @outPorts
         portOffset = height / keys.length

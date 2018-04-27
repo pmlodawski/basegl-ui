@@ -2,9 +2,6 @@ import {Composable}             from "basegl/object/Property"
 
 
 export class Disposable extends Composable
-    constructor: (args...) ->
-        super args...
-
     cons: =>
         @disposables = []
 

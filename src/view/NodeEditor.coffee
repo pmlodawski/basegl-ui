@@ -5,6 +5,7 @@ import {pushEvent}      from 'view/Component'
 import {Connection}     from 'view/Connection'
 import {Disposable}     from 'view/Disposable'
 import {ExpressionNode} from 'view/ExpressionNode'
+import {HalfConnection} from 'view/HalfConnection'
 import {InputNode}      from 'view/InputNode'
 import {OutputNode}     from 'view/OutputNode'
 import {Port}           from 'view/Port'
@@ -75,6 +76,10 @@ export class NodeEditor extends Disposable
     setInputNode:   (inputNode)   => @genericSetComponent 'inputNode',   InputNode,   inputNode
     setOutputNode:  (outputNode)  => @genericSetComponent 'outputNode',  OutputNode,  outputNode
     setSearcher:    (searcher)    => @genericSetComponent 'searcher',    Searcher,    searcher
+
+    setHalfConnections: (halfConnections) =>
+        @genericSetComponents 'halfConnections', HalfConnection, halfConnections
+
     setVisualization: (nodeVis)   =>
         for vis in nodeVis.visualizations
             vis.nodeKey     = nodeVis.nodeKey
@@ -90,7 +95,6 @@ export class NodeEditor extends Disposable
         if @visualizations[vis.key]?
             @visualizations[vis.key].dispose()
             delete @visualizations[vis.key]
-
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?
@@ -127,6 +131,20 @@ export class NodeEditor extends Disposable
             if @[name]?
                 @[name].dispose()
                 @[name] = null
+
+    genericSetComponents: (name, constructor, values = []) =>
+        @[name] ?= []
+        if values.length != @[name].length
+            for oldValue in @[name]
+                oldValue.dispose()
+            @[name] = []
+            for value in values
+                newValue = new constructor value, @
+                @[name].push newValue
+                newValue.attach()
+        else if values.length > 0
+            for i in [0..values.length -1]
+                @[name][i].set value[i]
 
     destruct: =>
         @breadcrumbs?.dispose()

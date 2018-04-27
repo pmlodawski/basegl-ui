@@ -4,6 +4,7 @@ import * as basegl from 'basegl'
 
 import {Breadcrumbs}     from 'view/Breadcrumbs'
 import {Connection}      from 'view/Connection'
+import {HalfConnection}  from 'view/HalfConnection'
 import {ExpressionNode}  from 'view/ExpressionNode'
 import {InputNode}       from 'view/InputNode'
 import {NodeEditor}      from 'view/NodeEditor'
@@ -233,6 +234,12 @@ runExample = -> main (nodeEditor) ->
                     start: 1
                     end: 3
                 ]
+        ]
+    nodeEditor.setHalfConnections [
+            new HalfConnection
+                srcNode: 1
+                srcPort: 1
+                reversed: false
         ]
 
 

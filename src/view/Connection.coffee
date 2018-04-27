@@ -35,6 +35,7 @@ export class Connection extends Component
     updateView: =>
         srcNode = @parent.node @srcNode
         dstNode = @parent.node @dstNode
+        return unless srcNode? and dstNode?
         srcPort = srcNode.outPorts[@srcPort]
         dstPort = dstNode.inPorts[@dstPort]
         return unless srcPort? and dstPort?
