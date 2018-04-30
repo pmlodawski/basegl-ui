@@ -40,7 +40,10 @@ export class NodeEditor extends Disposable
     initialize: =>
         @withScene (scene) =>
             @controls = new Navigator scene
-            @addDisposableListener scene, 'dblclick', @pushEvent
+            @addDisposableListener scene, 'click',     @pushEvent
+            @addDisposableListener scene, 'dblclick',  @pushEvent
+            @addDisposableListener scene, 'mousedown', @pushEvent
+            @addDisposableListener scene, 'mouseup',   @pushEvent
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]
@@ -143,7 +146,7 @@ export class NodeEditor extends Disposable
                 @[name].push newValue
                 newValue.attach()
         else if values.length > 0
-            for i in [0..values.length -1]
+            for i in [0..values.length - 1]
                 @[name][i].set value[i]
 
     destruct: =>
@@ -155,3 +158,5 @@ export class NodeEditor extends Disposable
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
+
+    pushEvent: (base) => pushEvent [@constructor.name], base, []
