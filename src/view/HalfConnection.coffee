@@ -28,19 +28,20 @@ export class HalfConnection extends Component
                   }) =>
         unless @def?
             @def = connectionShape
-
         return unless @parent?
         @srcNode2 = @parent.node @srcNode
         return unless @srcNode2?
         @srcPort2 =
             if @reversed
-                @srcNode2.outPorts[@srcPort]
-            else
                 @srcNode2.inPorts[@srcPort]
+            else
+                @srcNode2.outPorts[@srcPort]
 
     updateView: =>
-        return unless @srcPort2? and @dstPos?
+        @registerEvents()
+        return unless @srcPort2?
         srcPos = @srcPort2.position
+        @dstPos ?= srcPos.slice()
         if @srcNode2 instanceof InputNode
             leftOffset = @srcPort2.radius
         else
@@ -63,7 +64,7 @@ export class HalfConnection extends Component
         @view.variables.color_b = @srcPort2.color[2]
 
     registerEvents: =>
-        unless @srcConnected?
+        unless @srcConnected
             if @srcPort2?
                 @addDisposableListener @srcPort2, 'position', => @updateView()
                 @onDispose => @srcPort2.set follow: null

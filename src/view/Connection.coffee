@@ -65,7 +65,7 @@ export class Connection extends Component
         @view.variables.color_b = srcPort.color[2]
 
     connectSources: (srcPort, dstPort) =>
-        unless @srcConnected?
+        unless @srcConnected
             @addDisposableListener srcPort, 'position', => @updateView()
             @onDispose => srcPort.set follow: null
             @srcConnected = true

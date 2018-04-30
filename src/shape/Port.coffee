@@ -20,8 +20,8 @@ export inPortShape = basegl.expr ->
     p = pie angle
        .rotate Math.PI
        .move width/2, 0
-       .fill Color.rgb ['color_r', 'color_g', 'color_b']
     port = c * p
+    port.fill Color.rgb ['color_r', 'color_g', 'color_b']
 
 export outPortShape = basegl.expr ->
     r = outArrowRadius
@@ -30,9 +30,9 @@ export outPortShape = basegl.expr ->
     h2 = length - r + r * Math.cos Math.asin ((2*length*Math.tan (angle/2))/r )
     p = pie angle
        .move width/2, h2 + r
-       .fill Color.rgb ['color_r', 'color_g', 'color_b']
     port = p - c
     port.move 0, -r+length-h2
+        .fill Color.rgb ['color_r', 'color_g', 'color_b']
 
 export flatPortShape = basegl.expr ->
     r = outArrowRadius
@@ -61,10 +61,10 @@ plusThickness = plusLength/4
 export addPortShape = basegl.expr ->
     c = circle addPortRadius
        .move addPortRadius, addPortRadius
-       .fill Color.rgb [0.2, 0.2, 0.2]
     horizontal = rect plusLength, plusThickness
                 .move addPortRadius, addPortRadius
     vertical = rect plusThickness, plusLength
               .move addPortRadius, addPortRadius
     plus = horizontal + vertical
-    c - plus
+    port = c - plus
+    port.fill Color.rgb [0.2, 0.2, 0.2]

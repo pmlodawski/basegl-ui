@@ -252,8 +252,8 @@ export class ExpressionNode extends Component
 
     registerEvents: =>
         @group.addEventListener 'dblclick',  @pushEvent
-        @group.addEventListener 'mouseover', @pushEvent
-        @group.addEventListener 'mouseout',  @pushEvent
+        @group.addEventListener 'mouseenter', @pushEvent
+        @group.addEventListener 'mouseleave',  @pushEvent
         @makeDraggable()
         @makeSelectable()
 
