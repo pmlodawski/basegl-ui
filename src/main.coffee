@@ -235,16 +235,15 @@ runExample = -> main (nodeEditor) ->
                     end: 3
                 ]
         ]
-    nodeEditor.setHalfConnections [
-            new HalfConnection
-                srcNode: 1
-                srcPort: 1
-                reversed: false
-        ]
+    # nodeEditor.setHalfConnections [
+    #         new HalfConnection
+    #             srcNode: 1
+    #             srcPort: 1
+    #             reversed: false
+    #     ]
 
-
-    subscribeEvents (path, event) =>
-        console.log path.join('.'), event
+    subscribeEvents (path, event, key) =>
+        console.log path.join('.'), event, key
 
 if NODE_EDITOR_EXAMPLE? then runExample()
 else if NODE_EDITOR_PERFORMANCE? then main runPerformance

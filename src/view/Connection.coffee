@@ -30,8 +30,13 @@ export class Connection extends Component
                   , dstPort: @dstPort = @dstPort
                   }) =>
         unless @def?
-            @def = connectionShape
-
+            @def =  [
+                        name: 'src'
+                        def: connectionShape
+                    ,
+                        name: 'dst'
+                        def: connectionShape
+                    ]
     updateView: =>
         srcNode = @parent.node @srcNode
         dstNode = @parent.node @dstNode
@@ -51,18 +56,25 @@ export class Connection extends Component
         x = dstPos[0] - srcPos[0]
         y = dstPos[1] - srcPos[1]
         length = Math.sqrt(x*x + y*y) - leftOffset - rightOffset
-        @view.position.x = leftOffset
-        @view.position.y = -shape.width/2
-        @view.bbox.x = length
-        @group.position.xy = srcPos.slice()
         rotation = Math.atan2 y, x
-        @view.rotation.z = rotation
+        @view.src.position.x = leftOffset
+        @view.src.position.y = -shape.width/2
+        @view.src.bbox.x = length/2
+        @view.dst.position.x = leftOffset + length/2
+        @view.dst.position.y = -shape.width/2
+        @view.dst.bbox.x = length/2
+        @group.position.xy = [srcPos[0], srcPos[1]]
+        @view.src.rotation.z = rotation
+        @view.dst.rotation.z = rotation
         srcPort.set follow: rotation - Math.PI/2
         dstPort.set follow: rotation + Math.PI/2
 
-        @view.variables.color_r = srcPort.color[0]
-        @view.variables.color_g = srcPort.color[1]
-        @view.variables.color_b = srcPort.color[2]
+        @view.src.variables.color_r = srcPort.color[0]
+        @view.src.variables.color_g = srcPort.color[1]
+        @view.src.variables.color_b = srcPort.color[2]
+        @view.dst.variables.color_r = srcPort.color[0]
+        @view.dst.variables.color_g = srcPort.color[1]
+        @view.dst.variables.color_b = srcPort.color[2]
 
     connectSources: (srcPort, dstPort) =>
         unless @srcConnected
@@ -75,3 +87,9 @@ export class Connection extends Component
             @dstConnected = true
 
     registerEvents: =>
+        @view.src.addEventListener 'mousedown', => @pushEvent
+            tag: 'Disconnect'
+            src: true
+        @view.dst.addEventListener 'mousedown', => @pushEvent
+            tag: 'Disconnect'
+            src: false
