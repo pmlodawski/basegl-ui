@@ -94,10 +94,10 @@ export class Searcher extends Component
     align: (scale) =>
         if @scale != scale
             @scale = scale
-        node = @parent.node(@key)
-        if node?
-            @group.position.xy = node.position.slice()
-            @view.scale.xy = [@scale, @scale]
+            node = @parent.node @key
+            if node?
+                @group.position.xy = node.position.slice()
+                @view.scale.xy = [@scale, @scale]
 
     registerEvents: =>
         @withScene (scene) =>

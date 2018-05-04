@@ -45,6 +45,12 @@ export class NodeEditor extends Disposable
             @addDisposableListener scene, 'mousedown', @pushEvent
             @addDisposableListener scene, 'mouseup',   @pushEvent
 
+    getMousePosition: => @withScene (scene) =>
+        campos = scene.camera.position
+        x = (scene.screenMouse.x - scene.width/2) * campos.z + campos.x + scene.width/2
+        y = (scene.height/2 - scene.screenMouse.y) * campos.z + campos.y + scene.height/2
+        [x, y]
+
     node: (nodeKey) =>
         node = @nodes[nodeKey]
         if node? then node
