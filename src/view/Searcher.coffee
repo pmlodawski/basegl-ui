@@ -6,11 +6,16 @@ import * as style  from 'style'
 searcherRoot = 'searcher-root'
 
 export class Searcher extends Component
-    updateModel: ({ key: @key = @key
-                  , mode: @mode = @mode
-                  , input: @input = @input
-                  , selected: @selected = @selected or 0
-                  , entries: @entries = @entries or []}) =>
+    cons: (args...) =>
+        super args...
+        @dom = {}
+
+    updateModel: ({ key:            @key            = @key
+                  , mode:           @mode           = @mode
+                  , input:          @input          = @input
+                  , inputSelection: @inputSelection = null
+                  , selected:       @selected       = @selected or 0
+                  , entries:        @entries        = @entries or []}) =>
         @entries.forEach (entry) => entry.highlights ?= []
         unless @def?
             root = document.createElement 'div'
@@ -21,30 +26,32 @@ export class Searcher extends Component
             @def = basegl.symbol root
 
     updateView: =>
-        @view.domElement.innerHTML = ''
+        @updateResults()
+        @updateInput()
+        unless @dom.container?
+            @dom.container = document.createElement 'div'
+            @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
+            @dom.container.appendChild @dom.results
+            @dom.container.appendChild @dom.input
+            @view.domElement.appendChild @dom.container
+        @dom.input.focus()
 
-        container = document.createElement 'div'
-        container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
-        container.appendChild @renderResults() if @entries.length > 0
-        container.appendChild @renderInput()
-        @view.domElement.appendChild container
+    updateResults: =>
+        unless @dom.results?
+            @dom.results = document.createElement 'div'
+            @dom.results.className = style.luna ['searcher__results']
+            @dom.resultsList = document.createElement 'div'
+            @dom.resultsList.className = style.luna ['searcher__results__list']
+            @dom.results.appendChild @dom.resultsList
 
-    renderResults: =>
-        results = document.createElement 'div'
-        results.className = style.luna ['searcher__results']
-
-        resultsList = document.createElement 'div'
-        resultsList.className = style.luna ['searcher__results__list']
-        results.appendChild resultsList
-
-        i = 0
-        @entries.slice(@selected).forEach (entry) =>
-            resultsList.appendChild @renderResult entry, i
+        @dom.resultsList.innerText = ''
+        omit = if @selected == 0 then 0 else @selected - 1
+        i = omit + 1
+        @entries.slice(omit).forEach (entry) =>
+            @dom.resultsList.appendChild @renderResult entry, i == @selected
             i++
 
-        return results
-
-    renderResult: (entry, entryNo) =>
+    renderResult: (entry, selected) =>
         resultName = document.createElement 'div'
         resultName.className = style.luna ['searcher__results__item__name']
         resultName.appendChild @renderPrefix entry.className or ''
@@ -52,7 +59,7 @@ export class Searcher extends Component
 
         result = document.createElement 'div'
         resultClasses = ['searcher__results__item']
-        resultClasses.push ['searcher__results__item--selected'] if entryNo == 0
+        resultClasses.push ['searcher__results__item--selected'] if selected
         result.className = style.luna resultClasses
         result.appendChild resultName
         return result
@@ -84,12 +91,18 @@ export class Searcher extends Component
         nameSpan.appendChild normSpan
         return nameSpan
 
-    renderInput: =>
-        input = document.createElement 'input'
+    updateInput: =>
+        unless @dom.input?
+            @dom.input = document.createElement 'input'
+            @dom.input.type = 'text'
         inputClasses = ['searcher__input']
         inputClasses.push ['searcher__input-selected'] if @selected == 0
-        input.className = style.luna inputClasses
-        return input
+        @dom.input.className = style.luna inputClasses
+        if @inputSelection?.length == 2
+            @dom.input.selectionStart = @inputSelection[0]
+            @dom.input.selectionEnd   = @inputSelection[1]
+            @inputSelection = null
+        return @dom.input
 
     align: (scale) =>
         if @scale != scale
@@ -103,3 +116,16 @@ export class Searcher extends Component
         @withScene (scene) =>
             @addDisposableListener scene.camera, 'move', =>
                 @align scene.camera.position.z
+        @dom.input.addEventListener 'input', (e) =>
+            @pushEvent
+                tag: 'SearcherEdit'
+                selectionStart: @dom.input.selectionStart
+                selectionEnd:   @dom.input.selectionEnd
+                value:          @dom.input.value
+        @dom.input.addEventListener 'keyup', (e) =>
+            if e.code == 'Enter'
+                @pushEvent
+                    tag: 'SearcherAccept'
+                    selectionStart: @dom.input.selectionStart
+                    selectionEnd:   @dom.input.selectionEnd
+                    value:          @dom.input.value
