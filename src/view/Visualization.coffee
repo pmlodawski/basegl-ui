@@ -12,8 +12,64 @@ import * as shape        from 'shape/Visualization'
 import * as util         from 'shape/util'
 import * as nodeShape    from 'shape/Node'
 import {Widget}   from 'view/Widget'
+import * as style  from 'style'
+
 
 visualizationShape = basegl.symbol shape.visualizationShape
+
+export class VisualizationContainer extends Component
+    updateModel: ({ nodeKey:        @nodeKey            = @nodeKey
+                  , visualizers:     visualizers        = @visualizers
+                  , visualizations:  visualizations }) =>
+        if visualizers != @visualizers
+            @visualizers = visualizers
+        if visualizations?
+            @visualizations ?= {}
+            pos = @getPosition()
+            newVisualizations = {}
+
+            for vis in visualizations
+                vis.visualizers = @visualizers
+                vis.position    = pos
+                if @visualizations[vis.key]?
+                    newVisualizations[vis.key] = @visualizations[vis.key]
+                    newVisualizations[vis.key].set vis
+                else
+                    newVis = new Visualization vis, @
+                    newVisualizations[vis.key] = newVis
+                    newVis.attach()
+
+            for own key of @visualizations
+                unless newVisualizations[key]?
+                    @visualizations[key].dispose()
+
+            @visualizations = newVisualizations
+
+    dispose: =>
+        for key in @visualizations
+            if @visualizations.hasOwnProperty key
+               @visualizations[key].dispose()
+
+    getPosition: =>
+        node = @parent.node @nodeKey
+        offset = if node.expanded
+                [ nodeShape.width/2
+                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope ]
+            else [ 0, - nodeShape.height/2 ]
+
+        return [ node.position[0] + offset[0]
+            , node.position[1] + offset[1]]
+
+
+    updateVisualizationsPositions: =>
+        pos = @getPosition()
+        for own key of @visualizations
+            @visualizations[key].set position: pos
+
+    registerEvents: =>
+        node = @parent.node @nodeKey
+        @addDisposableListener node, 'position', => @updateVisualizationsPositions()
+        @addDisposableListener node, 'expanded', => @updateVisualizationsPositions()
 
 export class Visualization extends Widget
     constructor: (args...) ->
@@ -22,33 +78,46 @@ export class Visualization extends Widget
             height: 300
             width:  200
 
-    updateModel: ({ nodeKey:            @nodeKey            = @nodeKey
-                  , key:                @key                = @key
+    updateModel: ({ key:                @key                = @key
                   , mode:                mode               = @mode
                   , currentVisualizer:   currentVisualizer  = @currentVisualizer
                   , selectedVisualizer:  selectedVisualizer = @selectedVisualizer
-                  , visualizers:         visualizers        = @visualizers}) =>
-        if @mode != mode or @currentVisualizer != currentVisualizer or @selectedVisualizer != selectedVisualizer or @visualizers != visualizers
+                  , visualizers:         visualizers        = @visualizers
+                  , position:            position           = @position or [0,0] }) =>
+        if @mode != mode or @currentVisualizer != currentVisualizer or @selectedVisualizer != selectedVisualizer or @visualizers != visualizers or @position != position
             @mode               = mode
             @currentVisualizer  = currentVisualizer
             @selectedVisualizer = selectedVisualizer
             @visualizers        = visualizers
-            @def =
-                [ { name: 'visualization', def: visualizationShape }
-                ]
+            @position           = position
+            unless @def?
+                root = document.createElement 'div'
+                root.id = @key
+                root.style.width = 200 + 'px'
+                root.style.height = 300 + 'px'
+                root.style.backgroundColor = '#FF0000'
+                @def = basegl.symbol root
             if @view?
                 @reattach
+        @renderVisualizerMenu()
 
     updateView: =>
-        node = @parent.node @nodeKey
-        offset = if node.expanded
-                [ - nodeShape.width/2
-                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope ]
-            else [ 0, - nodeShape.height / 2 ]    
-        @group.position.xy =
-            [ node.position[0] + offset[0] - @width/2
-            , node.position[1] + offset[1]]
+        @view.domElement.innerHTML = ''
+        container = document.createElement 'div'
+        container.className = style.luna ['dropdown']
+        container.appendChild @renderVisualizerMenu()
+        @view.domElement.appendChild container
+        @group.position.xy = [@position[0], @position[1] - @height/2]
 
-    registerEvents: =>
-        node = @parent.node @nodeKey
-        @addDisposableListener node, 'position', => @updateView()
+    renderVisualizerMenu: =>
+        menu = document.createElement 'ul'
+        menu.className = style.luna ['dropdown__menu']
+
+        for visualizer in @visualizers
+            menu.appendChild (@renderVisualizerMenuEntry visualizer)
+        return menu
+
+    renderVisualizerMenuEntry: (visualizer) =>
+        entry = document.createElement 'li'
+        entry.appendChild document.createTextNode visualizer.visualizerName
+        return entry

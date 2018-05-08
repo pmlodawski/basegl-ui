@@ -77,7 +77,7 @@ export class ExpressionNode extends Component
             if @value?
                 value = util.text str: @value
                 @def.splice 0, 0, {name: 'value', def: value}
-            @expanded = expanded
+            @emitProperty 'expanded', expanded
             if @view?
                 @reattach()
         if selected != @selected
