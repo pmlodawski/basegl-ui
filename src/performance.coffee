@@ -2,7 +2,7 @@ require "babel-core/register"
 require "babel-polyfill"
 import * as basegl from 'basegl'
 
-import {Breadcrumbs}     from 'view/Breadcrumbs'
+import {Breadcrumb}      from 'view/Breadcrumb'
 import {Connection}      from 'view/Connection'
 import {ExpressionNode}  from 'view/ExpressionNode'
 import {InputNode}       from 'view/InputNode'
@@ -73,9 +73,16 @@ generateConnections = (count, maxNode) =>
     return connections
 
 export runPerformance = (nodeEditor) ->
-    nodeEditor.setBreadcrumbs new Breadcrumbs
+    nodeEditor.setBreadcrumb new Breadcrumb
         moduleName: 'Foo'
-        items: ['bar', 'baz']
+        items:
+            [
+                name: 'bar'
+                breadcrumb: 1
+            ,
+                name: 'baz'
+                breadcrumb: 2
+            ]
 
     nodesCount = 1000
     connectionsCount = 500

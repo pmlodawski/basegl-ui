@@ -1,6 +1,6 @@
 import {Navigator}               from 'basegl/navigation/Navigator'
 
-import {Breadcrumbs}             from 'view/Breadcrumbs'
+import {Breadcrumb}              from 'view/Breadcrumb'
 import {pushEvent}               from 'view/Component'
 import {Connection}              from 'view/Connection'
 import {Disposable}              from 'view/Disposable'
@@ -82,8 +82,8 @@ export class NodeEditor extends Disposable
             @setNode node
         undefined
 
-    setBreadcrumbs: (breadcrumbs) =>
-        @genericSetComponent 'breadcrumbs', Breadcrumbs, breadcrumbs
+    setBreadcrumb: (breadcrumb) =>
+        @genericSetComponent 'breadcrumb', Breadcrumb, breadcrumb
     setHalfConnections: (halfConnections) =>
         @genericSetComponents 'halfConnections', HalfConnection, halfConnections
     setInputNode: (inputNode) =>
@@ -160,7 +160,7 @@ export class NodeEditor extends Disposable
                 @[name][i].set value[i]
 
     destruct: =>
-        @breadcrumbs?.dispose()
+        @breadcrumb?.dispose()
         @inputNode?.dispose()
         @outputNode?.dispose()
         @searcher?.dispose()
