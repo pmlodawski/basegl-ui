@@ -16,11 +16,12 @@ import {VisualizationContainer}  from 'view/Visualization'
 export class NodeEditor extends Disposable
     constructor: (@_scene) ->
         super()
-        @nodes ?= {}
-        @connections ?= {}
-        @visualizations ?= {}
-        @inTransaction = false
-        @pending = []
+        @nodes               ?= {}
+        @connections         ?= {}
+        @visualizations      ?= {}
+        @visualizerLibraries ?= {}
+        @inTransaction        = false
+        @pending              = []
 
     withScene: (fun) =>
         action = => fun @_scene if @_scene?
@@ -81,14 +82,20 @@ export class NodeEditor extends Disposable
             @setNode node
         undefined
 
-    setBreadcrumbs: (breadcrumbs) => @genericSetComponent 'breadcrumbs', Breadcrumbs, breadcrumbs
-    setInputNode:   (inputNode)   => @genericSetComponent 'inputNode',   InputNode,   inputNode
-    setOutputNode:  (outputNode)  => @genericSetComponent 'outputNode',  OutputNode,  outputNode
-    setSearcher:    (searcher)    => @genericSetComponent 'searcher',    Searcher,    searcher
-
+    setBreadcrumbs: (breadcrumbs) =>
+        @genericSetComponent 'breadcrumbs', Breadcrumbs, breadcrumbs
     setHalfConnections: (halfConnections) =>
         @genericSetComponents 'halfConnections', HalfConnection, halfConnections
-
+    setInputNode: (inputNode) =>
+        @genericSetComponent 'inputNode', InputNode, inputNode
+    setOutputNode: (outputNode) =>
+        @genericSetComponent 'outputNode', OutputNode, outputNode
+    setSearcher: (searcher) =>
+        @genericSetComponent 'searcher', Searcher, searcher
+    
+    setVisualizerLibraries: (visLib) =>
+        @visualizerLibraries = visLib
+    
     setVisualization: (nodeVis)   =>
         if @visualizations[nodeVis.nodeKey]?
             @visualizations[nodeVis.nodeKey].set nodeVis
@@ -157,6 +164,8 @@ export class NodeEditor extends Disposable
         @inputNode?.dispose()
         @outputNode?.dispose()
         @searcher?.dispose()
+        @visualizerLibraries?.dispose()
+        @visualizations?.dispose()
         for connectionKey in Object.keys @connections
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes

@@ -3,7 +3,7 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {world}        from 'basegl/display/World'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
+import {circle, glslShape, union, grow, negate, rect, quadraticCurve} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
 
 import {InPort, OutPort} from 'view/Port'
@@ -11,8 +11,9 @@ import {Component}       from 'view/Component'
 import * as shape        from 'shape/Visualization'
 import * as util         from 'shape/util'
 import * as nodeShape    from 'shape/Node'
-import {Widget}   from 'view/Widget'
-import * as style  from 'style'
+import {Widget}          from 'view/Widget'
+import * as style        from 'style'
+import * as path         from 'path'
 
 
 visualizationShape = basegl.symbol shape.visualizationShape
@@ -99,16 +100,30 @@ export class Visualization extends Widget
                 @def = basegl.symbol root
             if @view?
                 @reattach
-        @renderVisualizerMenu()
 
     updateView: =>
         @view.domElement.innerHTML = ''
         container = document.createElement 'div'
         container.className = style.luna ['dropdown']
+        container.appendChild @renderVisualization()
         container.appendChild @renderVisualizerMenu()
         @view.domElement.appendChild container
         @group.position.xy = [@position[0], @position[1] - @height/2]
 
+    renderVisualization: =>
+        vis = document.createElement 'div'
+        visPaths = @parent.parent.visualizerLibraries
+        visType = @currentVisualizer.visualizerType
+        pathPrefix = if visType == 'InternalVisualizer'
+                visPaths.internalVisualizersPath
+            else if visType == 'LunaVisualizer'
+                visPaths.lunaVisualizersPath
+            else visPaths.projectVisualizersPath
+        if pathPrefix?
+            url = path.join pathPrefix, @currentVisualizer.visualizerPath
+            vis.innerHTML = '<iframe style="width:100%;height:100%;" frameborder="0" src="' + url + '" />'
+        return vis
+        
     renderVisualizerMenu: =>
         menu = document.createElement 'ul'
         menu.className = style.luna ['dropdown__menu']
