@@ -1,16 +1,16 @@
-import {Navigator}               from 'basegl/navigation/Navigator'
+import {Navigator}           from 'basegl/navigation/Navigator'
 
-import {Breadcrumbs}             from 'view/Breadcrumbs'
-import {pushEvent}               from 'view/Component'
-import {Connection}              from 'view/Connection'
-import {Disposable}              from 'view/Disposable'
-import {ExpressionNode}          from 'view/ExpressionNode'
-import {HalfConnection}          from 'view/HalfConnection'
-import {InputNode}               from 'view/InputNode'
-import {OutputNode}              from 'view/OutputNode'
-import {Port}                    from 'view/Port'
-import {Searcher}                from 'view/Searcher'
-import {VisualizationContainer}  from 'view/Visualization'
+import {Breadcrumbs}         from 'view/Breadcrumbs'
+import {pushEvent}           from 'view/Component'
+import {Connection}          from 'view/Connection'
+import {Disposable}          from 'view/Disposable'
+import {ExpressionNode}      from 'view/ExpressionNode'
+import {HalfConnection}      from 'view/HalfConnection'
+import {InputNode}           from 'view/InputNode'
+import {OutputNode}          from 'view/OutputNode'
+import {Port}                from 'view/Port'
+import {Searcher}            from 'view/Searcher'
+import {NodeVisualizations}  from 'view/Visualization'
 
 
 export class NodeEditor extends Disposable
@@ -96,14 +96,19 @@ export class NodeEditor extends Disposable
     setVisualizerLibraries: (visLib) =>
         @visualizerLibraries = visLib
     
-    setVisualization: (nodeVis)   =>
-        if @visualizations[nodeVis.nodeKey]?
-            @visualizations[nodeVis.nodeKey].set nodeVis
+    setVisualization: (nodeVis) =>
+        key = nodeVis.nodeKey
+        if @visualizations[key]?
+            @visualizations[key].set nodeVis
         else
-            visView = new VisualizationContainer nodeVis, @
-            @visualizations[nodeVis.nodeKey] = visView
+            visView = new NodeVisualizations nodeVis, @
+            @visualizations[key] = visView
             visView.attach()
-
+        @node(key).onDispose =>
+            if @visualizations[key]?
+                @visualizations[key].dispose()
+                delete @visualizations[key]
+        
     unsetVisualization: (nodeVis) =>
         if @visualizations[nodeVis.nodeKey]?
             @visualizations[nodeVis.nodeKey].dispose()

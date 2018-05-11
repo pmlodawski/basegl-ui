@@ -15,14 +15,16 @@ import {Widget}          from 'view/Widget'
 import * as style        from 'style'
 import * as path         from 'path'
 
+import * as _ from 'underscore'
+
 
 visualizationShape = basegl.symbol shape.visualizationShape
 
-export class VisualizationContainer extends Component
+export class NodeVisualizations extends Component
     updateModel: ({ nodeKey:        @nodeKey            = @nodeKey
                   , visualizers:     visualizers        = @visualizers
                   , visualizations:  visualizations }) =>
-        if visualizers != @visualizers
+        if not _.isEqual(visualizers, @visualizers)
             @visualizers = visualizers
         if visualizations?
             @visualizations ?= {}
@@ -36,7 +38,7 @@ export class VisualizationContainer extends Component
                     newVisualizations[vis.key] = @visualizations[vis.key]
                     newVisualizations[vis.key].set vis
                 else
-                    newVis = new Visualization vis, @
+                    newVis = new VisualizationContainer vis, @
                     newVisualizations[vis.key] = newVis
                     newVis.attach()
 
@@ -47,9 +49,8 @@ export class VisualizationContainer extends Component
             @visualizations = newVisualizations
 
     dispose: =>
-        for key in @visualizations
-            if @visualizations.hasOwnProperty key
-               @visualizations[key].dispose()
+        for own key of @visualizations
+           @visualizations[key].dispose()
 
     getPosition: =>
         node = @parent.node @nodeKey
@@ -72,47 +73,135 @@ export class VisualizationContainer extends Component
         @addDisposableListener node, 'position', => @updateVisualizationsPositions()
         @addDisposableListener node, 'expanded', => @updateVisualizationsPositions()
 
-export class Visualization extends Widget
+export class VisualizationContainer extends Widget
     constructor: (args...) ->
         super args...
         @configure
             height: 300
-            width:  200
+            width:  300
 
     updateModel: ({ key:                @key                = @key
+                  , iframeId:            iframeId           = @iframeId
                   , mode:                mode               = @mode
                   , currentVisualizer:   currentVisualizer  = @currentVisualizer
                   , selectedVisualizer:  selectedVisualizer = @selectedVisualizer
                   , visualizers:         visualizers        = @visualizers
                   , position:            position           = @position or [0,0] }) =>
-        if @mode != mode or @currentVisualizer != currentVisualizer or @selectedVisualizer != selectedVisualizer or @visualizers != visualizers or @position != position
-            @mode               = mode
-            @currentVisualizer  = currentVisualizer
-            @selectedVisualizer = selectedVisualizer
-            @visualizers        = visualizers
-            @position           = position
+        if @iframeId != iframeId or @position != position or @mode != mode or not _.isEqual(@currentVisualizer, currentVisualizer)
+            @iframeId          = iframeId
+            @mode              = mode
+            @currentVisualizer = currentVisualizer
+            @position          = position
+            vis = {
+                key: @key,
+                iframeId: @iframeId,
+                mode: @mode,
+                currentVisualizer: @currentVisualizer,
+                position: @position
+            }
+            if @visualization?
+                @visualization.set vis
+            else
+                vis = new Visualization vis, @
+                @visualization = vis
+                vis.attach()
+
             unless @def?
                 root = document.createElement 'div'
-                root.id = @key
-                root.style.width = 200 + 'px'
-                root.style.height = 300 + 'px'
+                root.id           = @key
+                root.style.width  = @width + 'px'
+                root.style.height = @height + 'px'
                 root.style.backgroundColor = '#FF0000'
+                # root.className = style.luna ['visualization-container']
                 @def = basegl.symbol root
             if @view?
                 @reattach
 
+        if @mode != mode or @selectedVisualizer != selectedVisualizer or @visualizers != visualizers
+            @mode               = mode
+            @selectedVisualizer = selectedVisualizer
+            @visualizers        = visualizers
+            #  if @visualizerMenu?
+            #     @visualizerMenu.set vis
+            # else
+            #     vis = new VisualizationMenu vis, @
+            #     @visualizerMenu = vis
+            #     vis.attach()
+
+            # unless @def?
+            #     root = document.createElement 'div'
+            #     root.id = @key
+            #     root.style.width = 200 + 'px'
+            #     root.style.height = 300 + 'px'
+            #     root.style.backgroundColor = '#FF0000'
+            #     @def = basegl.symbol root
+            # if @view?
+            #     @reattach
+
+
     updateView: =>
-        @view.domElement.innerHTML = ''
-        container = document.createElement 'div'
-        container.className = style.luna ['dropdown']
-        container.appendChild @renderVisualization()
-        container.appendChild @renderVisualizerMenu()
-        @view.domElement.appendChild container
+        @view.domElement.className = style.luna ['visualization-container']
         @group.position.xy = [@position[0], @position[1] - @height/2]
 
+    dispose: =>
+        @visualization.dispose()
+        
+    # renderVisualizerMenu: =>
+    #     container = document.createElement 'div'
+    #     container.className = style.luna ['dropdown']
+    #     menu = document.createElement 'ul'
+    #     menu.className = style.luna ['dropdown__menu']
+
+    #     for visualizer in @visualizers
+    #         menu.appendChild (@renderVisualizerMenuEntry visualizer)
+
+    #     container.appendChild menu
+    #     return container
+
+    # renderVisualizerMenuEntry: (visualizer) =>
+    #     entry = document.createElement 'li'
+    #     entry.appendChild document.createTextNode visualizer.visualizerName
+    #     return entry
+
+export class Visualization extends Widget
+    constructor: (args...) ->
+        super args...
+        @configure
+            height: 300
+            width:  300
+
+    updateModel: ({ key:                @key                = @key
+                  , iframeId:            iframeId           = @iframeId
+                  , mode:                mode               = @mode
+                  , currentVisualizer:   currentVisualizer  = @currentVisualizer
+                  , position:            position           = @position or [0,0] }) =>
+        @rerender = false
+        if @position != position
+            @position = position
+        if @iframeId != iframeId or @mode != mode or not _.isEqual(@currentVisualizer, currentVisualizer)
+            @iframeId          = iframeId
+            @mode              = mode
+            @currentVisualizer = currentVisualizer
+            @rerender          = true
+        unless @def?
+            root = document.createElement 'div'
+            root.id           = @key
+            root.style.width  = @width + 'px'
+            root.style.height = @height + 'px'
+            root.style.backgroundColor = '#FFF000'
+            @def = basegl.symbol root    
+        if @view?
+            @reattach
+
+    updateView: =>
+        @group.position.xy = [@position[0], @position[1] - @height/2]
+        if @rerender
+            @view.domElement.innerHTML = ''
+            @view.domElement.appendChild @renderVisualization()
+
     renderVisualization: =>
-        vis = document.createElement 'div'
-        visPaths = @parent.parent.visualizerLibraries
+        iframe = document.createElement 'iframe'
+        visPaths = @parent.parent.parent.visualizerLibraries
         visType = @currentVisualizer.visualizerType
         pathPrefix = if visType == 'InternalVisualizer'
                 visPaths.internalVisualizersPath
@@ -121,18 +210,10 @@ export class Visualization extends Widget
             else visPaths.projectVisualizersPath
         if pathPrefix?
             url = path.join pathPrefix, @currentVisualizer.visualizerPath
-            vis.innerHTML = '<iframe style="width:100%;height:100%;" frameborder="0" src="' + url + '" />'
-        return vis
-        
-    renderVisualizerMenu: =>
-        menu = document.createElement 'ul'
-        menu.className = style.luna ['dropdown__menu']
-
-        for visualizer in @visualizers
-            menu.appendChild (@renderVisualizerMenuEntry visualizer)
-        return menu
-
-    renderVisualizerMenuEntry: (visualizer) =>
-        entry = document.createElement 'li'
-        entry.appendChild document.createTextNode visualizer.visualizerName
-        return entry
+            # url = 'https://onet.pl'
+            iframe.name         = @iframeId
+            iframe.style.width  = @width + 'px'
+            iframe.style.height = @height + 'px'
+            iframe.className    = style.luna ['visualization-iframe']
+            iframe.src          = url
+        return iframe
