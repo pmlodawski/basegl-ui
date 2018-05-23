@@ -61,11 +61,10 @@ export class Component extends Disposable
 
     _detach: => @withScene (scene) =>
         if @view?
-            if @def instanceof Array
-                for def in @def
-                    @view[def.name].dispose() if @view[def.name]?
-            else
+            if @view.dispose?
                 @view.dispose()
+            else for own k,v of @view
+                v.dispose()
             @view = null
 
     reattach: =>

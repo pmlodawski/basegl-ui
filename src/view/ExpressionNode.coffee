@@ -10,6 +10,7 @@ import {InPort, OutPort} from 'view/Port'
 import {Component}       from 'view/Component'
 import * as shape        from 'shape/Node'
 import * as util         from 'shape/util'
+import * as _            from 'underscore'
 
 ### Utils ###
 selectedNode = null
@@ -51,18 +52,17 @@ export class ExpressionNode extends Component
     updateModel: ({ key:        @key        = @key
                   , name:        name       = @name
                   , expression:  expression = @expression
-                  , error:       error      = @error or false
                   , value:       value      = @value
                   , inPorts:     inPorts    = @inPorts
                   , outPorts:    outPorts   = @outPorts
                   , position:    position   = @position
                   , selected:    selected   = @selected
                   , expanded:    expanded   = @expanded}) =>
+
         @emitProperty 'position', position
-        if @expanded != expanded or @name != name or @expression != expression or @error != error or @value != value
+        if @expanded != expanded or @name != name or @expression != expression or not _.isEqual(@value, value)
             @name = name
             @expression = expression
-            @error = error
             @value = value
             nameDef = util.text str: @name
             exprDef = util.text str: @expression
@@ -71,11 +71,11 @@ export class ExpressionNode extends Component
                    ,{ name: 'name', def: nameDef }
                    ,{ name: 'expression', def: exprDef }
                    ]
-            if @error
+            if @error()
                 errorFrame = if expanded then expandedNodeErrorShape else compactNodeErrorShape
                 @def.splice 0, 0, {name: 'errorFrame', def: errorFrame}
-            if @value?
-                value = util.text str: @value
+            if @shortValue()?
+                value = util.text str: @shortValue()
                 @def.splice 0, 0, {name: 'value', def: value}
             @emitProperty 'expanded', expanded
             if @view?
@@ -89,6 +89,13 @@ export class ExpressionNode extends Component
         @setOutPorts outPorts
         @updateInPorts()
         @updateOutPorts()
+
+    error: =>
+        @value? and @value.tag == "Error"
+
+    shortValue: =>
+        if @value? and @value.contents?
+            @value.contents.contents
 
     setInPorts: (inPorts) =>
         @inPorts ?= {}
@@ -162,11 +169,11 @@ export class ExpressionNode extends Component
             @view.node.variables.bodyWidth  = @bodyWidth
             nodePosition = [-shape.width/2, -@bodyHeight - shape.height/2 - shape.slope]
             @view.node.position.xy = nodePosition
-            if @error
+            if @error()
                 @view.errorFrame.variables.bodyHeight = @bodyHeight
                 @view.errorFrame.variables.bodyWidth  = @bodyWidth
                 @view.errorFrame.position.xy = nodePosition
-            if @value?
+            if @shortValue()?
                 errorSize = util.textSize @view.value
                 @view.value.position.y = nodePosition[1] - errorSize[1]/2
             Object.keys(@inPorts).forEach (inPortKey) =>
@@ -176,9 +183,9 @@ export class ExpressionNode extends Component
                     @drawWidgets widgets, inPort.position.slice(), @bodyWidth
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
-            if @error
+            if @error()
                 @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
-            if @value?
+            if @shortValue()?
                 errorSize = util.textSize @view.value
                 @view.value.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
         nameSize = util.textSize @view.name
