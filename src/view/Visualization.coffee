@@ -6,19 +6,19 @@ import {world}        from 'basegl/display/World'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
 
-import {InPort, OutPort} from 'view/Port'
-import {Component}       from 'view/Component'
-import * as shape        from 'shape/Visualization'
-import * as util         from 'shape/util'
-import * as nodeShape    from 'shape/Node'
-import {Widget}          from 'view/Widget'
-import * as style        from 'style'
-import * as path         from 'path'
+import {InPort, OutPort}      from 'view/Port'
+import {Component, pushEvent} from 'view/Component'
+import * as shape             from 'shape/Visualization'
+import * as util              from 'shape/util'
+import * as nodeShape         from 'shape/Node'
+import {Widget}               from 'view/Widget'
+import * as style             from 'style'
+import * as path              from 'path'
 
 import * as _ from 'underscore'
 
 
-visualizationShape = basegl.symbol shape.visualizationShape
+visualizationCoverShape = basegl.symbol shape.visualizationCover
 
 export class NodeVisualizations extends Component
     updateModel: ({ nodeKey:        @nodeKey            = @nodeKey
@@ -73,12 +73,15 @@ export class NodeVisualizations extends Component
         @addDisposableListener node, 'position', => @updateVisualizationsPositions()
         @addDisposableListener node, 'expanded', => @updateVisualizationsPositions()
 
+    withNodeKey: (fun) =>
+        fun @nodeKey
+
 export class VisualizationContainer extends Widget
-    constructor: (args...) ->
+    cons: (args...) ->
         super args...
         @configure
-            height: 300
-            width:  300
+            height: shape.height
+            width:  shape.width
 
     updateModel: ({ key:                @key                = @key
                   , iframeId:            iframeId           = @iframeId
@@ -87,86 +90,88 @@ export class VisualizationContainer extends Widget
                   , selectedVisualizer:  selectedVisualizer = @selectedVisualizer
                   , visualizers:         visualizers        = @visualizers
                   , position:            position           = @position or [0,0] }) =>
-        if @iframeId != iframeId or @position != position or @mode != mode or not _.isEqual(@currentVisualizer, currentVisualizer)
+        updateVis  = false
+        updateMenu = false
+
+        if @position != position
+            @position  = position
+            updateVis  = true
+            updateMenu = true
+
+
+        if @iframeId != iframeId or @mode != mode or not _.isEqual(@currentVisualizer, currentVisualizer)
             @iframeId          = iframeId
             @mode              = mode
             @currentVisualizer = currentVisualizer
-            @position          = position
-            vis = {
-                key: @key,
-                iframeId: @iframeId,
-                mode: @mode,
-                currentVisualizer: @currentVisualizer,
-                position: @position
-            }
-            if @visualization?
-                @visualization.set vis
-            else
-                vis = new Visualization vis, @
-                @visualization = vis
-                vis.attach()
-
-            unless @def?
-                root = document.createElement 'div'
-                root.id           = @key
-                root.style.width  = @width + 'px'
-                root.style.height = @height + 'px'
-                @def = basegl.symbol root
-            if @view?
-                @reattach
-
-        if @mode != mode or @selectedVisualizer != selectedVisualizer or @visualizers != visualizers
+            updateVis          = true
+            
+            
+        if @mode != mode or not _.isEqual(@selectedVisualizer, selectedVisualizer) or not _.isEqual(@visualizers, visualizers)
             @mode               = mode
             @selectedVisualizer = selectedVisualizer
             @visualizers        = visualizers
-            #  if @visualizerMenu?
-            #     @visualizerMenu.set vis
-            # else
-            #     vis = new VisualizationMenu vis, @
-            #     @visualizerMenu = vis
-            #     vis.attach()
+            updateMenu          = true
+        
+        if updateVis
+            @updateVisualization()
+        if updateMenu
+            @updateVisualizerMenu()    
 
-            # unless @def?
-            #     root = document.createElement 'div'
-            #     root.id = @key
-            #     root.style.width = 200 + 'px'
-            #     root.style.height = 300 + 'px'
-            #     root.style.backgroundColor = '#FF0000'
-            #     @def = basegl.symbol root
-            # if @view?
-            #     @reattach
+        unless @def?
+            @def = visualizationCoverShape
+
+    updateVisualization: =>
+        vis = {
+            key: @key,
+            iframeId: @iframeId,
+            mode: @mode,
+            currentVisualizer: @currentVisualizer,
+            position: @position
+        }
+        if @visualization?
+            @visualization.set vis
+        else
+            vis = new Visualization vis, @
+            @visualization = vis
+            vis.attach()
+
+    updateVisualizerMenu: =>
+        if @visualizers?.length
+            vm = {
+                key: @key,
+                mode: @mode,
+                visualizers: @visualizers,
+                visualizer: @selectedVisualizer,
+                position: @position
+            }
+            if @visualizerMenu?
+                @visualizerMenu.set vm
+            else
+                vm = new VisualizerMenu vm, @
+                @visualizerMenu = vm
+                vm.attach()
+        else if @visualizerMenu?
+            @visualizerMenu.dispose()
 
 
     updateView: =>
-        @view.domElement.className = style.luna ['visualization-container']
-        @group.position.xy = [@position[0], @position[1] - @height/2]
+        @group.position.xy = [@position[0] - shape.width/2, @position[1] - shape.height]
+        @view.bbox.xy = [shape.width, shape.height]
 
     dispose: =>
         @visualization.dispose()
-        
-    # renderVisualizerMenu: =>
-    #     container = document.createElement 'div'
-    #     container.className = style.luna ['dropdown']
-    #     menu = document.createElement 'ul'
-    #     menu.className = style.luna ['dropdown__menu']
+        if @visualizerMenu?
+            @visualizerMenu.dispose()
 
-    #     for visualizer in @visualizers
-    #         menu.appendChild (@renderVisualizerMenuEntry visualizer)
-
-    #     container.appendChild menu
-    #     return container
-
-    # renderVisualizerMenuEntry: (visualizer) =>
-    #     entry = document.createElement 'li'
-    #     entry.appendChild document.createTextNode visualizer.visualizerName
-    #     return entry
+    withNodeKey: (fun) =>
+        @parent.withNodeKey fun
 
 export class Visualization extends Widget
     constructor: (args...) ->
         super args...
         @configure
-            height: 300
-            width:  300
+            height: shape.height
+            width:  shape.width
 
     updateModel: ({ key:                @key                = @key
                   , iframeId:            iframeId           = @iframeId
@@ -181,14 +186,14 @@ export class Visualization extends Widget
             @mode              = mode
             @currentVisualizer = currentVisualizer
             @rerender          = true
-        unless @def?
-            root = document.createElement 'div'
-            root.id           = @key
-            root.style.width  = @width + 'px'
-            root.style.height = @height + 'px'
-            @def = basegl.symbol root    
-        if @view?
-            @reattach
+            unless @def?
+                root = document.createElement 'div'
+                root.id           = @key
+                root.style.width  = @width + 'px'
+                root.style.height = @height + 'px'
+                @def = basegl.symbol root    
+            if @view?
+                @reattach()
 
     updateView: =>
         @group.position.xy = [@position[0], @position[1] - @height/2]
@@ -199,7 +204,7 @@ export class Visualization extends Widget
     renderVisualization: =>
         iframe = document.createElement 'iframe'
         visPaths = @parent.parent.parent.visualizerLibraries
-        visType = @currentVisualizer.visualizerType
+        visType = @currentVisualizer.visualizerId.visualizerType
         pathPrefix = if visType == 'InternalVisualizer'
                 visPaths.internalVisualizersPath
             else if visType == 'LunaVisualizer'
@@ -207,10 +212,75 @@ export class Visualization extends Widget
             else visPaths.projectVisualizersPath
         if pathPrefix?
             url = path.join pathPrefix, @currentVisualizer.visualizerPath
-            # url = 'https://onet.pl'
             iframe.name         = @iframeId
             iframe.style.width  = @width + 'px'
             iframe.style.height = @height + 'px'
             iframe.className    = style.luna ['visualization-iframe']
             iframe.src          = url
         return iframe
+
+
+export class VisualizerMenu extends Widget
+    constructor: (args...) ->
+        super args...
+        @configure
+            height: shape.height
+            width:  shape.width
+
+    updateModel: ({ key:                @key                = @key
+                  , mode:                mode               = @mode
+                  , visualizers:         visualizers        = @visualizers
+                  , visualizer:          visualizer         = @visualizer
+                  , position:            position           = @position or [0,0] }) =>
+        if @position != position or @mode != mode or not _.isEqual(@visualizer, visualizer) or not _.isEqual(@visualizers, visualizers)
+            @mode              = mode
+            @position          = position
+            @visualizers       = visualizers
+            @visualizer        = visualizer
+
+        unless @def?
+            root              = document.createElement 'div'
+            root.id           = @key
+            @def = basegl.symbol root
+        if @view?
+            @reattach()
+
+    updateView: =>
+        @group.position.xy = [@position[0] + @width/2, @position[1]]
+        @view.domElement.innerHTML = '▾'
+        @view.domElement.className = style.luna ['dropdown']
+        @view.domElement.appendChild @renderVisualizerMenu()
+
+    withNodeKey: (fun) =>
+        @parent.withNodeKey(fun)
+
+    eventPathh: =>
+        @withNodeKey (nodeKey) =>
+            nodeVisPath = @parent.parent.eventPath()
+            nodeVisPath.push nodeKey
+            nodeVisPath.push "Visualization"
+            nodeVisPath.push @key
+            nodeVisPath
+
+
+    pushSelectVisualizer: (visId) => 
+        path = @eventPathh()
+        base = {
+            tag: 'SelectVisualizerEvent'
+            visualizerId: visId
+        }
+        pushEvent path, base, @eventKey()
+
+    renderVisualizerMenu: =>
+        menu = document.createElement 'ul'
+        menu.className = style.luna ['dropdown__menu']
+
+        @visualizers.forEach (visualizer) =>
+            entry = document.createElement 'li'
+            if _.isEqual(visualizer, @visualizer)
+                entry.className = style.luna ['dropdown__active']
+            entry.addEventListener 'mouseup', => @pushSelectVisualizer visualizer
+            entry.appendChild (document.createTextNode visualizer.visualizerName)
+            menu.appendChild entry
+
+        return menu

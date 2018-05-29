@@ -88,8 +88,8 @@ export class Connection extends Component
 
     registerEvents: =>
         @view.src.addEventListener 'mousedown', => @pushEvent
-            tag: 'Disconnect'
+            tag: 'DisconnectEvent'
             src: true
         @view.dst.addEventListener 'mousedown', => @pushEvent
-            tag: 'Disconnect'
+            tag: 'DisconnectEvent'
             src: false

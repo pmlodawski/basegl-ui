@@ -269,7 +269,7 @@ export class ExpressionNode extends Component
             performSelect = (select) =>
                 target = selectedNode or @
                 target.pushEvent
-                    tag: 'NodeSelect'
+                    tag: 'NodeSelectEvent'
                     select: select
                 target.set selected: select
                 selectedNode = if select then @ else null
@@ -298,7 +298,7 @@ export class ExpressionNode extends Component
 
             dragFinish = =>
                 @pushEvent
-                    tag: 'NodeMove'
+                    tag: 'NodeMoveEvent'
                     position: @position
                 window.removeEventListener 'mouseup', dragFinish
                 window.removeEventListener 'mousemove', moveNodes

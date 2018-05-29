@@ -33,7 +33,7 @@ export class Breadcrumb extends Component
         div.innerHTML = item.name
         if item.link
             div.addEventListener 'click', => @pushEvent
-                tag: 'Navigate'
+                tag: 'NavigateEvent'
                 to: item.breadcrumb
         return div
 

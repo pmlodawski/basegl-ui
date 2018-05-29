@@ -2,17 +2,15 @@ import * as basegl    from 'basegl'
 import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
-import {circle, pie, rect}  from 'basegl/display/Shape'
+import {rect, plane}  from 'basegl/display/Shape'
 
-white          = Color.rgb [1,1,1]
-bg             = (Color.hsl [40,0.08,0.09]).toRGB()
+# white       = Color.rgb [1,1,1]
+transparent = Color.rgb [0,0,0,0]
 
-export visualizationShape = basegl.expr ->
-    topLeft     = 'bbox.y'/2 * 'topLeft'
-    topRight    = 'bbox.y'/2 * 'topRight'
-    bottomLeft  = 'bbox.y'/2 * 'bottomLeft'
-    bottomRight = 'bbox.y'/2 * 'bottomRight'
-    background = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
-    background = background.move 'bbox.x'/2, 'bbox.y'/2
-    background = background.fill white
-    background
+export width  = 300
+export height = 300
+
+export visualizationCover = basegl.expr ->
+    shape = plane()
+    shape = shape.fill transparent
+    shape = shape.move height/2, width/2

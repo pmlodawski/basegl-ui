@@ -118,14 +118,14 @@ export class Searcher extends Component
                 @align scene.camera.position.z
         @dom.input.addEventListener 'input', (e) =>
             @pushEvent
-                tag: 'SearcherEdit'
+                tag: 'SearcherEditEvent'
                 selectionStart: @dom.input.selectionStart
                 selectionEnd:   @dom.input.selectionEnd
                 value:          @dom.input.value
         @dom.input.addEventListener 'keyup', (e) =>
             if e.code == 'Enter'
                 @pushEvent
-                    tag: 'SearcherAccept'
+                    tag: 'SearcherAcceptEvent'
                     selectionStart: @dom.input.selectionStart
                     selectionEnd:   @dom.input.selectionEnd
                     value:          @dom.input.value
