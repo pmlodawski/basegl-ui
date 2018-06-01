@@ -138,6 +138,15 @@ export class NodeEditor extends Disposable
             @setConnection connection
         undefined
 
+    setDebugLayer: (layerNumber) =>
+        if layerNumber? and layerNumber >= 0 and layerNumber <= 9
+            @withScene (scene) =>
+                scene._symbolRegistry.materials.uniforms.displayMode = layerNumber
+
+    unsetDebugLayer: =>
+        @withScene (scene) =>
+            scene._symbolRegistry.materials.uniforms.displayMode = 0
+            
     genericSetComponent: (name, constructor, value) =>
         if value?
             if @[name]?
