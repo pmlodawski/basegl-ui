@@ -196,6 +196,7 @@ export class ExpressionNode extends Component
         @view.node.variables.selected = if @selected then 1 else 0
 
     updateInPorts: =>
+        @selfPort = undefined
         inPortNumber = 0
         inPortKeys = Object.keys @inPorts
         for inPortKey in inPortKeys
@@ -203,6 +204,7 @@ export class ExpressionNode extends Component
             values = {}
             values.locked = @expanded
             if inPort.mode == 'self'
+                @selfPort = inPort
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = @position.slice()
@@ -288,7 +290,7 @@ export class ExpressionNode extends Component
                 scene.addEventListener 'mousedown', unselect
 
     makeDraggable: =>
-        @group.addEventListener 'mousedown', (e) =>
+        dragHandler = (e) =>
             if e.button != 0 then return
             moveNodes = (e) =>
                 @withScene (scene) =>
@@ -304,3 +306,5 @@ export class ExpressionNode extends Component
                 window.removeEventListener 'mousemove', moveNodes
             window.addEventListener 'mouseup', dragFinish
             window.addEventListener 'mousemove', moveNodes
+        @group.addEventListener 'mousedown', dragHandler
+        @selfPort?.group.addEventListener 'mousedown', dragHandler
