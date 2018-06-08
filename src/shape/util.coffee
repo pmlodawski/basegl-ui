@@ -1,5 +1,4 @@
-import * as basegl    from 'basegl'
-
+import * as basegl from 'basegl'
 
 export textWidth = (textGroup) =>
     textMinX = undefined

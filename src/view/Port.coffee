@@ -29,7 +29,7 @@ class Subports extends Component
     unfollow: (key) =>
         @subports[key].component?.dispose()
         delete @subports[key]
-        @redraw()
+        @redraw() unless @disposed
 
     destruct: =>
         for own k, subport of @subports

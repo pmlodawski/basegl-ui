@@ -103,8 +103,8 @@ export class ExpressionNode extends Component
             for inPort in inPorts
                 @setInPort inPort
         else
-            for inPortKey in Object.keys inPorts
-                @setInPort inPorts[inPortKey]
+            for own k, inPort of inPorts
+                @setInPort inPort
 
     setInPort: (inPort) =>
         if @inPorts[inPort.key]?
@@ -121,8 +121,8 @@ export class ExpressionNode extends Component
             for outPort in outPorts
                 @setOutPort outPort
         else
-            for outPortKey in Object.keys outPorts
-                @setOutPort outPorts[outPortKey]
+            for own k, outPort of outPorts
+                @setOutPort outPort
 
     setOutPort: (outPort) =>
         if @outPorts[outPort.key]?

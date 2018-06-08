@@ -17,7 +17,6 @@ export class Component extends Disposable
     cons: (values, @parent) ->
         super()
         @mixin eventDispatcherMixin, @
-        @propertyListeners = {}
         @set values
 
     withScene: (fun) => @parent.withScene fun if @parent?
