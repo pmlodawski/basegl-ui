@@ -9,6 +9,7 @@ import {Composable, fieldMixin} from "basegl/object/Property"
 import {InPort, OutPort} from 'view/Port'
 import {Component}       from 'view/Component'
 import * as shape        from 'shape/Node'
+import * as layers       from 'view/layers'
 import * as util         from 'shape/util'
 import * as _            from 'underscore'
 
@@ -30,20 +31,24 @@ applySelectAnimation = (symbol, rev=false) ->
         anim
 
 expandedNodeShape = basegl.symbol shape.expandedNodeShape
+expandedNodeShape.defaultZIndex = layers.expandedNode
 expandedNodeShape.variables.selected = 0
 expandedNodeShape.variables.bodyWidth = 200
 expandedNodeShape.variables.bodyHeight = 300
 
 expandedNodeErrorShape = basegl.symbol shape.expandedNodeErrorShape
+expandedNodeErrorShape.defaultZIndex = layers.expandedNodeError
 expandedNodeErrorShape.variables.selected = 0
 expandedNodeErrorShape.variables.bodyWidth = 200
 expandedNodeErrorShape.variables.bodyHeight = 300
 
 compactNodeShape = basegl.symbol shape.compactNodeShape
+compactNodeShape.defaultZIndex = layers.compactNode
 compactNodeShape.variables.selected = 0
 compactNodeShape.bbox.xy = [shape.width, shape.height]
 
 compactNodeErrorShape = basegl.symbol shape.compactNodeErrorShape
+compactNodeErrorShape.defaultZIndex = layers.compactNodeError
 compactNodeErrorShape.variables.selected = 0
 compactNodeErrorShape.bbox.xy = [shape.errorWidth, shape.errorHeight]
 
@@ -176,11 +181,13 @@ export class ExpressionNode extends Component
             if @shortValue()?
                 errorSize = util.textSize @view.value
                 @view.value.position.y = nodePosition[1] - errorSize[1]/2
-            Object.keys(@inPorts).forEach (inPortKey) =>
+            for own inPortKey, inPort of @inPorts
                 widgets = @widgets[inPortKey]
                 if widgets?
-                    inPort = @inPorts[inPortKey]
-                    @drawWidgets widgets, inPort.position.slice(), @bodyWidth
+                    leftOffset = 50
+                    startPoint = [inPort.position[0] + leftOffset, inPort.position[1]]
+                    width = @bodyWidth - 20
+                    @drawWidgets widgets, startPoint, width
         else
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
             if @error()

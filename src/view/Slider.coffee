@@ -1,11 +1,13 @@
 import * as basegl from 'basegl'
 
-import * as shape from 'shape/Slider'
-import {Widget}   from 'view/Widget'
-import * as util  from 'shape/util'
+import * as shape  from 'shape/Slider'
+import * as layers from 'view/layers'
+import {Widget}    from 'view/Widget'
+import * as util   from 'shape/util'
 
 
 sliderShape = basegl.symbol shape.sliderShape
+sliderShape.defaultZIndex = layers.slider
 sliderShape.bbox.xy = [100, 20]
 sliderShape.variables.level = 0
 sliderShape.variables.topLeft     = 0
@@ -52,6 +54,6 @@ export class Slider extends Widget
         @view.slider.bbox.xy = [@width, @height]
         textSize = util.textSize @view.value
         @view.value.position.xy = [@width/2 - textSize[0]/2 , @height/2 - textSize[1]/2]
-        @group.position.xy = [@position[0] + 250, @position[1] - @height/2]
+        @group.position.xy = [@position[0], @position[1] - @height/2]
 
     registerEvents: =>

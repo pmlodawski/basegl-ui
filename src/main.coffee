@@ -13,6 +13,7 @@ import {Searcher}        from 'view/Searcher'
 import {Slider}          from 'view/Slider'
 import {subscribeEvents} from 'view/Component'
 import {runPerformance}  from './performance'
+import * as layers       from 'view/layers'
 import * as test         from './test'
 
 removeChildren = (name) =>
@@ -24,7 +25,8 @@ export install = (name, fontRootPath = '', callback) ->
     removeChildren name
     scene = basegl.scene {domElement: name}
     basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
-    basegl.fontManager.load('DejaVuSansMono').then =>
+    basegl.fontManager.load('DejaVuSansMono').then (atlas) =>
+        atlas._letterDef.defaultZIndex = layers.text
         nodeEditor = new NodeEditor scene
         window.n = nodeEditor
         nodeEditor.initialize()

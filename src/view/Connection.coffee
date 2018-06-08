@@ -5,12 +5,14 @@ import {Composable}   from "basegl/object/Property"
 import * as shape       from 'shape/Connection'
 import * as nodeShape   from 'shape/Node'
 import * as portShape   from 'shape/Port'
+import * as layers      from 'view/layers'
 import {Component}  from 'view/Component'
 import {InputNode}  from 'view/InputNode'
 import {OutputNode} from 'view/OutputNode'
 
 
 connectionShape = basegl.symbol shape.connectionShape
+connectionShape.defaultZIndex = layers.connection
 connectionShape.bbox.y = shape.width
 connectionShape.variables.color_r = 1
 connectionShape.variables.color_g = 0

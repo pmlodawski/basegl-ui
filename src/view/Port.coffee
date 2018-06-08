@@ -7,6 +7,7 @@ import * as shape       from 'shape/Port'
 import * as nodeShape   from 'shape/Node'
 import * as util        from 'shape/util'
 import {Component}      from 'view/Component'
+import * as layers      from 'view/layers'
 
 
 class Port extends Component
@@ -101,6 +102,7 @@ selfPortShape.bbox.xy = [shape.selfPortWidth, shape.selfPortHeight]
 selfPortShape.variables.color_r = 1
 selfPortShape.variables.color_g = 0
 selfPortShape.variables.color_b = 0
+selfPortShape.defaultZIndex = layers.selfPort
 
 class Self extends Port
     updateModel: =>
@@ -119,6 +121,7 @@ inPortShape.bbox.xy = [shape.width,shape.length]
 inPortShape.variables.color_r = 1
 inPortShape.variables.color_g = 0
 inPortShape.variables.color_b = 0
+inPortShape.defaultZIndex = layers.inPort
 nameOffset = shape.width
 
 class InArrow extends Port
@@ -155,6 +158,7 @@ outPortShape.bbox.xy = [shape.width,shape.length]
 outPortShape.variables.color_r = 1
 outPortShape.variables.color_g = 0
 outPortShape.variables.color_b = 0
+outPortShape.defaultZIndex = layers.outPort
 
 class OutArrow extends Port
     updateModel: ({ angle: @angle = @angle
@@ -177,6 +181,7 @@ flatPortShape.bbox.xy = [shape.length, shape.width]
 flatPortShape.variables.color_r = 1
 flatPortShape.variables.color_g = 0
 flatPortShape.variables.color_b = 0
+flatPortShape.defaultZIndex = layers.flatPort
 
 export class FlatPort extends Subports
     constructor: (args...) ->
