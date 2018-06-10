@@ -2,19 +2,19 @@ require 'babel-core/register'
 require 'babel-polyfill'
 import * as basegl from 'basegl'
 
-import {Breadcrumb}      from 'view/Breadcrumb'
-import {Connection}      from 'view/Connection'
-import {HalfConnection}  from 'view/HalfConnection'
-import {ExpressionNode}  from 'view/ExpressionNode'
-import {InputNode}       from 'view/InputNode'
-import {NodeEditor}      from 'view/NodeEditor'
-import {OutputNode}      from 'view/OutputNode'
-import {Searcher}        from 'view/Searcher'
-import {Slider}          from 'view/Slider'
-import {subscribeEvents} from 'view/Component'
-import {runPerformance}  from './performance'
-import * as layers       from 'view/layers'
-import * as test         from './test'
+import {Breadcrumb}         from 'view/Breadcrumb'
+import {Connection}         from 'view/Connection'
+import {HalfConnection}     from 'view/HalfConnection'
+import {ExpressionNode}     from 'view/ExpressionNode'
+import {InputNode}          from 'view/InputNode'
+import {NodeEditor}         from 'view/NodeEditor'
+import {OutputNode}         from 'view/OutputNode'
+import {Searcher}           from 'view/Searcher'
+import {Slider}             from 'view/Slider'
+import {subscribeEvents}    from 'view/Component'
+import {runPerformance}     from './performance'
+import * as layers          from 'view/layers'
+import * as test            from './test'
 
 removeChildren = (name) =>
     element = document.getElementById(name).innerHTML = ''
@@ -64,10 +64,15 @@ runExample = -> main (nodeEditor) ->
             expanded: false
             selected: false
             error: true
-            value: 'Another error description'
+            value:
+                tag: 'Error'
+                content:
+                    tag: 'ShortValue'
+                    content: 'Another error description'
         new ExpressionNode
             key: 2
             name: 'bar'
+            expression: '54'
             inPorts:
                 [
                     key: 0
@@ -90,7 +95,10 @@ runExample = -> main (nodeEditor) ->
             position: [200, 600]
             expanded: false
             selected: false
-            value: '54'
+            value:
+                tag: 'Value'
+                content:
+                    tag: 'Visualization'
         new ExpressionNode
             key: 3
             name: 'baz'
@@ -150,7 +158,10 @@ runExample = -> main (nodeEditor) ->
             position: [500, 300]
             expanded: true
             error: true
-            value: 'Error description'
+            value:
+                tag: 'Error'
+                content:
+                    tag: 'Visualization'
             selected: false
         new ExpressionNode
             key: 4
@@ -250,6 +261,52 @@ runExample = -> main (nodeEditor) ->
                     end: 3
                 ]
         ]
+
+    nodeEditor.setVisualizerLibraries
+        internalVisualizersPath: ''
+        lunaVisualizersPath:     ''
+        projectVisualizersPath:  ''
+
+
+    nodeEditor.setVisualization new Object
+        nodeKey: 2
+        visualizers: [
+            visualizerName: 'base: json'
+            visualizerType: 'LunaVisualizer', 
+            visualizerName: 'base: yaml'
+            visualizerType: 'LunaVisualizer'
+        ]
+        visualizations: [
+            key: 900
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'base: json'
+                    visualizerType: 'LunaVisualizer'
+                visualizerPath: 'base/json/json.html'
+            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
+    
+    nodeEditor.setVisualization new Object
+        nodeKey: 3
+        visualizers: []
+        visualizations: [
+            key: 900
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'internal: error'
+                    visualizerType: '"InternalVisualizer"'
+                visualizerPath: '"internal/error/error.html"'
+            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
+
     # nodeEditor.setHalfConnections [
     #         new HalfConnection
     #             srcNode: 1
