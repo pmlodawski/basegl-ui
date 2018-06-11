@@ -66,9 +66,9 @@ runExample = -> main (nodeEditor) ->
             error: true
             value:
                 tag: 'Error'
-                content:
+                contents:
                     tag: 'ShortValue'
-                    content: 'Another error description'
+                    contents: 'Another error description'
         new ExpressionNode
             key: 2
             name: 'bar'
@@ -97,7 +97,7 @@ runExample = -> main (nodeEditor) ->
             selected: false
             value:
                 tag: 'Value'
-                content:
+                contents:
                     tag: 'Visualization'
         new ExpressionNode
             key: 3
@@ -160,7 +160,7 @@ runExample = -> main (nodeEditor) ->
             error: true
             value:
                 tag: 'Error'
-                content:
+                contents:
                     tag: 'Visualization'
             selected: false
         new ExpressionNode
