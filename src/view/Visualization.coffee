@@ -52,8 +52,8 @@ export class NodeVisualizations extends Component
         node = @nodeEditor.node @nodeKey
         offset = if node.expanded
                 [ nodeShape.width/2
-                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope ]
-            else [ 0, - nodeShape.height/2 ]
+                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope - nodeShape.togglerSize ]
+            else [ 0, - nodeShape.height/2 - nodeShape.togglerSize]
 
         return [ node.position[0] + offset[0]
             , node.position[1] + offset[1]]

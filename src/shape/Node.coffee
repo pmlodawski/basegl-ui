@@ -4,7 +4,7 @@ import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {world}        from 'basegl/display/World'
 import {Component}    from 'view/Component'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
+import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path, plane} from 'basegl/display/Shape'
 import {vector}       from 'basegl/math/Vector'
 
 
@@ -18,6 +18,16 @@ export nodeSelectionBorderMaxSize = 40
 export width = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export height = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export slope = 20
+
+export togglerSize = 10 
+export foldVisualizationButtonShape = basegl.expr ->
+    shape = plane()
+    white = Color.rgb [1,1,1]
+    shape.fill white
+export unfoldVisualizationButtonShape = basegl.expr ->
+    shape = plane()
+    white = Color.rgb [1,1,1]
+    shape.fill white
 
 basicNodeShape = -> basegl.expr ->
     border = 0
