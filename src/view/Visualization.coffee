@@ -9,9 +9,9 @@ import {group}                from 'basegl/display/Symbol'
 import {Component, pushEvent} from 'view/Component'
 import {Widget}               from 'view/Widget'
 
-
-export visualizationCoverShape = basegl.symbol shape.visualizationCover
-
+export visualizationCover = basegl.symbol shape.visualizationCoverShape
+menuToggler               = basegl.symbol shape.menuTogglerDiv
+visualization             = basegl.symbol shape.visualizationDiv
 
 export class NodeVisualizations extends Component
     cons: (values, @parent) =>
@@ -76,7 +76,7 @@ export class NodeVisualizations extends Component
 export class VisualizationContainer extends Widget
     cons: (values, @parent) =>
         @nodeEditor = @parent.nodeEditor
-        @def        = visualizationCoverShape
+        @def        = visualizationCover
         @configure
             height: shape.height
             width:  shape.width
@@ -171,57 +171,64 @@ export class Visualization extends Widget
         @registerEvents()
     
     registerEvents: =>
-        @addDisposableListener @nodeEditor, 'visualizerLibraries', => @reattach()
+        @addDisposableListener @nodeEditor, 'visualizerLibraries', => @updateIframe()
 
     updateModel: ({ key:                @key                = @key
                   , iframeId:            iframeId           = @iframeId
                   , mode:                mode               = @mode
                   , currentVisualizer:   currentVisualizer  = @currentVisualizer
                   , position:            position           = @position or [0,0] }) =>
+
         @position = position
-
-        if @mode != mode
-            @mode = mode
-            # @softReattach() # TODO: UNCOMMENT THIS LINE WHEN IFRAME REPLACED WITH SHADOW DOM
-
+        
         if @iframeId != iframeId or
         not _.isEqual(@currentVisualizer, currentVisualizer)
             @iframeId          = iframeId
             @currentVisualizer = currentVisualizer
-            @reattach()
+            @mode              = mode
+            @updateIframe()
 
-        unless @view?
-            @attach()
+        if @mode != mode
+            @mode = mode
+            @updateMode()
     
-    softReattach: => @withScene (scene) =>
+    updateIframe: =>
+        iframe = @__mkIframe()
+
+        if iframe?
+            unless @view?
+                @attach()
+            while @view.domElement.hasChildNodes()
+                @view.domElement.removeChild @view.domElement.firstChild
+            @view.domElement.appendChild iframe
+        else if @view?
+            @_detach()
+
+        @updateMode()
+    
+    updateMode: => @withScene (scene) =>
         if @view?
             if @mode == 'Default'
-                @view.domElement.style.pointerEvents            = 'none'
-                @view.domElement.firstChild.style.pointerEvents = 'none'
+                @view.domElement.style.pointerEvents             = 'none'
+                @view.domElement.firstChild?.style.pointerEvents = 'none'
                 scene.domModel.model.add @view.obj
             else
-                @view.domElement.style.pointerEvents            = 'auto'
-                @view.domElement.firstChild.style.pointerEvents = 'auto'
-                @nodeEditor.topDomScene.model.add @view.obj
+                @view.domElement.style.pointerEvents             = 'auto'
+                @view.domElement.firstChild?.style.pointerEvents = 'auto'
+                @nodeEditor.topDomScene.model.add @view.obj            
 
     updateView: =>
         @group?.position.xy = [@position[0], @position[1] - @height/2]
 
-    attach: => @withScene =>
-        iframe = @__mkIframe()
-        if iframe?
-            vis              = document.createElement 'div'
-            vis.id           = @key
-            vis.style.width  = @width + 'px'
-            vis.style.height = @height + 'px'
-            vis.appendChild iframe
-            visSymbol = basegl.symbol vis
+    _detach: =>
+        while @view.domElement.hasChildNodes()
+            @view.domElement.removeChild @view.domElement.firstChild
+        super()
 
-            @view  = visSymbol.newInstance()
-            @group = group [@view]
-        
-        @softReattach()
-        @updateView()
+    attach: =>
+        @view = visualization.newInstance()
+        @view.domElement.id = @key
+        @group = group [@view]
 
     __mkIframe: =>
         if @currentVisualizer?
@@ -247,8 +254,9 @@ export class Visualization extends Widget
 
 export class VisualizerMenu extends Widget
     cons: (values, @parent) =>
-        @nodeEditor  = @parent.nodeEditor
-        @eventPath   = @parent.eventPath
+        @nodeEditor = @parent.nodeEditor
+        @eventPath  = @parent.eventPath
+        @def        = menuToggler
         @configure
             height: @parent.height
             width:  @parent.width
@@ -259,13 +267,6 @@ export class VisualizerMenu extends Widget
                   , visualizers:         visualizers        = @visualizers
                   , visualizer:          visualizer         = @visualizer
                   , position:            position           = @position or [0,0] }) =>
-        unless @def?
-            root           = document.createElement 'div'
-            root.id        = @key
-            root.innerHTML = '▾'
-            root.className = style.luna ['dropdown']
-            @def    = basegl.symbol root
-            
         if @position != position or @mode = mode
             @mode      = mode
             @position  = position
@@ -292,6 +293,7 @@ export class VisualizerMenu extends Widget
 
     attach: => @withScene (scene) =>
         super()
+        @view?.domElement.id = @key
         @updateMenu()
 
     updateView: =>

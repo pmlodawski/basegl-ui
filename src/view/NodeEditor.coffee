@@ -1,17 +1,18 @@
-import {Navigator}               from 'basegl/navigation/Navigator'
+import {Navigator}          from 'basegl/navigation/Navigator'
 
-import {Breadcrumb}              from 'view/Breadcrumb'
-import {pushEvent}               from 'view/Component'
-import {Connection}              from 'view/Connection'
-import {Disposable}              from 'view/Disposable'
-import {ExpressionNode}          from 'view/ExpressionNode'
-import {HalfConnection}          from 'view/HalfConnection'
-import {InputNode}               from 'view/InputNode'
-import {OutputNode}              from 'view/OutputNode'
-import {Port}                    from 'view/Port'
-import {Searcher}                from 'view/Searcher'
-import {PropertyEmitter}         from 'view/PropertyEmitter'
-import {NodeVisualizations, visualizationCoverShape} from 'view/Visualization'
+import {Breadcrumb}         from 'view/Breadcrumb'
+import {pushEvent}          from 'view/Component'
+import {Connection}         from 'view/Connection'
+import {Disposable}         from 'view/Disposable'
+import {ExpressionNode}     from 'view/ExpressionNode'
+import {HalfConnection}     from 'view/HalfConnection'
+import {InputNode}          from 'view/InputNode'
+import {OutputNode}         from 'view/OutputNode'
+import {Port}               from 'view/Port'
+import {Searcher}           from 'view/Searcher'
+import {PropertyEmitter}    from 'view/PropertyEmitter'
+import {NodeVisualizations} from 'view/Visualization'
+import {visualizationCover} from 'view/Visualization'
 
 import * as _ from 'underscore'
 
@@ -29,7 +30,7 @@ export class NodeEditor extends PropertyEmitter
         topDomLayer           = @_scene.addLayer 'dom-top'
         topDomLayer.style.pointerEvents = 'none'
         topDomLayer.appendChild @topDomScene.renderer.domElement
-        visCoverFamily = @_scene.register visualizationCoverShape
+        visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
     withScene: (fun) =>
