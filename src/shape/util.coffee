@@ -42,5 +42,5 @@ export text = (attrs) =>
         attrs.scene = scene
         attrs.str        ?= ''
         attrs.fontFamily ?= 'DejaVuSansMono'
-        attrs.size       ?= 14
+        attrs.size       ?= 12
         basegl.text attrs

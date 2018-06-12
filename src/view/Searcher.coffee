@@ -21,7 +21,7 @@ export class Searcher extends Component
             root = document.createElement 'div'
             root.id = searcherRoot
             root.style.width = 100 + 'px'
-            root.style.height = 200 + 'px'
+            root.style.height = 150 + 'px'
             # root.style.backgroundColor = '#FF0000'
             @def = basegl.symbol root
 
@@ -97,6 +97,7 @@ export class Searcher extends Component
             @dom.input.type = 'text'
         inputClasses = ['searcher__input']
         inputClasses.push ['searcher__input-selected'] if @selected == 0
+        inputClasses.push ['searcher__no-results'] if @entries.length == 0
         @dom.input.className = style.luna inputClasses
         if @inputSelection?.length == 2
             @dom.input.selectionStart = @inputSelection[0]
@@ -119,13 +120,13 @@ export class Searcher extends Component
         @dom.input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'SearcherEditEvent'
-                selectionStart: @dom.input.selectionStart
-                selectionEnd:   @dom.input.selectionEnd
-                value:          @dom.input.value
+                editSelectionStart: @dom.input.selectionStart
+                editSelectionEnd:   @dom.input.selectionEnd
+                editValue:          @dom.input.value
         @dom.input.addEventListener 'keyup', (e) =>
             if e.code == 'Enter'
                 @pushEvent
                     tag: 'SearcherAcceptEvent'
-                    selectionStart: @dom.input.selectionStart
-                    selectionEnd:   @dom.input.selectionEnd
-                    value:          @dom.input.value
+                    acceptSelectionStart: @dom.input.selectionStart
+                    acceptSelectionEnd:   @dom.input.selectionEnd
+                    acceptValue:          @dom.input.value
