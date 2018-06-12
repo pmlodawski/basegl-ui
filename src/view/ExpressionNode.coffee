@@ -52,6 +52,10 @@ compactNodeErrorShape.defaultZIndex = layers.compactNodeError
 compactNodeErrorShape.variables.selected = 0
 compactNodeErrorShape.bbox.xy = [shape.errorWidth, shape.errorHeight]
 
+nodeNameYOffset = shape.width / 3 + 5
+nodeExprYOffset = shape.width / 3
+
+portDistance = shape.height / 3
 
 export class ExpressionNode extends Component
     updateModel: ({ key:        @key        = @key
@@ -197,8 +201,8 @@ export class ExpressionNode extends Component
                 @view.value.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
         nameSize = util.textSize @view.name
         exprWidth = util.textWidth @view.expression
-        @view.name.position.xy = [-nameSize[0]/2, shape.width/2 + nameSize[1]*2]
-        @view.expression.position.xy = [-exprWidth/2, shape.width/2]
+        @view.name.position.xy = [-nameSize[0]/2, nodeNameYOffset + nameSize[1]]
+        @view.expression.position.xy = [-exprWidth/2, nodeExprYOffset]
         @group.position.xy = @position.slice()
         @view.node.variables.selected = if @selected then 1 else 0
 
@@ -224,7 +228,7 @@ export class ExpressionNode extends Component
                     ]
                 inPortNumber++
             else
-                values.radius = shape.height/2
+                values.radius = portDistance
                 if inPortKeys.length == 1
                     values.angle = Math.PI/2
                 else
@@ -261,7 +265,7 @@ export class ExpressionNode extends Component
                     values.angle = Math.PI*3/2
                 else
                     values.angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
-                values.radius = shape.height/2
+                values.radius = portDistance
             values.position = @position.slice()
             outPort.set values
             outPortNumber++
