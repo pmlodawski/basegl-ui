@@ -78,8 +78,10 @@ export class VisualizationContainer extends Widget
         @nodeEditor = @parent.nodeEditor
         @def        = visualizationCover
         @configure
-            height: shape.height
-            width:  shape.width
+            minHeight: shape.height
+            maxHeight: shape.height
+            minWidth:  shape.width
+            maxWidth:  shape.width
         super values, @parent
 
     updateModel: ({ key:                @key                = @key
@@ -165,8 +167,10 @@ export class Visualization extends Widget
         @nodeEditor  = @parent.nodeEditor
         @eventPath   = @parent.eventPath
         @configure
-            height: @parent.height
-            width:  @parent.width
+            minHeight: @parent.minHeight
+            maxHeight: @parent.maxHeight
+            minWidth:  @parent.minWidth
+            maxWidth:  @parent.maxWidth
         super values, @parent
         @registerEvents()
     
@@ -258,8 +262,10 @@ export class VisualizerMenu extends Widget
         @eventPath  = @parent.eventPath
         @def        = menuToggler
         @configure
-            height: @parent.height
-            width:  @parent.width
+            minHeight: @parent.minHeight
+            maxHeight: @parent.maxHeight
+            minWidth:  @parent.minWidth
+            maxWidth:  @parent.maxWidth
         super values, @parent
 
     updateModel: ({ key:                @key                = @key
@@ -299,14 +305,6 @@ export class VisualizerMenu extends Widget
     updateView: =>
         @group?.position.xy = [@position[0] - @width/2 , @position[1]]
 
-    pushSelectVisualizer: (visId) => 
-        path = @eventPath()
-        base = {
-            tag: 'SelectVisualizerEvent'
-            visualizerId: visId
-        }
-        pushEvent path, base, @eventKey()
-
     renderVisualizerMenu: =>
         menu = document.createElement 'ul'
         menu.className = style.luna ['dropdown__menu']
@@ -315,7 +313,9 @@ export class VisualizerMenu extends Widget
             entry = document.createElement 'li'
             if _.isEqual(visualizer, @visualizer)
                 entry.className = style.luna ['dropdown__active']
-            entry.addEventListener 'mouseup', => @pushSelectVisualizer visualizer
+            entry.addEventListener 'mouseup', => @pushEvent
+                tag: 'SelectVisualizerEvent'
+                visualizerId: visualizer
             entry.appendChild (document.createTextNode visualizer.visualizerName)
             menu.appendChild entry
 
