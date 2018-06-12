@@ -47,11 +47,13 @@ export class Component extends PropertyEmitter
         if @def?
             if @def instanceof Array
                 @view = {}
-                views = []
+                @groups = {}
+                groups  = []
                 for def in @def
                     @view[def.name] = scene.add def.def
-                    views.push @view[def.name]
-                @group = group views
+                    @groups[def.name] = group [@view[def.name]]
+                    groups.push @groups[def.name]
+                @group = group groups
             else
                 @view = scene.add @def
                 @group = group [@view]

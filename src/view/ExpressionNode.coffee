@@ -191,12 +191,14 @@ export class ExpressionNode extends Component
             valuePosition = @view.value.position
 
         @view.valueToggler.position.x = -shape.togglerSize/2
-        @view.valueToggler.position.y =
-            @view.node.position.y - valueSize[1] - shape.togglerSize/2
         if @value?.contents?.tag == 'Visualization'
-            @view.valueToggler.variables.isFolded = 0.0
+            @view.valueToggler.rotation.z = 0
         else
-            @view.valueToggler.variables.isFolded = 1.0
+            @view.valueToggler.rotation.z = Math.PI
+            @view.valueToggler.position.y = -shape.togglerSize
+
+        @groups.valueToggler.position.y =
+            @view.node.position.y - valueSize[1] - shape.togglerSize
         
     updateView: =>
         if @expanded
