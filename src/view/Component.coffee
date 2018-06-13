@@ -1,39 +1,13 @@
-import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
 import {group}                  from 'basegl/display/Symbol'
-import {fieldMixin}             from "basegl/object/Property"
-import {Disposable}             from "view/Disposable"
-import {PropertyEmitter}        from "view/PropertyEmitter"
+import {EventEmitter}           from "view/EventEmitter"
 
-eventListeners = []
 
-export subscribeEvents = (listener) =>
-    eventListeners.push listener
-
-export pushEvent = (path, base, key) =>
-    unless base.tag? then base.tag = base.constructor.name
-    for listener in eventListeners
-        listener path, base, key
-
-export class Component extends PropertyEmitter
+export class Component extends EventEmitter
     cons: (values, @parent) =>
         super()
         @set values
 
     withScene: (fun) => @parent.withScene fun if @parent?
-
-    eventPath: =>
-        path = if @parent?
-                    @parent.eventPath?() or [@parent.constructor.name]
-               else []
-        path.push @constructor.name
-        path
-
-    eventKey: =>
-        key = @parent?.eventKey?() or []
-        key.push @key if @key?
-        key
-
-    pushEvent: (e) => pushEvent @eventPath(), e, @eventKey()
 
     redraw: => @set @
 

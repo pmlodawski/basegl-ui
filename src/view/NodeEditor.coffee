@@ -1,23 +1,22 @@
 import {Navigator}          from 'basegl/navigation/Navigator'
 
 import {Breadcrumb}         from 'view/Breadcrumb'
-import {pushEvent}          from 'view/Component'
 import {Connection}         from 'view/Connection'
 import {Disposable}         from 'view/Disposable'
 import {ExpressionNode}     from 'view/ExpressionNode'
+import {EventEmitter}       from 'view/EventEmitter'
 import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Port}               from 'view/Port'
 import {Searcher}           from 'view/Searcher'
-import {PropertyEmitter}    from 'view/PropertyEmitter'
 import {NodeVisualizations} from 'view/Visualization'
 import {visualizationCover} from 'view/Visualization'
 
 import * as _ from 'underscore'
 
 
-export class NodeEditor extends PropertyEmitter
+export class NodeEditor extends EventEmitter
     constructor: (@_scene) ->
         super()
         @nodes               ?= {}
@@ -195,5 +194,3 @@ export class NodeEditor extends PropertyEmitter
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
-
-    pushEvent: (base) => pushEvent [@constructor.name], base, []

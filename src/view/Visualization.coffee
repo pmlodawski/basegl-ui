@@ -152,10 +152,8 @@ export class VisualizationContainer extends Widget
         evtPath
 
     pushFocusVisualization: => 
-        base = {
+        @pushEvent
             tag: 'FocusVisualizationEvent'
-        }
-        pushEvent @eventPath(), base
 
     registerEvents: =>
         @group.addEventListener 'click', =>
