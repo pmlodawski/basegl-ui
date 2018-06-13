@@ -345,4 +345,4 @@ export class ExpressionNode extends Component
             window.addEventListener 'mouseup', dragFinish
             window.addEventListener 'mousemove', moveNodes
         @group.addEventListener 'mousedown', dragHandler
-        @selfPort?.subport.group.addEventListener 'mousedown', dragHandler
+        @selfPort?.subport?.group.addEventListener 'mousedown', dragHandler
