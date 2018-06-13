@@ -71,7 +71,8 @@ export class ExpressionNode extends Component
                   , outPorts:    outPorts   = @outPorts
                   , position:    position   = @position
                   , selected:    selected   = @selected
-                  , expanded:    expanded   = @expanded}) =>
+                  , expanded:    expanded   = @expanded
+                  , hovered:    @hovered    = @hovered}) =>
 
         @emitProperty 'position', position
         if @expanded != expanded or @name != name or @expression != expression or not _.isEqual(@value, value)
@@ -293,12 +294,15 @@ export class ExpressionNode extends Component
 
     registerEvents: =>
         @group.addEventListener 'dblclick',  @pushEvent
-        @group.addEventListener 'mouseenter', @pushEvent
-        @group.addEventListener 'mouseleave',  @pushEvent
         @view.valueToggler?.addEventListener 'mouseup', => @pushEvent
             tag: 'ToggleVisualizationsEvent'
+        @makeHoverable()
         @makeDraggable()
         @makeSelectable()
+
+    makeHoverable: =>
+        @group.addEventListener 'mouseenter', => @set hovered: true
+        @group.addEventListener 'mouseleave', => @set hovered: false
 
     makeSelectable: =>
         @withScene (scene) =>

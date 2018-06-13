@@ -57,9 +57,9 @@ runExample = -> main (nodeEditor) ->
             key: 1
             name: 'number1'
             expression: '12'
-            inPorts: [{key: 1, name: 'onlyPort'}]
-            outPorts: [{key: 1}
-                      ,{key: 2}]
+            inPorts: [{key: 1, name: 'onlyPort', typeName: 'Int'}]
+            outPorts: [{key: 1, typeName: 'A'}
+                      ,{key: 2, typeName: 'B'}]
             position: [200, 300]
             expanded: false
             selected: false
@@ -69,6 +69,7 @@ runExample = -> main (nodeEditor) ->
                 contents:
                     tag: 'ShortValue'
                     contents: 'Another error description'
+            hovered: true
         new ExpressionNode
             key: 2
             name: 'bar'
@@ -78,20 +79,29 @@ runExample = -> main (nodeEditor) ->
                     key: 0
                     name: 'self'
                     mode: 'self'
+                    typeName: 'A'
                 ,
                     key: 1
                     name: 'port1'
+                    typeName: 'A'
                 ,
                     key: 2
                     name: 'port2'
+                    typeName: 'A'
                 ,
                     key: 3
                     name: 'port3'
+                    typeName: 'A'
                 ,
                     key: 4
                     name: 'port4'
+                    typeName: 'B'
                 ]
-            outPorts: [{key: 1}]
+            outPorts:
+                [
+                    key: 1
+                    typeName: 'A'
+                ]
             position: [200, 600]
             expanded: false
             selected: false
@@ -108,9 +118,11 @@ runExample = -> main (nodeEditor) ->
                     key: 0
                     name: 'self'
                     mode: 'self'
+                    typeName: 'A'
                 ,
                     key: 1
                     name: 'port1'
+                    typeName: 'B'
                     widgets:
                         [
                             mkWidget Slider,
@@ -126,6 +138,7 @@ runExample = -> main (nodeEditor) ->
                 ,
                     key: 2
                     name: 'port2'
+                    typeName: 'C'
                     widgets:
                         [
                             mkWidget Slider,
@@ -136,6 +149,7 @@ runExample = -> main (nodeEditor) ->
                 ,
                     key: 3
                     name: 'port3'
+                    typeName: 'D'
                     widgets:
                         [
                             mkWidget Slider,
@@ -166,7 +180,11 @@ runExample = -> main (nodeEditor) ->
         new ExpressionNode
             key: 4
             name: 'node1'
-            inPorts: [{key: 1, name: 'onlyPort'}]
+            inPorts: [
+                key: 1
+                name: 'onlyPort'
+                typeName: 'A'
+                ]
             outPorts: [{key: 1}]
             position: [500, 600]
             expanded: false
