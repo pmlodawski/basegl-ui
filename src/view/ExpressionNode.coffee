@@ -57,8 +57,9 @@ compactNodeErrorShape.defaultZIndex = layers.compactNodeError
 compactNodeErrorShape.variables.selected = 0
 compactNodeErrorShape.bbox.xy = [shape.errorWidth, shape.errorHeight]
 
-nodeNameYOffset = shape.width / 3 + 5
-nodeExprYOffset = shape.width / 3
+nodeExprYOffset = shape.height / 3
+nodeNameYOffset = nodeExprYOffset + 5
+nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
 

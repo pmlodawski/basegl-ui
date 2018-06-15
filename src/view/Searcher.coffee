@@ -1,9 +1,13 @@
 import {Component} from 'view/Component'
 import * as basegl from 'basegl'
 import * as style  from 'style'
+import * as shape  from 'shape/Node'
 
 
-searcherRoot = 'searcher-root'
+searcherRoot    = 'searcher-root'
+searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
+searcherBaseOffsetX = -searcherWidth / 8
+searcherBaseOffsetY = shape.height   / 8
 
 export class Searcher extends Component
     cons: (args...) =>
@@ -20,9 +24,7 @@ export class Searcher extends Component
         unless @def?
             root = document.createElement 'div'
             root.id = searcherRoot
-            root.style.width = 100 + 'px'
-            root.style.height = 150 + 'px'
-            # root.style.backgroundColor = '#FF0000'
+            root.className = style.luna ['searcher__root']
             @def = basegl.symbol root
 
     updateView: =>
@@ -105,13 +107,18 @@ export class Searcher extends Component
             @inputSelection = null
         return @dom.input
 
+    offsetFromNode: => [searcherBaseOffsetX * @scale, searcherBaseOffsetY * @scale]
+
     align: (scale) =>
         if @scale != scale
             @scale = scale
             node = @parent.node @key
             if node?
-                @group.position.xy = node.position.slice()
-                @view.scale.xy = [@scale, @scale]
+                [posx, posy] = node.position.slice()
+                exprPosY     = node.view.expression.position.y
+                [offX, offY] = @offsetFromNode()
+                @group.position.xy = [offX + posx, offY + exprPosY + posy]
+                @view.scale.xy     = [@scale, @scale]
 
     registerEvents: =>
         @withScene (scene) =>
