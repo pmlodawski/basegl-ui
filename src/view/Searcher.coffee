@@ -10,10 +10,6 @@ searcherBaseOffsetX = -searcherWidth / 8
 searcherBaseOffsetY = shape.height   / 8
 
 export class Searcher extends Component
-    cons: (args...) =>
-        super args...
-        @dom = {}
-
     updateModel: ({ key:            @key            = @key
                   , mode:           @mode           = @mode
                   , input:          @input          = @input
@@ -21,6 +17,7 @@ export class Searcher extends Component
                   , selected:       @selected       = @selected or 0
                   , entries:        @entries        = @entries or []}) =>
         @entries.forEach (entry) => entry.highlights ?= []
+        @dom ?= {}
         unless @def?
             root = document.createElement 'div'
             root.id = searcherRoot

@@ -6,6 +6,7 @@ export class Component extends EventEmitter
     cons: (values, @parent) =>
         super()
         @set values
+        @attach()
 
     withScene: (fun) => @parent.withScene fun if @parent?
 

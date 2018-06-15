@@ -28,6 +28,11 @@ export class Slider extends Widget
                   , value: value  = @value
                   , position: @position = @position or [0,0]
                   }) =>
+        @siblings ?= {}
+        @siblings.top ?= false
+        @siblings.bottom ?= false
+        @siblings.left ?= false
+        @siblings.right ?= false
         if @def?
             if value != @value
                 @value = value

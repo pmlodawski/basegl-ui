@@ -38,7 +38,6 @@ export class OutputNode extends Component
             inPort.output = true
             portView = new FlatPort inPort, @
             @inPorts[inPort.key] = portView
-            portView.attach()
             @onDispose => portView.dispose()
 
     align: (x, y) =>

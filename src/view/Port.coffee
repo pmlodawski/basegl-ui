@@ -46,9 +46,10 @@ export class InPort extends Subports
                   , locked:   @locked   = @locked or false
                   , position:  position = @position or [0,0]
                   , radius:   @radius   = @radius or 0
-                  , color:    @color    = @color or [0, 1, 0]
+                  , color:     color    = @color or [0, 1, 0]
                   , widgets:  @widgets  = @widgets or []
                   }) =>
+        @emitProperty 'color', color
         @emitProperty 'position', position
         cons = if @mode == 'self' then Self else InArrow
         if not @locked and @subports? and (Object.keys @subports).length
@@ -62,13 +63,11 @@ export class InPort extends Subports
                     inArrow = new cons angle: subport.angle, @
                     inArrow.set angle: subport.angle
                     subport.component = inArrow
-                    inArrow.attach()
         else
             if @subport?
                 @subport.redraw()
             else
                 @subport = new cons angle: @angle, @
-                @subport.attach()
 
 export class OutPort extends Subports
     updateModel: ({ key:      @key      = @key
@@ -76,8 +75,9 @@ export class OutPort extends Subports
                   , angle:    @angle    = @angle
                   , position:  position = @position or [0,0]
                   , radius:   @radius   = @radius or 0
-                  , color:    @color    = @color or [0, 1, 0]
+                  , color:     color    = @color or [0, 1, 0]
                   }) =>
+        @emitProperty 'color', color
         @emitProperty 'position', position
         if @subports? and (Object.keys @subports).length
             if @subport?
@@ -89,10 +89,8 @@ export class OutPort extends Subports
                 else
                     outArrow = new OutArrow angle: subport.angle, @
                     subport.component = outArrow
-                    outArrow.attach()
         else unless @subport?
             @subport = new OutArrow angle: @angle, @
-            @subport.attach()
 
 selfPortShape = basegl.symbol shape.selfPortShape
 selfPortShape.bbox.xy = [shape.selfPortWidth, shape.selfPortHeight]

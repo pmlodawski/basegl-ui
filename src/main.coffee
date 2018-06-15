@@ -209,43 +209,42 @@ runExample = -> main (nodeEditor) ->
         inPorts: [ {key: 1}
                  , {key: 2}]
     nodeEditor.setConnections [
-        new Connection
             key: 0
             srcNode: 'in'
             srcPort: 2
             dstNode: 1
             dstPort: 1
-        new Connection
+        ,
             key: 1
             srcNode: 1
             srcPort: 1
             dstNode: 2
             dstPort: 0
-        new Connection
+        ,
             key: 2
             srcNode: 2
             srcPort: 1
             dstNode: 3
             dstPort: 1
-        new Connection
+        ,
             key: 3
             srcNode: 3
             srcPort: 1
             dstNode: 4
             dstPort: 1
-        new Connection
+        ,
             key: 4
             srcNode: 4
             srcPort: 1
             dstNode: 'out'
             dstPort: 2
-        new Connection
+        ,
             key: 5
             srcNode: 1
             srcPort: 2
             dstNode: 3
             dstPort: 0
-        new Connection
+        ,
             key: 6
             srcNode: 1
             srcPort: 1

@@ -52,7 +52,6 @@ export class InputNode extends Component
         else
             portView = new FlatPort outPort, @
             @outPorts[outPort.key] = portView
-            portView.attach()
             @onDispose => portView.dispose()
 
     getPosition: (scene) =>

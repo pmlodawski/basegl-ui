@@ -77,7 +77,6 @@ export class NodeEditor extends EventEmitter
         else
             nodeView = new ExpressionNode node, @
             @nodes[node.key] = nodeView
-            nodeView.attach()
 
     setNodes: (nodes) =>
         nodeKeys = new Set
@@ -112,7 +111,6 @@ export class NodeEditor extends EventEmitter
         else
             visView = new NodeVisualizations nodeVis, @
             @visualizations[key] = visView
-            visView.attach()
         @node(key).onDispose =>
             if @visualizations[key]?
                 @visualizations[key].dispose()
@@ -134,7 +132,6 @@ export class NodeEditor extends EventEmitter
         else
             connectionView = new Connection connection, @
             @connections[connection.key] = connectionView
-            connectionView.attach()
 
     setConnections: (connections) =>
         connectionKeys = new Set
@@ -162,7 +159,6 @@ export class NodeEditor extends EventEmitter
                 @[name].set value
             else
                 @[name] = new constructor value, @
-                @[name].attach()
         else
             if @[name]?
                 @[name].dispose()
@@ -177,7 +173,6 @@ export class NodeEditor extends EventEmitter
             for value in values
                 newValue = new constructor value, @
                 @[name].push newValue
-                newValue.attach()
         else if values.length > 0
             for i in [0..values.length - 1]
                 @[name][i].set value[i]
