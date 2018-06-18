@@ -27,8 +27,11 @@ export class NodeEditor extends EventEmitter
         @pending              = []
         @topDomScene          = @_scene.addDOMScene()
         topDomLayer           = @_scene.addLayer 'dom-top'
-        topDomLayer.style.pointerEvents = 'none'
         topDomLayer.appendChild @topDomScene.renderer.domElement
+        @topDomSceneNoScale   = @_scene.addDOMSceneWithNewCamera()
+        topDomLayerNoScale    = @_scene.addLayer 'dom-top-no-scale'
+        topDomLayerNoScale.appendChild @topDomSceneNoScale.renderer.domElement
+
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
