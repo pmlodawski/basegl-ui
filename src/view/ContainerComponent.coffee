@@ -8,17 +8,14 @@ import * as _         from 'underscore'
 export class ContainerComponent extends HasModel
     # __defs: { key -> Component }
     # __view: group
-
-    cons: (values, @parent) =>
-        super()
+    cons: (args...) =>
+        super args...
         @__defs = {}
-        @prepare()
-        @set values
-        @connectSources()
 
-    destruct: =>
+    dispose: =>
         for def in @__defs
             def.dispose()
+        super()
 
     onModelUpdate: =>
         @update()

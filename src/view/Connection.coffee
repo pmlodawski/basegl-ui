@@ -20,13 +20,12 @@ connectionShape.variables.color_g = 0
 connectionShape.variables.color_b = 0
 
 class PartialConnection extends BasicComponent
-    prepare: =>
-        @model =
-            offset: 0
-            length: 0
-            angle: 0
-            color: [1,0,0]
-            src: true
+    initModel: =>
+        offset: 0
+        length: 0
+        angle: 0
+        color: [1,0,0]
+        src: true
 
     define: =>
         connectionShape
@@ -50,15 +49,16 @@ class PartialConnection extends BasicComponent
             src: @model.src
 
 export class Connection extends ContainerComponent
+    initModel: =>
+        key: null
+        srcNode: null
+        srcPort: null
+        dstNode: null
+        dstPort: null
+
     prepare: =>
         @addDef 'src', new PartialConnection src: true, @parent
         @addDef 'dst', new PartialConnection src: false, @parent
-        @model =
-            key: null
-            srcNode: null
-            srcPort: null
-            dstNode: null
-            dstPort: null
 
     update: =>
 

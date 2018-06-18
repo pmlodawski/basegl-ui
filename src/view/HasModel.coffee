@@ -3,13 +3,19 @@ import * as _ from 'underscore'
 
 
 export class HasModel extends EventEmitter
-    # _defs: { key -> Component }
-    # _element: group
-
-    cons: (values) =>
+    cons: (values, @parent) =>
         super()
-        @model = {}
+
+    init: (values) =>
+        super()
+        @model = @initModel?() or {}
         @changed = {}
+        @prepare?()
+        @withScene =>
+            @set values
+            @connectSources?()
+
+    withScene: (fun) => @parent.withScene fun if @parent?
 
     set: (values) =>
         return unless values?
@@ -19,4 +25,5 @@ export class HasModel extends EventEmitter
             if values[key]? and not _.isEqual @model[key], values[key]
                 @changed[key] = true
                 @model[key] = values[key]
+                @performEmit key, values[key]
         @onModelUpdate values

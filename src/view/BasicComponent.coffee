@@ -4,21 +4,13 @@ import * as basegl from 'basegl/display/Symbol'
 
 
 export class BasicComponent extends HasModel
-    cons: (values, @parent) =>
-        super values
-        @prepare()
-        @set values
-
-    withScene: (fun) => @parent.withScene fun if @parent?
-
     __draw: (def) => @withScene (scene) =>
         @__element = scene.add def
         @__view = basegl.group [@__element]
 
-    __undraw: (def) =>
+    __undraw: (def) => @withScene (scene) =>
         if def?
-            @withScene (scene) =>
-                scene.delete def
+            scene.delete def
             @__element = null
 
     redefineRequred: => false
@@ -29,7 +21,7 @@ export class BasicComponent extends HasModel
             if def? and not _.isEqual(def, @__def)
                 @__undraw @__def
                 @__draw def
-                @registerEvents @__element
+                @registerEvents? @__element
                 @__def = def
         @adjust @__element, @__view
 

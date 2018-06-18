@@ -32,10 +32,11 @@ class Subports extends Component
         delete @subports[key]
         @redraw() unless @disposed
 
-    destruct: =>
+    dispose: =>
         for own k, subport of @subports
             subport.dispose?()
         @subport?.dispose?()
+        super()
 
 export class InPort extends Subports
     updateModel: ({ key:      @key      = @key
