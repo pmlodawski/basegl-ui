@@ -163,7 +163,6 @@ export class VisualizationContainer extends Widget
 export class Visualization extends Widget
     cons: (values, @parent) =>
         @nodeEditor  = @parent.nodeEditor
-        @eventPath   = @parent.eventPath
         @configure
             minHeight: @parent.minHeight
             maxHeight: @parent.maxHeight
@@ -171,7 +170,10 @@ export class Visualization extends Widget
             maxWidth:  @parent.maxWidth
         super values, @parent
         @registerEvents()
-    
+
+    eventPath: =>
+        @parent.eventPath()
+
     registerEvents: =>
         @addDisposableListener @nodeEditor, 'visualizerLibraries', => @updateIframe()
 
@@ -207,21 +209,36 @@ export class Visualization extends Widget
             @_detach()
 
         @updateMode()
-    
+
+
+    # FIXME: This function is needed due to bug in basegl or THREE.js
+    # which causes problems with positioning when layer changed
+    __forceUpdatePosition: =>
+        if @view?
+            if @view.position.y == 0 
+                @view.position.y = 1
+            else
+                @view.position.y = 0
+
     updateMode: => @withScene (scene) =>
         if @view?
             if @mode == 'Default'
-                @view.domElement.style.pointerEvents             = 'none'
-                @view.domElement.firstChild?.style.pointerEvents = 'none'
+                @view.domElement.className = style.luna ['basegl-visualization']
                 scene.domModel.model.add @view.obj
+            else if @mode == 'Focused'
+                @view.domElement.className = style.luna ['basegl-visualization']
+                @nodeEditor.topDomScene.model.add @view.obj
             else
-                @view.domElement.style.pointerEvents             = 'auto'
-                @view.domElement.firstChild?.style.pointerEvents = 'auto'
-                @nodeEditor.topDomScene.model.add @view.obj            
+                @view.domElement.className = style.luna ['basegl-visualization--fullscreen']
+                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @__forceUpdatePosition()
 
-    updateView: =>
-        @group?.position.xy = [@position[0], @position[1] - @height/2]
-
+    updateView: => @withScene (scene) =>
+        if @mode == 'Default' or @mode == 'Focused'
+            @group?.position.xy = [@position[0], @position[1] - @height/2]
+        else
+            @group?.position.xy = [scene.width/2, scene.height/2]
+        
     _detach: =>
         while @view.domElement.hasChildNodes()
             @view.domElement.removeChild @view.domElement.firstChild
@@ -246,19 +263,16 @@ export class Visualization extends Widget
             url = path.join pathPrefix, @currentVisualizer.visualizerPath
                 
         if url?
-            iframe              = document.createElement 'iframe'
-            iframe.name         = @iframeId
-            iframe.style.width  = @width + 'px'
-            iframe.style.height = @height + 'px'
-            iframe.src          = url
+            iframe           = document.createElement 'iframe'
+            iframe.name      = @iframeId
+            iframe.className = style.luna ['basegl-visualization-iframe']
+            iframe.src       = url
             iframe
 
 
 export class VisualizerMenu extends Widget
-    cons: (values, @parent) =>
+    cons: (values, @parent) ->
         @nodeEditor = @parent.nodeEditor
-        @eventPath  = @parent.eventPath
-        @def        = menuToggler
         @configure
             minHeight: @parent.minHeight
             maxHeight: @parent.maxHeight
@@ -266,26 +280,44 @@ export class VisualizerMenu extends Widget
             maxWidth:  @parent.maxWidth
         super values, @parent
 
+    eventPath: =>
+        @parent.eventPath()
+
     updateModel: ({ key:                @key                = @key
                   , mode:                mode               = @mode
                   , visualizers:         visualizers        = @visualizers
                   , visualizer:          visualizer         = @visualizer
                   , position:            position           = @position or [0,0] }) =>
-        if @position != position or @mode = mode
-            @mode      = mode
-            @position  = position
+        @position = position
 
         if not _.isEqual(@visualizer, visualizer) or
         not _.isEqual(@visualizers, visualizers)
             @visualizers = visualizers
             @visualizer  = visualizer
-            menuChanged  = true
+            @updateMenu()
 
+        if @mode != mode
+            @mode = mode
+            @updateMode()
+
+        unless @view?
+            @attach()
+
+    updateMode: => @withScene (scene) =>
         if @view?
-            if menuChanged
-                @updateMenu()
-            else @updateView()
-        else @attach()
+            if @mode == 'Default'
+                @view.domElement.className = style.luna ['basegl-dropdown']
+                @menu?.className = style.luna ['basegl-dropdown__menu']
+                scene.domModel.model.add @view.obj
+            else if @mode == 'Focused'
+                @view.domElement.className = style.luna ['basegl-dropdown--top']
+                @menu?.className = style.luna ['basegl-dropdown__menu']
+                @nodeEditor.topDomScene.model.add @view.obj
+            else
+                @view.domElement.className = style.luna ['basegl-dropdown--fullscreen']
+                @menu?.className = style.luna ['basegl-dropdown__menu--fullscreen']
+                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @__forceUpdatePosition()
 
     updateMenu: =>
         if @view?
@@ -293,24 +325,40 @@ export class VisualizerMenu extends Widget
             delete @menu
             @menu = @renderVisualizerMenu()
             @view.domElement.appendChild @menu
-            @updateView()
 
-    attach: => @withScene (scene) =>
+    updateView: => @withScene (scene) =>
+        if @mode == 'Default' or @mode == 'Focused'
+            @group?.position.xy = [@position[0] - @width/2 , @position[1]]
+        else
+            @group?.position.xy = [0, scene.height]
+
+    _detach: =>
+        while @view.domElement.hasChildNodes()
+            @view.domElement.removeChild @view.domElement.firstChild
         super()
-        @view?.domElement.id = @key
-        @updateMenu()
 
-    updateView: =>
-        @group?.position.xy = [@position[0] - @width/2 , @position[1]]
+    attach: =>
+        @view = menuToggler.newInstance()
+        @view?.domElement.id = @key
+        @group = group [@view]
+        @updateMenu()
+        @updateMode()
+
+    # FIXME: This function is needed due to bug in basegl or THREE.js
+    # which causes problems with positioning when layer changed
+    __forceUpdatePosition: =>
+        if @view?
+            if @view.position.y == 0 
+                @view.position.y = 1
+            else
+                @view.position.y = 0
 
     renderVisualizerMenu: =>
         menu = document.createElement 'ul'
-        menu.className = style.luna ['dropdown__menu']
-
         @visualizers.forEach (visualizer) =>
             entry = document.createElement 'li'
             if _.isEqual(visualizer, @visualizer)
-                entry.className = style.luna ['dropdown__active']
+                entry.className = style.luna ['basegl-dropdown__active']
             entry.addEventListener 'mouseup', => @pushEvent
                 tag: 'SelectVisualizerEvent'
                 visualizerId: visualizer

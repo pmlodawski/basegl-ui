@@ -24,7 +24,7 @@ export visualizationDiv = __mkVisualizationDiv()
 __mkMenuTogglerDiv = ->
     div           = document.createElement 'div'
     div.innerHTML = '▾'
-    div.className = style.luna ['dropdown']
+    div.className = style.luna ['basegl-dropdown']
     div
 
 export menuTogglerDiv = __mkMenuTogglerDiv()

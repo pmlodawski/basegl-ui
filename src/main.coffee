@@ -289,10 +289,8 @@ runExample = -> main (nodeEditor) ->
     nodeEditor.setVisualization new Object
         nodeKey: 2
         visualizers: [
-            visualizerName: 'base: json'
-            visualizerType: 'LunaVisualizer', 
-            visualizerName: 'base: yaml'
-            visualizerType: 'LunaVisualizer'
+            {visualizerName: 'base: json', visualizerType: 'LunaVisualizer'}, 
+            {visualizerName: 'base: yaml', visualizerType: 'LunaVisualizer'}
         ]
         visualizations: [
             key: 900
@@ -301,7 +299,7 @@ runExample = -> main (nodeEditor) ->
                     visualizerName: 'base: json'
                     visualizerType: 'LunaVisualizer'
                 visualizerPath: 'base/json/json.html'
-            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            iframeId: '1'
             mode: 'Default'
             selectedVisualizer:
                 visualizerName: 'base: json'
@@ -312,13 +310,13 @@ runExample = -> main (nodeEditor) ->
         nodeKey: 3
         visualizers: []
         visualizations: [
-            key: 900
+            key: 901
             currentVisualizer:
                 visualizerId:
                     visualizerName: 'internal: error'
                     visualizerType: '"InternalVisualizer"'
                 visualizerPath: '"internal/error/error.html"'
-            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            iframeId: '2'
             mode: 'Default'
             selectedVisualizer:
                 visualizerName: 'base: json'
@@ -334,6 +332,27 @@ runExample = -> main (nodeEditor) ->
 
     subscribeEvents (path, event, key) =>
         console.log path.join('.'), event, key
+        if event.tag == 'FocusVisualizationEvent'
+            nodeKey = path[2]
+            nodeEditor.setVisualization new Object
+                nodeKey: nodeKey
+                visualizations: [
+                    key: 900
+                    mode: 'Focused'
+                ]
+        if event.tag == 'MouseEvent' and event.type == 'mouseup'
+            nodeEditor.setVisualization new Object
+                nodeKey: 2
+                visualizations: [
+                    key: 900
+                    mode: 'Default'
+                ]
+            nodeEditor.setVisualization new Object
+                nodeKey: 3
+                visualizations: [
+                    key: 901
+                    mode: 'Default'
+                ]
 
 if NODE_EDITOR_EXAMPLE? then runExample()
 else if NODE_EDITOR_PERFORMANCE? then main runPerformance
