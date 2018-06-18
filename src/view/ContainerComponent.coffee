@@ -18,7 +18,7 @@ export class ContainerComponent extends HasModel
         super()
 
     onModelUpdate: =>
-        @update()
+        @update?()
         if @__defsModified
             shapes = []
             for own key of @__defs
@@ -46,14 +46,20 @@ export class ContainerComponent extends HasModel
             delete @__defs[key]
             @__defsModified = true
 
-    # # implement this when deriving: #
-    # #################################
+    # # implement following methods when deriving: #
+    # ##############################################
+    #
+    # initModel: =>
+    #     # return model structure (optional, default: {})
     #
     # prepare: =>
-    #     # called once, define @model
+    #     # called once, add initial defs here (optional)
+    #
+    # redefineRequred (values) =>
+    #     # test values if it is required to redefine shape (optional, default: false)
     #
     # update: (values) =>
-    #     # update defs using @def, @addDef, @deleteDef
+    #     # update defs using @def, @addDef, @deleteDef (optional)
     #
     # registerEvents: (element) =>
-    #     # register events on element being group of all defs
+    #     # register events on element being group of all defs (optional)
