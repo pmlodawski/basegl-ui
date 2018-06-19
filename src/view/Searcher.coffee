@@ -24,6 +24,10 @@ export class Searcher extends Component
             root.className = style.luna ['searcher__root']
             @def = basegl.symbol root
 
+    attach: =>
+        super.attach()
+        @parent.topDomScene.model.add @view.obj
+
     updateView: =>
         @updateResults()
         @updateInput()
@@ -115,7 +119,7 @@ export class Searcher extends Component
                 exprPosY     = node.view('expression').position.y
                 [offX, offY] = @offsetFromNode()
                 @group.position.xy = [offX + posx, offY + exprPosY + posy]
-                @view.scale.xy     = [@scale, @scale]
+                @view.scale.xy     = [1.0, 1.0]
 
     registerEvents: =>
         @withScene (scene) =>
