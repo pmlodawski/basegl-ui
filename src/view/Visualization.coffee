@@ -227,10 +227,10 @@ export class Visualization extends Widget
                 scene.domModel.model.add @view.obj
             else if @mode == 'Focused'
                 @view.domElement.className = style.luna ['basegl-visualization']
-                @nodeEditor.topDomScene.model.add @view.obj
+                @nodeEditor.domScene.model.add @view.obj
             else
                 @view.domElement.className = style.luna ['basegl-visualization--fullscreen']
-                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @nodeEditor.domSceneNoScale.model.add @view.obj
                 @__forceUpdatePosition()
 
     updateView: => @withScene (scene) =>
@@ -312,11 +312,11 @@ export class VisualizerMenu extends Widget
             else if @mode == 'Focused'
                 @view.domElement.className = style.luna ['basegl-dropdown--top']
                 @menu?.className = style.luna ['basegl-dropdown__menu']
-                @nodeEditor.topDomScene.model.add @view.obj
+                @nodeEditor.domScene.model.add @view.obj
             else
                 @view.domElement.className = style.luna ['basegl-dropdown--fullscreen']
                 @menu?.className = style.luna ['basegl-dropdown__menu--fullscreen']
-                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @nodeEditor.domSceneNoScale.model.add @view.obj
                 @__forceUpdatePosition()
 
     updateMenu: =>
