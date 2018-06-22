@@ -334,7 +334,7 @@ export class VisualizerMenu extends Widget
             @group?.position.xy = [0, scene.height]
 
     _detach: =>
-        while @view.domElement.hasChildNodes()
+        while @view?.domElement.hasChildNodes()
             @view.domElement.removeChild @view.domElement.firstChild
         super()
 
