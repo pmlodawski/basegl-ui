@@ -1,7 +1,7 @@
-import {Component} from 'view/Component'
+import {Component} from 'abstract/Component'
 import * as basegl from 'basegl'
 import * as style  from 'style'
-import * as shape  from 'shape/Node'
+import * as shape  from 'shape/node/Base'
 
 
 searcherRoot    = 'searcher-root'
@@ -111,8 +111,8 @@ export class Searcher extends Component
             @scale = scale
             node = @parent.node @key
             if node?
-                [posx, posy] = node.position.slice()
-                exprPosY     = node.view.expression.position.y
+                [posx, posy] = node.model.position.slice()
+                exprPosY     = node.view('expression').position.y
                 [offX, offY] = @offsetFromNode()
                 @group.position.xy = [offX + posx, offY + exprPosY + posy]
                 @view.scale.xy     = [@scale, @scale]

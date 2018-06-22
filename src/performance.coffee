@@ -9,7 +9,7 @@ import {InputNode}       from 'view/InputNode'
 import {NodeEditor}      from 'view/NodeEditor'
 import {OutputNode}      from 'view/OutputNode'
 import {Searcher}        from 'view/Searcher'
-import {subscribeEvents} from 'view/EventEmitter'
+import {subscribeEvents} from 'abstract/EventEmitter'
 
 export install = (name, fontRootPath = "", f) ->
     scene = basegl.scene {domElement: name}

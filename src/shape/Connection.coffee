@@ -1,17 +1,47 @@
-import * as basegl    from 'basegl'
-import * as Animation from 'basegl/animation/Animation'
-import * as Easing    from 'basegl/animation/Easing'
-import * as Color     from 'basegl/display/Color'
-import {circle, pie, rect}  from 'basegl/display/Shape'
-import {nodeSelectionBorderMaxSize} from 'shape/Node'
+import * as basegl      from 'basegl'
+import * as Color       from 'basegl/display/Color'
+import {rect}           from 'basegl/display/Shape'
+import {BasicComponent} from 'abstract/BasicComponent'
+import * as layers      from 'view/layers'
 
 export width     = 20
 
 lineWidth = 2
 
-export connectionShape = basegl.expr ->
+export connectionExpr = basegl.expr ->
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     r = rect 'bbox.x', scaledWidth
     r = r.move 'bbox.x'/2, 'bbox.y'/2
     r.fill Color.rgb ['color_r', 'color_g', 'color_b']
+
+connectionSymbol = basegl.symbol connectionExpr
+connectionSymbol.defaultZIndex = layers.connection
+connectionSymbol.bbox.y = width
+connectionSymbol.variables.color_r = 1
+connectionSymbol.variables.color_g = 0
+connectionSymbol.variables.color_b = 0
+
+export class ConnectionShape extends BasicComponent
+    initModel: =>
+        offset: 0
+        length: 0
+        angle: 0
+        color: [1,0,0]
+
+    define: =>
+        connectionSymbol
+
+    adjust: (element, view) =>
+        if @changed.length
+            element.bbox.x = @model.length
+        if @changed.offset
+            element.position.x = @model.offset
+        element.position.y = - width/2
+        if @changed.angle
+            element.rotation.z = @model.angle
+        if @changed.color
+            element.variables.color_r = @model.color[0]
+            element.variables.color_g = @model.color[1]
+            element.variables.color_b = @model.color[2]
+

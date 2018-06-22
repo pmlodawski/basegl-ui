@@ -2,7 +2,7 @@ import * as basegl from 'basegl'
 
 import * as shape  from 'shape/Slider'
 import * as layers from 'view/layers'
-import {Widget}    from 'view/Widget'
+import {Widget}    from 'abstract/Widget'
 import * as util   from 'shape/util'
 
 

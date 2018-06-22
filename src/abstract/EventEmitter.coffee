@@ -1,5 +1,5 @@
 import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
-import {PropertyEmitter}        from "view/PropertyEmitter"
+import {PropertyEmitter}        from "abstract/PropertyEmitter"
 
 eventListeners = []
 

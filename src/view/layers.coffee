@@ -11,6 +11,7 @@ export flatPort = port
 export inPort  = port
 export outPort  = port
 export selfPort = port
+export valueToggler = port
 
 export connection = port
 

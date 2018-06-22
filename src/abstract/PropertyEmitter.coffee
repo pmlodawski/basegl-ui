@@ -1,5 +1,5 @@
 import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
-import {Disposable}             from "view/Disposable"
+import {Disposable}             from "abstract/Disposable"
 
 export class PropertyEmitter extends Disposable
     cons: ->

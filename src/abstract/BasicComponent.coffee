@@ -1,32 +1,35 @@
-import {HasModel}  from "view/HasModel"
+import {HasModel}  from "abstract/HasModel"
 import * as _      from 'underscore'
 import * as basegl from 'basegl/display/Symbol'
 
 
 export class BasicComponent extends HasModel
-    __draw: (def) => @withScene (scene) =>
-        @__element = scene.add def
-        @__view = basegl.group [@__element]
+    __draw: (def) =>
+        @withScene (scene) =>
+            @__element = scene.add def
+            @__addToGroup @__element
 
-    __undraw: (def) => @withScene (scene) =>
-        if def?
-            scene.delete def
+    __undraw: =>
+        if @__element?
+            @__removeFromGroup @__element
+            @__element.dispose()
             @__element = null
 
-    redefineRequred: => false
-
     onModelUpdate: =>
-        if @redefineRequred(@changed) or (not @__def?)
+        if (@redefineRequired? and @redefineRequired(@changed)) or (not @__def?)
             def = @define()
             if def? and not _.isEqual(def, @__def)
-                @__undraw @__def
+                @__undraw()
                 @__draw def
-                @registerEvents? @__element
                 @__def = def
-        @adjust @__element, @__view
+        @adjust? @__element, @__view
 
-    destruct: =>
+    dispose: =>
         @__undraw @__def
+        if @__view
+            @__view.dispose()
+            @__view = null
+        super()
 
     # # implement following methods when deriving: #
     # ##############################################
@@ -37,7 +40,7 @@ export class BasicComponent extends HasModel
     # prepare: =>
     #     # initialize component (optional)
     #
-    # redefineRequred (values) =>
+    # redefineRequired (values) =>
     #     # test values if it is required to redefine shape (optional, default: false)
     #
     # define =>

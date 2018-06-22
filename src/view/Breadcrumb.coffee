@@ -1,4 +1,4 @@
-import {Component}    from 'view/Component'
+import {Component}    from 'abstract/Component'
 import * as basegl from 'basegl'
 import * as style  from 'style'
 

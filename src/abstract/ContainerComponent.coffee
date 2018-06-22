@@ -1,5 +1,5 @@
-import {EventEmitter} from "view/EventEmitter"
-import {HasModel}     from "view/HasModel"
+import {EventEmitter} from "abstract/EventEmitter"
+import {HasModel}     from "abstract/HasModel"
 
 import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
@@ -13,38 +13,45 @@ export class ContainerComponent extends HasModel
         @__defs = {}
 
     dispose: =>
-        for def in @__defs
+        for own k, def of @__defs
             def.dispose()
         super()
 
     onModelUpdate: =>
         @update?()
-        if @__defsModified
-            shapes = []
-            for own key of @__defs
-                shapes.push @__defs[key].__view
-            @__view = basegl.group shapes
-            @__defsModified = false
-            @registerEvents? @__view
+        @adjust? @__view
 
     view: (key) => @def(key).__view
 
     def: (key) => @__defs[key]
 
+    updateDef: (key, value) =>
+        @def(key).set value
+
     addDef: (key, def) =>
         unless @__defs[key]?
             @__defs[key] = def
-            @__defsModified = true
+            @__addToGroup def.__view
         else unless _.isEqual @__defs[key], def
+            @__removeFromGroup @__defs[key]
             @__defs[key].dispose()
+            @__addToGroup def.__view
             @__defs[key] = def
-            @__defsModified = true
 
     deleteDef: (key) =>
         if @__defs[key]?
+            @__removeFromGroup @__defs[key]
             @__defs[key].dispose()
             delete @__defs[key]
-            @__defsModified = true
+
+    autoUpdateDef: (key, cons, value) =>
+        if @def(key)?
+            if value?
+                @updateDef key, value
+            else
+                @deleteDef key
+        else if value?
+            @addDef key, new cons value, @
 
     # # implement following methods when deriving: #
     # ##############################################
