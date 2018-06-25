@@ -269,48 +269,48 @@ runExample = -> main (nodeEditor) ->
                 ]
         ]
 
-    # nodeEditor.setVisualizerLibraries
-    #     internalVisualizersPath: ''
-    #     lunaVisualizersPath:     ''
-    #     projectVisualizersPath:  ''
+    nodeEditor.setVisualizerLibraries
+        internalVisualizersPath: ''
+        lunaVisualizersPath:     ''
+        projectVisualizersPath:  ''
 
 
-    # nodeEditor.setVisualization new Object
-    #     nodeKey: 2
-    #     visualizers: [
-    #         {visualizerName: 'base: json', visualizerType: 'LunaVisualizer'}, 
-    #         {visualizerName: 'base: yaml', visualizerType: 'LunaVisualizer'}
-    #     ]
-    #     visualizations: [
-    #         key: 900
-    #         currentVisualizer:
-    #             visualizerId:
-    #                 visualizerName: 'base: json'
-    #                 visualizerType: 'LunaVisualizer'
-    #             visualizerPath: 'base/json/json.html'
-    #         iframeId: '1'
-    #         mode: 'Default'
-    #         selectedVisualizer:
-    #             visualizerName: 'base: json'
-    #             visualizerType: 'LunaVisualizer'
-    #     ]
+    nodeEditor.setVisualization
+        nodeKey: 2
+        visualizers: [
+            {visualizerName: 'base: json', visualizerType: 'LunaVisualizer'},
+            {visualizerName: 'base: yaml', visualizerType: 'LunaVisualizer'}
+        ]
+        visualizations: [
+            key: 900
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'base: json'
+                    visualizerType: 'LunaVisualizer'
+                visualizerPath: 'base/json/json.html'
+            iframeId: '1'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
     
-    # nodeEditor.setVisualization new Object
-    #     nodeKey: 3
-    #     visualizers: []
-    #     visualizations: [
-    #         key: 901
-    #         currentVisualizer:
-    #             visualizerId:
-    #                 visualizerName: 'internal: error'
-    #                 visualizerType: '"InternalVisualizer"'
-    #             visualizerPath: '"internal/error/error.html"'
-    #         iframeId: '2'
-    #         mode: 'Default'
-    #         selectedVisualizer:
-    #             visualizerName: 'base: json'
-    #             visualizerType: 'LunaVisualizer'
-    #     ]
+    nodeEditor.setVisualization
+        nodeKey: 3
+        visualizers: []
+        visualizations: [
+            key: 901
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'internal: error'
+                    visualizerType: '"InternalVisualizer"'
+                visualizerPath: '"internal/error/error.html"'
+            iframeId: '2'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
 
     # nodeEditor.setHalfConnections [
     #         srcNode: 1

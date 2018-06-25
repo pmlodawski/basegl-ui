@@ -34,6 +34,6 @@ export class ValueTogglerShape extends BasicComponent
 
         view.position.xy =
             if @model.expanded
-                [- baseNode.width/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
+                [- baseNode.width/2 + @model.body[0]/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
             else
-                [- baseNode.width/2, - baseNode.height/2]
+                [0, - baseNode.height/2]

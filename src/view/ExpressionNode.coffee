@@ -10,6 +10,7 @@ import {Composable, fieldMixin} from "basegl/object/Property"
 import {InPort}             from 'view/port/In'
 import {OutPort}            from 'view/port/Out'
 import * as shape           from 'shape/node/Base'
+import * as togglerShape    from 'shape/node/ValueToggler'
 import * as util            from 'shape/util'
 import * as _               from 'underscore'
 import {BasicComponent}     from 'abstract/BasicComponent'
@@ -73,8 +74,8 @@ export class ExpressionNode extends ContainerComponent
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
-            @autoUpdateDef 'value', TextShape, if @shortValue()?
-                text: @shortValue()
+            @autoUpdateDef 'value', TextShape, if @__shortValue()?
+                text: @__shortValue()
                 body: [@bodyWidth, @bodyHeight]
 
         @updateDef 'valueToggler',
@@ -91,7 +92,7 @@ export class ExpressionNode extends ContainerComponent
     error: =>
         @model.value? and @model.value.tag == 'Error'
 
-    shortValue: =>
+    __shortValue: =>
         if @model.value? and @model.value.contents?
             @model.value.contents.contents
 
@@ -128,7 +129,7 @@ export class ExpressionNode extends ContainerComponent
     # updateValueView: =>
     #     valueSize     = [0,0]
     #     valuePosition = @view('node').position
-    #     if @shortValue()?
+    #     if @__shortValue()?
     #         @view('value').position.y = @view('node').position.y
     #         valuePosition = @view('value').position
     #     @view('valueToggler').position.y = @view('node').position.y
@@ -143,6 +144,13 @@ export class ExpressionNode extends ContainerComponent
         #             width = @bodyWidth - 20
         #             @drawWidgets widgets, startPoint, width
         # @updateValueView()
+        if @__shortValue()?
+            @view('value').position.xy =
+                if @model.expanded
+                    [ shape.width/2
+                    , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
+                else
+                    [ 0, - shape.height/2 - togglerShape.size]
         @view('name').position.y = nodeNameYOffset
         @view('expression').position.y = nodeExprYOffset
         view.position.xy = @model.position.slice()
