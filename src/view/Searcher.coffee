@@ -35,6 +35,10 @@ export class Searcher extends Component
         @updateView()
         @registerEvents()
 
+    attach: =>
+        super.attach()
+        @parent.topDomScene.model.add @view.obj
+
     updateView: =>
         @updateResults()
         @updateInput()
