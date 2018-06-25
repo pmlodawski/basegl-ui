@@ -29,7 +29,7 @@ export class InArrow extends Subport
         if @changed.angle
             @view('port').rotation.z = @model.angle
             @view('name').rotation.z = @model.angle - Math.PI/2
-        if @model.hovered
+        if @view('typeName')?
             @view('typeName').rotation.z = @model.angle - Math.PI/2
             typeNamePosition = [- typeNameXOffset - @model.radius, - typeNameYOffset]
             @view('typeName').position.xy = typeNamePosition

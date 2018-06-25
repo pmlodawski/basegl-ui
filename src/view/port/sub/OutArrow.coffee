@@ -22,7 +22,7 @@ export class OutArrow extends Subport
             @view('port').position.y = @model.radius
         if @changed.angle
             @view('port').rotation.z = @model.angle
-        if @model.hovered
+        if @view('typeName')?
             @view('typeName').rotation.z = @model.angle + Math.PI/2
             @view('typeName').position.x = nameXOffset + @model.radius
 

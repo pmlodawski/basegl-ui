@@ -19,7 +19,7 @@ export class Self extends Subport
             align: 'left'
 
     adjust: (view) =>
-        if @model.hovered
+        if @view('typeName')?
             @view('typeName').rotation.z = @model.angle - Math.PI/2
             typeNamePosition = [- typeNameXOffset - @model.radius, 0]
             @view('typeName').position.xy = typeNamePosition

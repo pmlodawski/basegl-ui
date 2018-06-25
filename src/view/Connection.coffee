@@ -15,6 +15,15 @@ export class Connection extends ContainerComponent
         @addDef 'dst', new ConnectionShape src: false, @parent
 
     update: =>
+        if @changed.srcNode or @changed.srcPort
+            @srcNode = @parent.node @model.srcNode
+            @srcPort = @srcNode.outPort @model.srcPort
+            @__onColorChange()
+        if @changed.dstNode or @changed.dstPort
+            @dstNode = @parent.node @model.dstNode
+            @dstPort = @dstNode.inPort @model.dstPort
+        if @changed.srcNode or @changed.srcPort or @changed.dstNode or @changed.dstPort
+            @__onPositionChange()
 
     registerEvents: (view) =>
         registerDisconnect = (target, src) => @view(target).addEventListener 'mousedown', => @pushEvent
@@ -24,24 +33,22 @@ export class Connection extends ContainerComponent
         registerDisconnect 'dst', false
 
     connectSources: =>
-        srcNode = @parent.node @model.srcNode
-        dstNode = @parent.node @model.dstNode
-        srcPort = srcNode.outPort @model.srcPort
-        dstPort = dstNode.inPort @model.dstPort
-        @__onColorChange srcPort
-        @__onPositionChange srcNode, dstNode, srcPort, dstPort
-        @addDisposableListener srcPort, 'color', (color) => @__onColorChange srcPort
-        @addDisposableListener srcNode, 'position', => @__onPositionChange srcNode, dstNode, srcPort, dstPort
-        @addDisposableListener dstNode, 'position', => @__onPositionChange srcNode, dstNode, srcPort, dstPort
-        @addDisposableListener dstPort, 'position', => @__onPositionChange srcNode, dstNode, srcPort, dstPort
-        @onDispose => srcPort.unfollow @model.key
-        @onDispose => dstPort.unfollow @model.key
+        return unless @srcPort? and @dstPort?
+        @__onColorChange()
+        @__onPositionChange()
+        @addDisposableListener @srcPort, 'color', => @__onColorChange()
+        @addDisposableListener @srcNode, 'position', => @__onPositionChange()
+        @addDisposableListener @dstNode, 'position', => @__onPositionChange()
+        @addDisposableListener @dstPort, 'position', => @__onPositionChange()
+        @onDispose => @srcPort.unfollow @model.key
+        @onDispose => @dstPort.unfollow @model.key
 
-    __onPositionChange: (srcNode, dstNode, srcPort, dstPort) =>
-        srcPos = srcPort.connectionPosition()
-        dstPos = dstPort.connectionPosition()
-        leftOffset = srcPort.model.radius
-        rightOffset = dstPort.model.radius
+    __onPositionChange: =>
+        return unless @srcPort? and @dstPort?
+        srcPos = @srcPort.connectionPosition()
+        dstPos = @dstPort.connectionPosition()
+        leftOffset = @srcPort.model.radius
+        rightOffset = @dstPort.model.radius
 
         x = dstPos[0] - srcPos[0]
         y = dstPos[1] - srcPos[1]
@@ -58,9 +65,9 @@ export class Connection extends ContainerComponent
             angle: rotation
         @view('src').position.xy = srcPos.slice()
         @view('dst').position.xy = srcPos.slice()
-        srcPort.follow @model.key, rotation - Math.PI/2
-        dstPort.follow @model.key, rotation + Math.PI/2
+        @srcPort.follow @model.key, rotation - Math.PI/2
+        @dstPort.follow @model.key, rotation + Math.PI/2
 
-    __onColorChange: (srcPort) =>
-        @def('src').set color: srcPort.model.color
-        @def('dst').set color: srcPort.model.color
+    __onColorChange: =>
+        @def('src').set color: @srcPort.model.color
+        @def('dst').set color: @srcPort.model.color
