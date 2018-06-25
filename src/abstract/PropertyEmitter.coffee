@@ -1,5 +1,5 @@
 import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
-import {Disposable}             from "view/Disposable"
+import {Disposable}             from "abstract/Disposable"
 
 export class PropertyEmitter extends Disposable
     cons: ->
@@ -9,5 +9,8 @@ export class PropertyEmitter extends Disposable
     emitProperty: (name, property) =>
         unless @[name] == property
             @[name] = property
-            propertyEvent = new CustomEvent name, value: property
-            @dispatchEvent propertyEvent if @dispatchEvent?
+            @performEmit name, property
+
+    performEmit: (name, property) =>
+        propertyEvent = new CustomEvent name, value: property
+        @dispatchEvent propertyEvent if @dispatchEvent?

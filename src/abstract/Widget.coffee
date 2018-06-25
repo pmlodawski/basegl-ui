@@ -1,6 +1,6 @@
 import * as basegl    from 'basegl'
 
-import {Component}  from 'view/Component'
+import {Component}  from 'abstract/Component'
 
 
 

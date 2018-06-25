@@ -1,13 +1,14 @@
-import * as path      from 'path'
-import * as _         from 'underscore'
-import * as basegl    from 'basegl'
-import * as style     from 'style'
-import * as nodeShape from 'shape/Node'
-import * as shape     from 'shape/Visualization'
+import * as path         from 'path'
+import * as _            from 'underscore'
+import * as basegl       from 'basegl'
+import * as style        from 'style'
+import * as nodeShape    from 'shape/node/Base'
+import * as togglerShape from 'shape/node/ValueToggler'
+import * as shape        from 'shape/Visualization'
 
 import {group}                from 'basegl/display/Symbol'
-import {Component, pushEvent} from 'view/Component'
-import {Widget}               from 'view/Widget'
+import {Component, pushEvent} from 'abstract/Component'
+import {Widget}               from 'abstract/Widget'
 
 export visualizationCover = basegl.symbol shape.visualizationCoverShape
 menuToggler               = basegl.symbol shape.menuTogglerDiv
@@ -50,13 +51,13 @@ export class NodeVisualizations extends Component
 
     getPosition: =>
         node = @nodeEditor.node @nodeKey
-        offset = if node.expanded
+        offset = if node.model.expanded
                 [ nodeShape.width/2
-                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope - nodeShape.togglerSize ]
-            else [ 0, - nodeShape.height/2 - nodeShape.togglerSize]
+                , - node.bodyHeight - nodeShape.height/2 - nodeShape.slope - togglerShape.size ]
+            else [ 0, - nodeShape.height/2 - togglerShape.size]
 
-        return [ node.position[0] + offset[0]
-            , node.position[1] + offset[1]]
+        return [ node.model.position[0] + offset[0]
+            , node.model.position[1] + offset[1]]
 
 
     updateVisualizationsPositions: =>

@@ -3,7 +3,6 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {circle, pie, rect}  from 'basegl/display/Shape'
-import {nodeSelectionBorderMaxSize} from 'shape/Node'
 
 white          = Color.rgb [1,1,1]
 bg             = (Color.hsl [40,0.08,0.09]).toRGB()

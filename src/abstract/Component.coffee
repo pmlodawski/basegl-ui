@@ -1,11 +1,12 @@
 import {group}                  from 'basegl/display/Symbol'
-import {EventEmitter}           from "view/EventEmitter"
+import {EventEmitter}           from "abstract/EventEmitter"
 
 
 export class Component extends EventEmitter
     cons: (values, @parent) =>
         super()
         @set values
+        @attach()
 
     withScene: (fun) => @parent.withScene fun if @parent?
 

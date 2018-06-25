@@ -1,79 +1,59 @@
-import * as basegl    from 'basegl'
-import {group}        from 'basegl/display/Symbol'
-import {Composable}   from "basegl/object/Property"
-
-import * as shape       from 'shape/Connection'
-import * as nodeShape   from 'shape/Node'
-import * as portShape   from 'shape/Port'
-import {Component}  from 'view/Component'
-import {InputNode}  from 'view/InputNode'
-import {OutputNode} from 'view/OutputNode'
+import {ConnectionShape}    from 'shape/Connection'
+import {ContainerComponent} from 'abstract/ContainerComponent'
 
 
-connectionShape = basegl.symbol shape.connectionShape
-connectionShape.bbox.y = shape.width
-connectionShape.variables.color_r = 1
-connectionShape.variables.color_g = 0
-connectionShape.variables.color_b = 0
+export class HalfConnection extends ContainerComponent
+    initModel: =>
+        srcNode: null
+        srcPort: null
+        dstPos: [0,0]
+        reversed: false
 
-export class HalfConnection extends Component
-    constructor: (args...) ->
-        super args...
-        @srcNodeSubscirbed = false
+    prepare: =>
+        @addDef 'connection', new ConnectionShape null, @
 
-    updateModel: ({ srcNode:  @srcNode  = @srcNode
-                  , srcPort:  @srcPort  = @srcPort
-                  , dstPos:   @dstPos   = @dstPos
-                  , reversed: @reversed = @reversed or false
-                  }) =>
-        unless @def?
-            @def = connectionShape
-        return unless @parent?
-        @srcNode2 = @parent.node @srcNode
-        return unless @srcNode2?
-        @srcPort2 =
-            if @reversed
-                @srcNode2.inPorts[@srcPort]
-            else
-                @srcNode2.outPorts[@srcPort]
+    update: =>
+        if @changed.srcNode or @changed.srcPort or @changed.reversed
+            @srcNode = @parent.node @model.srcNode
+            @srcPort =
+                if @model.reversed
+                    @srcNode.inPort @model.dstPort
+                else
+                    @srcNode.outPort @model.srcPort
+            @__onPositionChange()
+        if @changed.dstPos
+            @__onPositionChange()
 
-    updateView: =>
-        @registerEvents()
-        return unless @srcPort2?
-        srcPos = @srcPort2.position
-        @dstPos ?= srcPos.slice()
-        if @srcNode2 instanceof InputNode
-            leftOffset = @srcPort2.radius
-        else
-            leftOffset = @srcPort2.radius + 1/2*portShape.length
-        rightOffset = 0
+    connectSources: =>
+        @__onColorChange()
+        @__onPositionChange()
+        @addDisposableListener @srcPort, 'color', (color) => @__onColorChange()
+        @addDisposableListener @srcNode, 'position', => @__onPositionChange()
+        @addDisposableListener @srcPort, 'position', => @__onPositionChange()
+        @onDispose => @srcPort.unfollow @model.key
+        @withScene (scene) =>
+            @addDisposableListener window, 'mousemove', (e) =>
+                campos = scene.camera.position
+                y = scene.height/2 + campos.y + (-scene.screenMouse.y + scene.height/2) * campos.z
+                x = scene.width/2  + campos.x + (scene.screenMouse.x - scene.width/2) * campos.z
+                @set dstPos: [x, y]
 
-        x = @dstPos[0] - srcPos[0]
-        y = @dstPos[1] - srcPos[1]
-        length = Math.sqrt(x*x + y*y) - leftOffset - rightOffset
-        @view.position.x = leftOffset
-        @view.position.y = -shape.width/2
-        @view.bbox.x = length
-        @group.position.xy = srcPos.slice()
+    __onPositionChange: =>
+        srcPos = @srcPort.connectionPosition()
+        leftOffset = @srcPort.model.radius
+
+        x = @model.dstPos[0] - srcPos[0]
+        y = @model.dstPos[1] - srcPos[1]
+        length = Math.sqrt(x*x + y*y) - leftOffset
         rotation = Math.atan2 y, x
-        @view.rotation.z = rotation
-        @srcPort2.set follow: rotation - Math.PI/2
 
-        @view.variables.color_r = @srcPort2.color[0]
-        @view.variables.color_g = @srcPort2.color[1]
-        @view.variables.color_b = @srcPort2.color[2]
+        @def('connection').set
+            offset: leftOffset
+            length: length
+            angle: rotation
 
-    registerEvents: =>
-        unless @srcConnected
-            if @srcPort2?
-                @addDisposableListener @srcPort2, 'position', => @updateView()
-                @onDispose => @srcPort2.set follow: null
-                @srcConnected = true
-        unless @dstConnected
-            @withScene (scene) =>
-                @addDisposableListener window, 'mousemove', (e) =>
-                    campos = scene.camera.position
-                    y = scene.height/2 + campos.y + (-scene.screenMouse.y + scene.height/2) * campos.z
-                    x = scene.width/2  + campos.x + (scene.screenMouse.x - scene.width/2) * campos.z
-                    @set dstPos: [x, y]
-                @dstConnected = true
+        @view('connection').position.xy = srcPos.slice()
+        @srcPort.follow @model.key, rotation - Math.PI/2
+
+    __onColorChange: =>
+        @def('connection').set color: @srcPort.model.color

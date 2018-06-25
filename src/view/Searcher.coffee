@@ -1,7 +1,7 @@
-import {Component} from 'view/Component'
+import {Component} from 'abstract/Component'
 import * as basegl from 'basegl'
 import * as style  from 'style'
-import * as shape  from 'shape/Node'
+import * as shape  from 'shape/node/Base'
 
 
 searcherRoot    = 'searcher-root'
@@ -10,10 +10,6 @@ searcherBaseOffsetX = -searcherWidth / 8
 searcherBaseOffsetY = shape.height   / 8
 
 export class Searcher extends Component
-    cons: (args...) =>
-        super args...
-        @dom = {}
-
     updateModel: ({ key:            @key            = @key
                   , mode:           @mode           = @mode
                   , input:          @input          = @input
@@ -21,6 +17,7 @@ export class Searcher extends Component
                   , selected:       @selected       = @selected or 0
                   , entries:        @entries        = @entries or []}) =>
         @entries.forEach (entry) => entry.highlights ?= []
+        @dom ?= {}
         unless @def?
             root = document.createElement 'div'
             root.id = searcherRoot
@@ -114,8 +111,8 @@ export class Searcher extends Component
             @scale = scale
             node = @parent.node @key
             if node?
-                [posx, posy] = node.position.slice()
-                exprPosY     = node.view.expression.position.y
+                [posx, posy] = node.model.position.slice()
+                exprPosY     = node.view('expression').position.y
                 [offX, offY] = @offsetFromNode()
                 @group.position.xy = [offX + posx, offY + exprPosY + posy]
                 @view.scale.xy     = [@scale, @scale]

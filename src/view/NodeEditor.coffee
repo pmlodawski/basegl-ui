@@ -2,13 +2,12 @@ import {Navigator}          from 'basegl/navigation/Navigator'
 
 import {Breadcrumb}         from 'view/Breadcrumb'
 import {Connection}         from 'view/Connection'
-import {Disposable}         from 'view/Disposable'
+import {Disposable}         from 'abstract/Disposable'
 import {ExpressionNode}     from 'view/ExpressionNode'
-import {EventEmitter}       from 'view/EventEmitter'
+import {EventEmitter}       from 'abstract/EventEmitter'
 import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
-import {Port}               from 'view/Port'
 import {Searcher}           from 'view/Searcher'
 import {NodeVisualizations} from 'view/Visualization'
 import {visualizationCover} from 'view/Visualization'
@@ -63,8 +62,8 @@ export class NodeEditor extends EventEmitter
     node: (nodeKey) =>
         node = @nodes[nodeKey]
         if node? then node
-        else if @inputNode?  and (@inputNode.key  is nodeKey) then @inputNode
-        else if @outputNode? and (@outputNode.key is nodeKey) then @outputNode
+        else if @inputNode?  and (@inputNode.model.key  is nodeKey) then @inputNode
+        else if @outputNode? and (@outputNode.model.key is nodeKey) then @outputNode
 
     unsetNode: (node) =>
         if @nodes[node.key]?
@@ -77,7 +76,6 @@ export class NodeEditor extends EventEmitter
         else
             nodeView = new ExpressionNode node, @
             @nodes[node.key] = nodeView
-            nodeView.attach()
 
     setNodes: (nodes) =>
         nodeKeys = new Set
@@ -112,7 +110,6 @@ export class NodeEditor extends EventEmitter
         else
             visView = new NodeVisualizations nodeVis, @
             @visualizations[key] = visView
-            visView.attach()
         @node(key).onDispose =>
             if @visualizations[key]?
                 @visualizations[key].dispose()
@@ -134,7 +131,6 @@ export class NodeEditor extends EventEmitter
         else
             connectionView = new Connection connection, @
             @connections[connection.key] = connectionView
-            connectionView.attach()
 
     setConnections: (connections) =>
         connectionKeys = new Set
@@ -162,7 +158,6 @@ export class NodeEditor extends EventEmitter
                 @[name].set value
             else
                 @[name] = new constructor value, @
-                @[name].attach()
         else
             if @[name]?
                 @[name].dispose()
@@ -177,7 +172,6 @@ export class NodeEditor extends EventEmitter
             for value in values
                 newValue = new constructor value, @
                 @[name].push newValue
-                newValue.attach()
         else if values.length > 0
             for i in [0..values.length - 1]
                 @[name][i].set value[i]

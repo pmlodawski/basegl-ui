@@ -2,14 +2,9 @@ require "babel-core/register"
 require "babel-polyfill"
 import * as basegl from 'basegl'
 
-import {Breadcrumb}      from 'view/Breadcrumb'
-import {Connection}      from 'view/Connection'
-import {ExpressionNode}  from 'view/ExpressionNode'
-import {InputNode}       from 'view/InputNode'
 import {NodeEditor}      from 'view/NodeEditor'
-import {OutputNode}      from 'view/OutputNode'
-import {Searcher}        from 'view/Searcher'
-import {subscribeEvents} from 'view/EventEmitter'
+import {subscribeEvents} from 'abstract/EventEmitter'
+
 
 export install = (name, fontRootPath = "", f) ->
     scene = basegl.scene {domElement: name}
@@ -31,24 +26,21 @@ window.run = main
 rand = (to, from = 1) => Math.floor((Math.random() * (to + 1 - from)) + from)
 
 generateInPorts = (count) =>
-    ports = []
+    ports = {}
     unless count == 0
         for i in [1..count]
-            ports.push
-                key: i
+            ports[i] = {}
     return ports
 
 generateNode = (key) =>
-    inPortsCount = rand(10, 0)
-
-    new ExpressionNode
-        key: key
-        name: 'node' + key
-        inPorts: generateInPorts rand 10
-        outPorts: [{key: 1}]
-        position: [rand(10000), rand(10000)]
-        expanded: rand 1, 0
-        selected: false
+    key: key
+    name: 'node' + key
+    inPorts: generateInPorts rand 10
+    outPorts:
+        1: {}
+    position: [rand(10000), rand(10000)]
+    expanded: rand 1, 0
+    selected: false
 
 generateNodes = (count) =>
     nodes = []
@@ -58,12 +50,11 @@ generateNodes = (count) =>
     return nodes
 
 generateConnection = (key, maxNode) =>
-    new Connection
-        key: key
-        srcNode: rand maxNode
-        srcPort: 1
-        dstNode: rand maxNode
-        dstPort: 1
+    key: key
+    srcNode: rand maxNode
+    srcPort: 1
+    dstNode: rand maxNode
+    dstPort: 1
 
 generateConnections = (count, maxNode) =>
     connections = []
@@ -73,7 +64,7 @@ generateConnections = (count, maxNode) =>
     return connections
 
 export runPerformance = (nodeEditor) ->
-    nodeEditor.setBreadcrumb new Breadcrumb
+    nodeEditor.setBreadcrumb
         moduleName: 'Foo'
         items:
             [
@@ -89,18 +80,20 @@ export runPerformance = (nodeEditor) ->
 
     nodeEditor.setNodes generateNodes nodesCount
 
-    nodeEditor.setInputNode new InputNode
+    nodeEditor.setInputNode
         key: 'in'
-        outPorts: [ {key: 1}
-                  , {key: 2}
-                  , {key: 3}]
+        outPorts:
+            1: {}
+            2: {}
+            3: {}
 
-    nodeEditor.setOutputNode new OutputNode
+    nodeEditor.setOutputNode
         key: 'out'
-        inPorts: [ {key: 1}
-                 , {key: 2}]
+        inPorts:
+            1: {}
+            2: {}
     nodeEditor.setConnections generateConnections connectionsCount, nodesCount
-    nodeEditor.setSearcher new Searcher
+    nodeEditor.setSearcher
         key: 4
         mode: 'node'
         selected: 0
