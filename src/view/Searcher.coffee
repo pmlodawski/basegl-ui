@@ -1,5 +1,6 @@
 import {Component} from 'abstract/Component'
 import * as basegl from 'basegl'
+import {group}     from 'basegl/display/Symbol'
 import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
 
@@ -22,15 +23,22 @@ export class Searcher extends Component
             root = document.createElement 'div'
             root.id = searcherRoot
             root.className = style.luna ['searcher__root']
-            @def = basegl.symbol root
+            @def = { name: "searcher", def: basegl.symbol root }
 
     attach: =>
-        super.attach()
+        console.log "Def: ", @def
+        console.log "Parent: ", @parent
+        console.log "TopDomScene: ", @parent.topDomScene
+        @view = @def.def.newInstance()
+        @group = group [@view]
         @parent.topDomScene.model.add @view.obj
+        @updateView()
+        @registerEvents()
 
     updateView: =>
         @updateResults()
         @updateInput()
+        console.log "Dom.container: ", @dom.container
         unless @dom.container?
             @dom.container = document.createElement 'div'
             @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
