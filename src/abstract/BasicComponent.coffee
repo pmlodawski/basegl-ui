@@ -22,7 +22,8 @@ export class BasicComponent extends HasModel
                 @__undraw()
                 @__draw def
                 @__def = def
-        @adjust? @__element, @__view
+        if @__element?
+            @adjust? @__element, @__view
 
     dispose: =>
         @__undraw @__def

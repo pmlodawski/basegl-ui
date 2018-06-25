@@ -1,14 +1,18 @@
 import * as util         from 'shape/util'
 import {BasicComponent}  from 'abstract/BasicComponent'
 
+
 export class TextShape extends BasicComponent
     initModel: =>
         text: ''
         align: 'center'
+
     redefineRequired: =>
         @changed.text
+
     define: =>
         util.text str: @model.text
+
     adjust: (element) =>
         element.position.x =
             if @model.align == 'center'

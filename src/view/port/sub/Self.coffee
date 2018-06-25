@@ -1,7 +1,6 @@
-import {SelfPortShape}   from 'shape/port/Self'
-import {TextShape}       from 'shape/Text'
-import {Subport}         from 'view/port/Port'
-import {typeNameXOffset} from 'view/port/sub/Base'
+import {SelfPortShape}            from 'shape/port/Self'
+import {TextShape}                from 'shape/Text'
+import {Subport, typeNameXOffset} from 'view/port/sub/Base'
 
 export class Self extends Subport
     initModel: =>

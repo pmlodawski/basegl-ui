@@ -21,7 +21,7 @@ export class ContainerComponent extends HasModel
         @update?()
         @adjust? @__view
 
-    view: (key) => @def(key).__view
+    view: (key) => @def(key)?.__view
 
     def: (key) => @__defs[key]
 

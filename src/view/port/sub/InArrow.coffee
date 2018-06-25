@@ -1,7 +1,6 @@
 import {InPortShape}        from 'shape/port/In'
 import {TextShape}          from 'shape/Text'
-import {Subport}            from 'view/port/Port'
-import {nameXOffset, typeNameXOffset, typeNameYOffset} from 'view/port/sub/Base'
+import {Subport, nameXOffset, typeNameXOffset, typeNameYOffset} from 'view/port/sub/Base'
 
 export class InArrow extends Subport
     initModel: =>
@@ -25,11 +24,11 @@ export class InArrow extends Subport
     adjust: (view) =>
         if @changed.radius
             @view('port').position.y = @model.radius
+            namePosition = [- nameXOffset - @model.radius, 0]
+            @view('name').position.xy = namePosition
         if @changed.angle
             @view('port').rotation.z = @model.angle
             @view('name').rotation.z = @model.angle - Math.PI/2
-        namePosition = [- nameXOffset - @model.radius, 0]
-        @view('name').position.xy = namePosition
         if @model.hovered
             @view('typeName').rotation.z = @model.angle - Math.PI/2
             typeNamePosition = [- typeNameXOffset - @model.radius, - typeNameYOffset]

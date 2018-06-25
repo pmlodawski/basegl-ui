@@ -251,7 +251,7 @@ export class ExpressionNode extends ContainerComponent
             dragFinish = =>
                 @pushEvent
                     tag: 'NodeMoveEvent'
-                    position: @position
+                    position: @model.position
                 window.removeEventListener 'mouseup', dragFinish
                 window.removeEventListener 'mousemove', moveNodes
             window.addEventListener 'mouseup', dragFinish

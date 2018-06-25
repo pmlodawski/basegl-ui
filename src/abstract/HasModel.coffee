@@ -31,8 +31,9 @@ export class HasModel extends EventEmitter
     withScene: (fun) => @parent.withScene fun if @parent?
 
     set: (values) =>
-        @__setValues values
-        @onModelUpdate values
+        @withScene =>
+            @__setValues values
+            @onModelUpdate values
 
     __setValues: (values, once = false) =>
         if values?

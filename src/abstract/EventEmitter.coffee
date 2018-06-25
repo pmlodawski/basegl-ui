@@ -6,10 +6,6 @@ eventListeners = []
 export subscribeEvents = (listener) =>
     eventListeners.push listener
 
-export pushEvent = (path, base, key) =>
-    unless base.tag? then base.tag = base.constructor.name
-    for listener in eventListeners
-        listener path, base, key
 
 export class EventEmitter extends PropertyEmitter
     eventPath: =>
@@ -21,7 +17,13 @@ export class EventEmitter extends PropertyEmitter
 
     eventKey: =>
         key = @parent?.eventKey?() or []
-        key.push @key if @key?
+        key.push @model.key if @model?.key?
         key
 
-    pushEvent: (e) => pushEvent @eventPath(), e, @eventKey()
+    pushEvent: (e) =>
+        __performPushEvent @eventPath(), e, @eventKey()
+
+    __performPushEvent = (path, base, key) =>
+        unless base.tag? then base.tag = base.constructor.name
+        for listener in eventListeners
+            listener path, base, key

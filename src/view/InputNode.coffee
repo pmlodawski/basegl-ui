@@ -33,7 +33,8 @@ export class InputNode extends ContainerComponent
         @view('add').position.xy = [ @addPortPosition[0]
                                    , @addPortPosition[1]
                                    ]
-        view.position.xy = @model.position.slice()
+        if @changed.position
+            view.position.xy = @model.position.slice()
 
     align: (x, y) =>
         unless x == @model.position[0] and y == @model.position[1]

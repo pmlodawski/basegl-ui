@@ -1,7 +1,6 @@
-import {OutPortShape}       from 'shape/port/Out'
-import {TextShape}          from 'shape/Text'
-import {Subport}            from 'view/port/Port'
-import {nameXOffset}        from 'view/port/sub/Base'
+import {OutPortShape}         from 'shape/port/Out'
+import {TextShape}            from 'shape/Text'
+import {Subport, nameXOffset} from 'view/port/sub/Base'
 
 export class OutArrow extends Subport
     initModel: =>
