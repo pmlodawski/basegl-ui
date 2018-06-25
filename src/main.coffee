@@ -196,8 +196,12 @@ runExample = -> main (nodeEditor) ->
     nodeEditor.setOutputNode
         key: 'out'
         inPorts:
-            1: {}
-            2: {}
+            1:
+                name: 'output1'
+                color: [0, 0.5, 0.5]
+            2:
+                name: 'output2'
+                color: [0.2, 0.5, 0.3]
     nodeEditor.setConnections [
             key: 0
             srcNode: 'in'

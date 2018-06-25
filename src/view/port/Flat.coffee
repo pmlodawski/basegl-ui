@@ -25,13 +25,15 @@ export class FlatPort extends Port
         if @changed.color
             @updateDef 'port',
                 color: @model.color
+        if @changed.output
+            @updateDef 'name', align: if @model.output then 'right' else 'left'
 
     adjust: (view) =>
         if @changed.output or @changed.position
             x = if @model.output then @model.position[0] - shape.length else @model.position[0]
             view.position.xy = [x, @model.position[1]]
-        if @changed.once
-            @view('name').position.x =  2* shape.length
+        if @changed.output
+            @view('name').position.x = if @model.output then -shape.length else  2* shape.length
 
     connectionPosition: =>
         [ @model.position[0] + @parent.model.position[0] + (if @model.output then -shape.length else shape.length)
