@@ -28,11 +28,6 @@ addPortSymbol = basegl.symbol addPortExpr
 addPortSymbol.bbox.xy = [addPortWidth, addPortHeight]
 
 export class AddPortShape extends BasicComponent
-    initModel: => color: [1,0,0]
     define: => addPortSymbol
     adjust: (element) =>
-        if @changed.color
-            element.variables.color_r = @model.color[0]
-            element.variables.color_g = @model.color[1]
-            element.variables.color_b = @model.color[2]
         element.position.xy = [-addPortWidth/2, -addPortHeight/2]

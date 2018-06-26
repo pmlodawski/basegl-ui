@@ -48,6 +48,7 @@ export class NodeVisualizations extends Component
     dispose: =>
         for own k,v of @visualizations
            v.dispose()
+        super()
 
     getPosition: =>
         node = @nodeEditor.node @nodeKey

@@ -20,7 +20,7 @@ export class HasModel extends EventEmitter
         @model = @initModel?() or {}
         @changed = {}
         @withScene =>
-            @__setValues values
+            @__setValues values, true
             @changed.once = true
             @prepare?()
             @onModelUpdate values
@@ -37,14 +37,14 @@ export class HasModel extends EventEmitter
             @onModelUpdate values
 
     __setValues: (values, once = false) =>
-        if values?
-            for own key of @model
-                @changed[key] = false
-                value = unArray @model[key], values[key]
-                if value? and not _.isEqual @model[key], value
-                    @changed[key] = true
-                    @model[key] = value
-                    @performEmit key, value
+        values ?= {}
+        for own key of @model
+            @changed[key] = once
+            value = unArray @model[key], values[key]
+            if value? and not _.isEqual @model[key], value
+                @changed[key] = true
+                @model[key] = value
+                @performEmit key, value
 
     __addToGroup:      (view) =>
         @__view.addChild view
