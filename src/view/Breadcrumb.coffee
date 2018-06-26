@@ -1,32 +1,43 @@
-import {Component}    from 'abstract/Component'
-import * as basegl from 'basegl'
-import * as style  from 'style'
+import {ContainerComponent} from 'abstract/ContainerComponent'
+import {HtmlShape}          from 'shape/Html'
+import * as style           from 'style'
 
 
 breadcrumbId = 'breadcrumbs'
 nullModuleNameError = 'No file selected'
 
-export class Breadcrumb extends Component
-    updateModel: ({ moduleName: @moduleName = @moduleName
-                  , items:      @items      = @items or []
-                  , position:   @position   = @position or [0,0]
-                  }) =>
-        unless @def?
-            root = document.createElement 'div'
-            root.id = breadcrumbId
-            @def = basegl.symbol root
+export class Breadcrumb extends ContainerComponent
+    initModel: =>
+        moduleName: null
+        items: []
+        position: [0,0]
+        scale: 0
 
-    updateView: =>
-        @view.domElement.innerHTML = ''
-        container = document.createElement 'div'
-        container.className = style.luna ['breadcrumbs', 'noselect']
-        @items[0].name = @moduleName or nullModuleNameError
-        @items[0].link = @moduleName?
-        @items.forEach (item) =>
-            container.appendChild @renderItem item
-        @view.domElement.appendChild container
+    prepare: =>
+        @addDef 'root', new HtmlShape
+                element: 'div'
+                id: breadcrumbId
+            , @
 
-    renderItem: (item) =>
+    update: =>
+        if @changed.once or @changed.items or @changed.moduleName
+            @def('root').__element.domElement.innerHTML = ''
+            container = document.createElement 'div'
+            container.className = style.luna ['breadcrumbs', 'noselect']
+            @model.items[0] =
+                name: @model.moduleName or nullModuleNameError
+                link: @model.moduleName?
+            @model.items.forEach (item) =>
+                container.appendChild @__renderItem item
+            @def('root').__element.domElement.appendChild container
+
+    adjust: (view) =>
+        if @changed.position
+            view.position.xy = @model.position.slice()
+        if @changed.scale
+            view.scale.xy = [@model.scale, @model.scale]
+
+    __renderItem: (item) =>
         item.link ?= item.breadcrumb?
         div = document.createElement 'div'
         div.className = style.luna ['breadcrumbs__item', 'breadcrumbs__item--home']
@@ -37,19 +48,14 @@ export class Breadcrumb extends Component
                 to: item.breadcrumb
         return div
 
-    getPosition: (scene) =>
+    __align: (scene) =>
         campos = scene.camera.position
-        return [ (campos.x + scene.width  / 2) / campos.z - scene.width/2
-               , (campos.y + scene.height / 2) / campos.z + scene.height/2]
-
-    align: (position, scale) =>
-        if position != @position or scale != @scale
-            @position = position
-            @scale = scale
-            @view.position.xy = @position.slice()
-            @group.scale.xy = [@scale, @scale]
+        position = [ (campos.x + scene.width  / 2) / campos.z - scene.width/2
+                   , (campos.y + scene.height / 2) / campos.z + scene.height/2]
+        @set
+            position: position
+            scale: campos.z
 
     registerEvents: =>
         @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', =>
-                @align @getPosition(scene), scene.camera.position.z
+            @addDisposableListener scene.camera, 'move', => @__align scene
