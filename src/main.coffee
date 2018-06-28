@@ -17,7 +17,12 @@ import * as layers          from 'view/layers'
 import * as test            from './test'
 
 removeChildren = (name) =>
-    element = document.getElementById(name).innerHTML = ''
+    element = document.getElementById(name)
+    unless element?
+        console.error "The DOM element \"#{name}\" does not exist."
+        return
+
+    element.innerHTML = ''
     while element.firstChild
         element.removeChild element.firstChild
 
