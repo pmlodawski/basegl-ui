@@ -8,7 +8,7 @@ import * as shape        from 'shape/Visualization'
 
 import {group}                from 'basegl/display/Symbol'
 import {Component, pushEvent} from 'abstract/Component'
-import {Widget}               from 'abstract/Widget'
+import {WidgetOld}            from 'widget/Widget'
 
 export visualizationCover = basegl.symbol shape.visualizationCoverShape
 menuToggler               = basegl.symbol shape.menuTogglerDiv
@@ -75,7 +75,7 @@ export class NodeVisualizations extends Component
         nePath = @nodeEditor.eventPath?() or [@nodeEditor.constructor.name]
         nePath.concat ["NodeVisualization", @nodeKey]
 
-export class VisualizationContainer extends Widget
+export class VisualizationContainer extends WidgetOld
     cons: (values, @parent) =>
         @nodeEditor = @parent.nodeEditor
         @def        = visualizationCover
@@ -162,7 +162,7 @@ export class VisualizationContainer extends Widget
             if @mode == 'Default'
                 @pushFocusVisualization()
 
-export class Visualization extends Widget
+export class Visualization extends WidgetOld
     cons: (values, @parent) =>
         @nodeEditor  = @parent.nodeEditor
         @configure
@@ -272,7 +272,7 @@ export class Visualization extends Widget
             iframe
 
 
-export class VisualizerMenu extends Widget
+export class VisualizerMenu extends WidgetOld
     cons: (values, @parent) ->
         @nodeEditor = @parent.nodeEditor
         @configure

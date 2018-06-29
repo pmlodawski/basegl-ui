@@ -20,6 +20,7 @@ import {TextShape}          from 'shape/Text'
 import {NodeShape}          from 'shape/node/Node'
 import {NodeErrorShape}     from 'shape/node/ErrorFrame'
 import {ValueTogglerShape}  from 'shape/node/ValueToggler'
+import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 ### Utils ###
 selectedNode = null
@@ -31,7 +32,7 @@ nodeNameYOffset = nodeExprYOffset + 15
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
-
+widgetOffset = 20
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -56,14 +57,26 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
 
-        setInPort  = (k, inPort)  => @autoUpdateDef ('in'  + k),  InPort,  inPort
-        for own k, inPort of @model.inPorts
-            setInPort k, inPort
-        setOutPort = (k, outPort) => @autoUpdateDef ('out' + k), OutPort, outPort
-        for own k, outPort of @model.outPorts
-            setOutPort k, outPort
-        @updateInPorts()
-        @updateOutPorts()
+        if @changed.inPorts
+            setInPort  = (k, inPort)  =>
+                @autoUpdateDef ('in'  + k),  InPort, inPort
+
+            for own k, inPort of @model.inPorts
+                setInPort k, inPort
+            @updateInPorts()
+        if @model.expanded
+            setWidget = (k) =>
+                @autoUpdateDef ('widget' + k), HorizontalLayout,
+                    widgets: inPort.widgets
+                    width: @bodyWidth - widgetOffset
+            for own k, inPort of @model.inPorts
+                setWidget k, inPort
+
+        if @changed.outPorts
+            setOutPort = (k, outPort) => @autoUpdateDef ('out' + k), OutPort, outPort
+            for own k, outPort of @model.outPorts
+                setOutPort k, outPort
+            @updateOutPorts()
 
         @updateDef 'node',
             expanded: @model.expanded
@@ -96,36 +109,6 @@ export class ExpressionNode extends ContainerComponent
         if @model.value? and @model.value.contents?
             @model.value.contents.contents
 
-    # drawWidgets: (widgets, startPoint, width) =>
-    #     return unless widgets.length > 0
-    #     ws = []
-    #     minWidth = 0
-    #     for i in [0..widgets.length - 1]
-    #         ws.push
-    #             index  : i
-    #             widget : widgets[i]
-    #             width : widgets[i].minWidth
-    #         minWidth += widgets[i].minWidth
-    #         widgets[i].configure siblings:
-    #             left:  ! (i == 0)
-    #             right: ! (i == widgets.length - 1)
-    #     offset = 3
-    #     free = width - minWidth - offset * (widgets.length - 1)
-    #     ws.sort (a, b) -> a.widget.maxWidth - b.widget.maxWidth
-    #     for i in [0..ws.length - 1]
-    #         w = ws[i]
-    #         wfree = free / (ws.length - i)
-    #         if (! w.widget.maxWidth?) or w.widget.maxWidth > w.width + wfree
-    #             free -= wfree
-    #             w.width += wfree
-    #         else
-    #             free -= w.widget.maxWidth - w.width
-    #             w.width = w.widget.maxWidth
-    #     ws.forEach (w) ->
-    #         widgets[w.index].set position: startPoint.slice()
-    #         widgets[w.index].configure width: w.width
-    #         startPoint[0] += w.width + offset
-
     # updateValueView: =>
     #     valueSize     = [0,0]
     #     valuePosition = @view('node').position
@@ -135,14 +118,13 @@ export class ExpressionNode extends ContainerComponent
     #     @view('valueToggler').position.y = @view('node').position.y
         
     adjust: (view) =>
-        # if @model.expanded
-        #     for own inPortKey, inPort of @inPorts
-        #         widgets = @widgets[inPortKey]
-        #         if widgets?
-        #             leftOffset = 50
-        #             startPoint = [inPort.position[0] + leftOffset, inPort.position[1]]
-        #             width = @bodyWidth - 20
-        #             @drawWidgets widgets, startPoint, width
+        if @model.expanded
+            for own inPortKey, inPortModel of @model.inPorts
+                inPort = @def('in' + inPortKey)
+                if inPortModel.widgets?
+                    leftOffset = 50
+                    startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
+                    @view('widget' + inPortKey).position.xy = startPoint
         # @updateValueView()
         if @__shortValue()?
             @view('value').position.xy =
@@ -181,19 +163,6 @@ export class ExpressionNode extends ContainerComponent
                 inPortNumber++
             @def('in' + inPortKey).set values
 
-            # if @model.expanded
-            #     unless @widgets[inPortKey]?
-            #         @widgets[inPortKey] = []
-            #         inPort.widgets.forEach (widgetCreate) =>
-            #             widget = widgetCreate @parent
-            #             @onDispose => widget.dispose()
-            #             @widgets[inPortKey].push widget
-            # else
-            #     if @widgets[inPortKey]?
-            #         @widgets[inPortKey].forEach (widget) =>
-            #             widget.detach()
-            #         delete @widgets[inPortKey]
-            # inPort.set values
         # Those values should be calculated based on informations about port widgets
         @bodyWidth = 200
         @bodyHeight = 300

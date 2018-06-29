@@ -11,7 +11,6 @@ import {InputNode}          from 'view/InputNode'
 import {NodeEditor}         from 'view/NodeEditor'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
-import {Slider}             from 'view/Slider'
 import {runPerformance}     from './performance'
 import * as layers          from 'view/layers'
 import * as test            from './test'
@@ -37,8 +36,6 @@ export onEvent = subscribeEvents
 main = (callback) -> install 'basegl-root', 'rsc/', callback
 
 window.run = main
-
-mkWidget  = (cons, args) -> (parent) -> new cons args, parent
 
 runExample = -> main (nodeEditor) ->
     nodeEditor.setBreadcrumb new Breadcrumb
@@ -120,45 +117,45 @@ runExample = -> main (nodeEditor) ->
                     typeName: 'B'
                     widgets:
                         [
-                            mkWidget Slider,
-                                min: 0
-                                max: 100
-                                value: 49
+                            cls: 'Int'
+                            min: 0
+                            max: 100
+                            value: 49
                         ,
-                            mkWidget Slider,
-                                min: -50
-                                max: 50
-                                value: 11
+                            cls: 'Int'
+                            min: -50
+                            max: 50
+                            value: 11
                         ]
                 2:
                     name: 'port2'
                     typeName: 'C'
                     widgets:
                         [
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
                         ]
                 3:
                     name: 'port3'
                     typeName: 'D'
                     widgets:
                         [
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
                         ,
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
                         ,
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
                         ]
             outPorts:
                 1: {}
