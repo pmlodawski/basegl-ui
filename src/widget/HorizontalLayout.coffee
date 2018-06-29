@@ -1,16 +1,19 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import {Slider}             from 'widget/Slider'
+import {lookupWidget}       from 'widget/WidgetDirectory'
 
 
 export class HorizontalLayout extends ContainerComponent
     initModel: =>
         widgets: []
         width: 100
+        offset: 3
 
     update: =>
         if @changed.widgets
             for own k, widget of @model.widgets
-                @autoUpdateDef k, Slider, widget
+                cons = lookupWidget widget
+                if cons?
+                    @autoUpdateDef k, cons, widget
 
         return unless @model.widgets.length > 0
         ws = []
@@ -25,8 +28,7 @@ export class HorizontalLayout extends ContainerComponent
             @updateDef i, siblings:
                 left:  ! (i == 0)
                 right: ! (i == @model.widgets.length - 1)
-        offset = 3
-        free = @model.width - minWidth - offset * (@model.widgets.length - 1)
+        free = @model.width - minWidth - @model.offset * (@model.widgets.length - 1)
         ws.sort (a, b) -> a.widget.maxWidth - b.widget.maxWidth
         for i in [0..ws.length - 1]
             w = ws[i]
@@ -40,4 +42,4 @@ export class HorizontalLayout extends ContainerComponent
         ws.forEach (w) =>
             @view(w.index).position.xy = startPoint.slice()
             @updateDef w.index, width: w.width
-            startPoint[0] += w.width + offset
+            startPoint[0] += w.width + @model.offset

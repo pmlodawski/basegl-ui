@@ -122,10 +122,8 @@ runExample = -> main (nodeEditor) ->
                             max: 100
                             value: 49
                         ,
-                            cls: 'Int'
-                            min: -50
-                            max: 50
-                            value: 11
+                            cls: 'Bool'
+                            value: true
                         ]
                 2:
                     name: 'port2'
@@ -147,10 +145,8 @@ runExample = -> main (nodeEditor) ->
                             max: 10
                             value: 5
                         ,
-                            cls: 'Int'
-                            min: -10
-                            max: 10
-                            value: 5
+                            cls: 'String'
+                            value: 'test'
                         ,
                             cls: 'Int'
                             min: -10
