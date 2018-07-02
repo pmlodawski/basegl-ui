@@ -10,9 +10,17 @@ unArray = (ref, obj) =>
         ret
     else
         obj
+
 export class HasModel extends EventEmitter
     cons: (values, @parent) =>
         super()
+        @root =
+            if @parent?
+                if @parent.root?
+                    @parent.root
+                else
+                    @parent
+            else @
 
     init: (values) =>
         super()

@@ -10,13 +10,12 @@ export class Breadcrumb extends ContainerComponent
     initModel: =>
         moduleName: null
         items: []
-        position: [0,0]
-        scale: 0
 
     prepare: =>
         @addDef 'root', new HtmlShape
                 element: 'div'
                 id: breadcrumbId
+                scalable: false
             , @
 
     update: =>
@@ -32,10 +31,9 @@ export class Breadcrumb extends ContainerComponent
             @def('root').__element.domElement.appendChild container
 
     adjust: (view) =>
-        if @changed.position
-            view.position.xy = @model.position.slice()
-        if @changed.scale
-            view.scale.xy = [@model.scale, @model.scale]
+        if @changed.once
+            @withScene (scene) =>
+                view.position.y = scene.height
 
     __renderItem: (item) =>
         item.link ?= item.breadcrumb?
@@ -47,15 +45,3 @@ export class Breadcrumb extends ContainerComponent
                 tag: 'NavigateEvent'
                 to: item.breadcrumb
         return div
-
-    __align: (scene) =>
-        campos = scene.camera.position
-        position = [ (campos.x + scene.width  / 2) / campos.z - scene.width/2
-                   , (campos.y + scene.height / 2) / campos.z + scene.height/2]
-        @set
-            position: position
-            scale: campos.z
-
-    registerEvents: =>
-        @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', => @__align scene
