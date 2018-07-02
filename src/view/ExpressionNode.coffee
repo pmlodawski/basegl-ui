@@ -33,6 +33,7 @@ nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
 widgetOffset = 20
+widgetHeight = 20
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -69,6 +70,7 @@ export class ExpressionNode extends ContainerComponent
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     widgets: inPort.widgets
                     width: @bodyWidth - widgetOffset
+                    height: widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
 

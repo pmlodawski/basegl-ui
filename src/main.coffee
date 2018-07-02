@@ -124,6 +124,9 @@ runExample = -> main (nodeEditor) ->
                         ,
                             cls: 'Bool'
                             value: true
+                        ,
+                            cls: 'Bool'
+                            value: false
                         ]
                 2:
                     name: 'port2'

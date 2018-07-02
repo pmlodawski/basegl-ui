@@ -34,15 +34,18 @@ export class HasModel extends EventEmitter
         return if @disposed
         @withScene =>
             @__setValues values
-            @onModelUpdate values
+            if @__anythingChanged
+                @onModelUpdate values
 
     __setValues: (values, once = false) =>
         values ?= {}
+        @__anythingChanged = once
         for own key of @model
             @changed[key] = once
             value = unArray @model[key], values[key]
             if value? and not _.isEqual @model[key], value
                 @changed[key] = true
+                @__anythingChanged = true
                 @model[key] = value
                 @performEmit key, value
 

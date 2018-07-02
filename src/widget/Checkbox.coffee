@@ -1,5 +1,5 @@
 
-import {CheckboxShape} from 'shape/Checkbox'
+import {CheckboxShape} from 'shape/widget/Checkbox'
 import {TextShape}   from 'shape/Text'
 import * as util     from 'shape/util'
 import * as layers   from 'view/layers'
@@ -13,11 +13,7 @@ export class Checkbox extends Widget
         model.minHeight = 20
         model.minWidth = 20
         model.maxHeight = 20
-        model.maxWidth = 20
-        model.width  = 20
-        model.height = 20
-        model.min = null
-        model.max = null
+        model.maxWidth = 50
         model.value = null
         model
 
@@ -26,7 +22,7 @@ export class Checkbox extends Widget
 
     update: =>
         @updateDef 'checkbox',
-            level:       (@model.value - @model.min)/(@model.max - @model.min)
+            checked:     @model.value
             topLeft:     not (@model.siblings.top or @model.siblings.left)
             topRight:    not (@model.siblings.top or @model.siblings.right)
             bottomLeft:  not (@model.siblings.bottom or @model.siblings.left)

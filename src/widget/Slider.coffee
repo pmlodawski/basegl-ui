@@ -1,6 +1,6 @@
 import * as basegl from 'basegl'
 
-import {SliderShape} from 'shape/Slider'
+import {SliderShape} from 'shape/widget/Slider'
 import {TextShape}   from 'shape/Text'
 import * as util     from 'shape/util'
 import * as layers   from 'view/layers'
@@ -13,8 +13,6 @@ export class Slider extends Widget
         model = super()
         model.minWidth = 40
         model.minHeight = 20
-        model.width  = 100
-        model.height = 20
         model.min = null
         model.max = null
         model.value = null

@@ -8,8 +8,8 @@ export class Widget extends ContainerComponent
     initModel: =>
         minWidth:  0
         minHeight: 0
-        maxWidth:  null
-        maxHeight: null
+        maxWidth:  Infinity
+        maxHeight: Infinity
         width:     null
         height:    null
         inline:    false
