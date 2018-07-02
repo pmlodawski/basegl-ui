@@ -184,8 +184,8 @@ export class ExpressionNode extends ContainerComponent
             outPortNumber++
 
     registerEvents: (view) =>
-        view.addEventListener 'dblclick',  @pushEvent
-        @view('valueToggler').addEventListener 'mouseup', => @pushEvent
+        view.addEventListener 'dblclick', (e) => @pushEvent e
+        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e
             tag: 'ToggleVisualizationsEvent'
         @makeHoverable view
         @makeDraggable view

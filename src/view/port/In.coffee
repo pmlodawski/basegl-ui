@@ -1,6 +1,6 @@
-import {Port}    from 'view/port/Base'
-import {InArrow} from 'view/port/sub/InArrow'
-import {Self}    from 'view/port/sub/Self'
+import {Port, defaultColor} from 'view/port/Base'
+import {InArrow}            from 'view/port/sub/InArrow'
+import {Self}               from 'view/port/sub/Self'
 
 
 export class InPort extends Port
@@ -13,7 +13,7 @@ export class InPort extends Port
         mode:     'in'
         locked:   false
         radius:   0
-        color:    [0, 1, 0]
+        color:    defaultColor
         widgets:  []
         position: [0,0]
 

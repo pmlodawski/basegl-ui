@@ -10,7 +10,6 @@ export class HorizontalLayout extends ContainerComponent
         offset: 3
 
     update: =>
-        console.log 'update'
         if @changed.widgets
             for own k, widget of @model.widgets
                 cons = lookupWidget widget
@@ -43,7 +42,6 @@ export class HorizontalLayout extends ContainerComponent
                 w.width = w.widget.maxWidth
         widgets.sort (a, b) -> a.index - b.index
         widgets.forEach (w) =>
-            console.log w
             @view(w.index).position.xy = startPoint.slice()
             @updateDef w.index,
                 width: w.width
