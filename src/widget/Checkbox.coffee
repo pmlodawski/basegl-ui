@@ -14,7 +14,7 @@ export class Checkbox extends Widget
         model.minWidth = 20
         model.maxHeight = 20
         model.maxWidth = 50
-        model.value = null
+        model.value = false
         model
 
     prepare: =>
@@ -33,4 +33,11 @@ export class Checkbox extends Widget
     adjust: (view) =>
         if @changed.height then @view('checkbox').position.y = -@model.height/2
 
-    registerEvents: =>
+    registerEvents: (view) =>
+        view.addEventListener 'click', (e) =>
+            @set value: not @model.value
+            @pushEvent
+                tag: 'PortControlEvent'
+                content:
+                    cls: 'Bool'
+                    value: @model.value

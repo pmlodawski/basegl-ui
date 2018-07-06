@@ -1,8 +1,8 @@
-import * as basegl      from 'basegl'
-import {rect}           from 'basegl/display/Shape'
-import {BasicComponent} from 'abstract/BasicComponent'
-import * as color       from 'shape/Color'
-import * as layers      from 'view/layers'
+import * as basegl       from 'basegl'
+import {halfplane, rect} from 'basegl/display/Shape'
+import {BasicComponent}  from 'abstract/BasicComponent'
+import * as color        from 'shape/Color'
+import * as layers       from 'view/layers'
 
 
 sliderExpr = basegl.expr ->
@@ -12,10 +12,13 @@ sliderExpr = basegl.expr ->
     bottomRight = 'bbox.y'/2 * 'bottomRight'
     valueWidth  = 'bbox.x' * 'level'
     background = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
-    background = background.move 'bbox.x'/2, 'bbox.y'/2
-    background = background.fill color.sliderBgColor
-    slider = rect valueWidth, 'bbox.y', topLeft, 0, bottomLeft, 0
-    slider = slider.move valueWidth/2, 'bbox.y'/2
+        .move 'bbox.x'/2, 'bbox.y'/2
+        .fill color.sliderBgColor
+    slider = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
+        .move 'bbox.x'/2, 'bbox.y'/2
+    cutter = halfplane -Math.PI/2, true
+        .move valueWidth, 0
+    slider = slider - cutter
     slider = slider.fill color.sliderColor
     background + slider
 

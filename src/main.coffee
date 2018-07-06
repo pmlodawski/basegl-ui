@@ -115,7 +115,7 @@ runExample = -> main (nodeEditor) ->
                 1:
                     name: 'port1'
                     typeName: 'B'
-                    widgets:
+                    controls:
                         [
                             cls: 'Int'
                             min: 0
@@ -131,9 +131,9 @@ runExample = -> main (nodeEditor) ->
                 2:
                     name: 'port2'
                     typeName: 'C'
-                    widgets:
+                    controls:
                         [
-                            cls: 'Int'
+                            cls: 'Real'
                             min: -10
                             max: 10
                             value: 5
@@ -141,7 +141,7 @@ runExample = -> main (nodeEditor) ->
                 3:
                     name: 'port3'
                     typeName: 'D'
-                    widgets:
+                    controls:
                         [
                             cls: 'Int'
                             min: -10

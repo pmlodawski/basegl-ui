@@ -58,7 +58,7 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
 
-        if @changed.inPorts
+        if @changed.inPorts or @changed.expanded
             setInPort  = (k, inPort)  =>
                 @autoUpdateDef ('in'  + k),  InPort, inPort
 
@@ -68,7 +68,8 @@ export class ExpressionNode extends ContainerComponent
         if @model.expanded
             setWidget = (k) =>
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
-                    widgets: inPort.widgets
+                    key: k
+                    widgets: inPort.controls
                     width: @bodyWidth - widgetOffset
                     height: widgetHeight
             for own k, inPort of @model.inPorts
@@ -98,9 +99,6 @@ export class ExpressionNode extends ContainerComponent
             expanded: @model.expanded
             body: [@bodyWidth, @bodyHeight]
 
-
-        # @widgets ?= {}
-
     outPort: (key) => @def ('out' + key)
     inPort: (key) => @def ('in' + key)
 
@@ -123,7 +121,7 @@ export class ExpressionNode extends ContainerComponent
         if @model.expanded
             for own inPortKey, inPortModel of @model.inPorts
                 inPort = @def('in' + inPortKey)
-                if inPortModel.widgets?
+                if inPortModel.controls?
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
@@ -140,6 +138,8 @@ export class ExpressionNode extends ContainerComponent
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
+        @bodyWidth = 200
+        @bodyHeight = 90
         inPortNumber = 0
         inPortKeys = Object.keys @model.inPorts
         for inPortKey, inPort of @model.inPorts
@@ -155,6 +155,7 @@ export class ExpressionNode extends ContainerComponent
                 values.position = [- shape.height/2
                                   ,- shape.height/2 - inPortNumber * 50]
                 inPortNumber++
+                @bodyHeight += widgetHeight
             else
                 values.position = [0,0]
                 values.radius = portDistance
@@ -165,9 +166,6 @@ export class ExpressionNode extends ContainerComponent
                 inPortNumber++
             @def('in' + inPortKey).set values
 
-        # Those values should be calculated based on informations about port widgets
-        @bodyWidth = 200
-        @bodyHeight = 300
 
     updateOutPorts: =>
         outPortNumber = 0

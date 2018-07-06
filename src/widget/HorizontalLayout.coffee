@@ -4,6 +4,7 @@ import {lookupWidget}       from 'widget/WidgetDirectory'
 
 export class HorizontalLayout extends ContainerComponent
     initModel: =>
+        key: null
         widgets: []
         width: null
         height: null
