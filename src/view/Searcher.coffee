@@ -1,4 +1,6 @@
-import {Component} from 'abstract/Component'
+import {ContainerComponent} from 'abstract/ContainerComponent'
+import {HtmlShape} from 'shape/Html'
+
 import * as basegl from 'basegl'
 import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
@@ -9,52 +11,87 @@ searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
 searcherBaseOffsetX = -searcherWidth / 8
 searcherBaseOffsetY = shape.height   / 8
 
-export class Searcher extends Component
-    updateModel: ({ key:            @key            = @key
-                  , mode:           @mode           = @mode
-                  , input:          @input          = @input
-                  , inputSelection: @inputSelection = null
-                  , selected:       @selected       = @selected or 0
-                  , entries:        @entries        = @entries or []}) =>
-        @entries.forEach (entry) => entry.highlights ?= []
-        @dom ?= {}
-        unless @def?
-            root = document.createElement 'div'
-            root.id = searcherRoot
-            root.className = style.luna ['searcher__root']
-            @def = basegl.symbol root
 
-    updateView: =>
-        @updateResults()
-        @updateInput()
-        unless @dom.container?
-            @dom.container = document.createElement 'div'
-            @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
-            @dom.container.appendChild @dom.results
-            @dom.container.appendChild @dom.input
-            @view.domElement.appendChild @dom.container
+export class Searcher extends ContainerComponent
+
+    ################################
+    ### Initialize the component ###
+    ################################
+
+    initModel: =>
+        key: null
+        input: null
+        inputSelection: null
+        selected: 0
+        entries: []
+        position: [0, 0]
+
+    prepare: =>
+        @dom ?= {}
+        @addDef 'root', new HtmlShape
+                element: 'div'
+                id: 'searcher-root'
+                scalable: false
+            , @
+
+    #############################
+    ### Create/update the DOM ###
+    #############################
+
+    update: =>
+        @__createDom() unless @dom.container?
+        @__updateResults() if @changed.entries
+        @__updateInput() if @changed.input
         @dom.input.focus()
 
-    updateResults: =>
-        unless @dom.results?
-            @dom.results = document.createElement 'div'
-            @dom.results.className = style.luna ['searcher__results']
-            @dom.resultsList = document.createElement 'div'
-            @dom.resultsList.className = style.luna ['searcher__results__list']
-            @dom.results.appendChild @dom.resultsList
+    __createDom: =>
+        @__createResults()
+        @__createInput()
+        @__createContainer()
 
+    __createContainer: =>
+        @dom.container = document.createElement 'div'
+        @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
+        @dom.container.appendChild @dom.results
+        @dom.container.appendChild @dom.input
+        @def('root').appendChild @dom.container
+
+    __createResults: =>
+        @dom.results = document.createElement 'div'
+        @dom.results.className = style.luna ['searcher__results']
+        @dom.resultsList = document.createElement 'div'
+        @dom.resultsList.className = style.luna ['searcher__results__list']
+        @dom.results.appendChild @dom.resultsList
+
+    __createInput: =>
+        @dom.input = document.createElement 'input'
+        @dom.input.type = 'text'
+        @dom.input.className = style.luna ['searcher__input']
+
+    __updateResults: =>
         @dom.resultsList.innerText = ''
-        omit = if @selected == 0 then 0 else @selected - 1
+        omit = if @model.selected == 0 then 0 else @model.selected - 1
         i = omit + 1
-        @entries.slice(omit).forEach (entry) =>
-            @dom.resultsList.appendChild @renderResult entry, i == @selected
+        @model.entries.slice(omit).forEach (entry) =>
+            @dom.resultsList.appendChild @__renderResult entry, i == @model.selected
             i++
 
-    renderResult: (entry, selected) =>
+    __updateInput: =>
+        inputClasses = ['searcher__input']
+        inputClasses.push ['searcher__input-selected'] if @model.selected == 0
+        inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
+        @dom.input.className = style.luna inputClasses
+        if @model.inputSelection?.length == 2
+            @dom.input.selectionStart = @model.inputSelection[0]
+            @dom.input.selectionEnd   = @model.inputSelection[1]
+            @model.inputSelection = null
+        return @dom.input
+
+    __renderResult: (entry, selected) =>
         resultName = document.createElement 'div'
         resultName.className = style.luna ['searcher__results__item__name']
-        resultName.appendChild @renderPrefix entry.className or ''
-        resultName.appendChild @renderHighlights entry.name, entry.highlights
+        resultName.appendChild @__renderPrefix entry.className or ''
+        resultName.appendChild @__renderHighlights entry.name, entry.highlights
 
         result = document.createElement 'div'
         resultClasses = ['searcher__results__item']
@@ -63,13 +100,13 @@ export class Searcher extends Component
         result.appendChild resultName
         return result
 
-    renderPrefix: (prefix) ->
+    __renderPrefix: (prefix) ->
         prefixSpan = document.createElement 'span'
         prefixSpan.className = style.luna ['searcher__pre']
         prefixSpan.innerHTML = prefix
         return prefixSpan
 
-    renderHighlights: (name, highlights) =>
+    __renderHighlights: (name, highlights) =>
         nameSpan = document.createElement 'span'
         last = 0
         highlights.forEach (highlight) =>
@@ -90,37 +127,41 @@ export class Searcher extends Component
         nameSpan.appendChild normSpan
         return nameSpan
 
-    updateInput: =>
-        unless @dom.input?
-            @dom.input = document.createElement 'input'
-            @dom.input.type = 'text'
-        inputClasses = ['searcher__input']
-        inputClasses.push ['searcher__input-selected'] if @selected == 0
-        inputClasses.push ['searcher__no-results'] if @entries.length == 0
-        @dom.input.className = style.luna inputClasses
-        if @inputSelection?.length == 2
-            @dom.input.selectionStart = @inputSelection[0]
-            @dom.input.selectionEnd   = @inputSelection[1]
-            @inputSelection = null
-        return @dom.input
+    #######################
+    ### Adjust the view ###
+    #######################
 
-    offsetFromNode: => [searcherBaseOffsetX * @scale, searcherBaseOffsetY * @scale]
+    adjust: (view) =>
+        if @changed.position or @changed.scale
+            @__withParentNode (parentNode) =>
+                [posx, posy] = parentNode.model.position.slice()
+                exprPosY     = parentNode.view('expression').position.y
+                view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
 
-    align: (scale) =>
-        if @scale != scale
-            @scale = scale
-            node = @parent.node @key
-            if node?
-                [posx, posy] = node.model.position.slice()
-                exprPosY     = node.view('expression').position.y
-                [offX, offY] = @offsetFromNode()
-                @group.position.xy = [offX + posx, offY + exprPosY + posy]
-                @view.scale.xy     = [@scale, @scale]
+    __withParentNode: (f) =>
+        unless @parentNode?
+            @parentNode = @parent.node @model.key
+
+        unless @parentNode?
+            console.warn "[Searcher] Trying to perform an action on an unknown parent"
+
+        f @parentNode
+
+    __offsetFromNode: => [searcherBaseOffsetX, searcherBaseOffsetY]
+
+    __onPositionChanged: (parentNode) =>
+        @set { position: parentNode.model.position }
+
+    ###################################
+    ### Register the event handlers ###
+    ###################################
 
     registerEvents: =>
-        @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', =>
-                @align scene.camera.position.z
+        @__withParentNode (parentNode) =>
+            @__onPositionChanged parentNode
+            @addDisposableListener parentNode, 'position', =>
+                @__onPositionChanged parentNode
+
         @dom.input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'SearcherEditEvent'

@@ -9,6 +9,7 @@ export class HtmlShape extends BasicComponent
         element: 'div'
         top: true
         scalable: true
+        still: false
 
     redefineRequired: =>
         @changed.id or @changed.element
@@ -20,10 +21,12 @@ export class HtmlShape extends BasicComponent
 
     adjust: =>
         if @changed.top or @changed.scalable
-            if @model.top and @model.scalable
-                @root.topDomScene.model.add @__element.obj
-            else if @model.top
+            if @model.still
+                @root.topDomSceneStill.add @__element.obj
+            else if not @model.scalable
                 @root.topDomSceneNoScale.model.add @__element.obj
+            else if @model.top
+                @root.topDomScene.model.add @__element.obj
                 @__forceUpdatePosition()
             else
                 @root.scene.domModel.model.add @view.obj
@@ -36,3 +39,10 @@ export class HtmlShape extends BasicComponent
                 @__element.position.y = 1
             else
                 @__element.position.y = 0
+
+    appendChild: (childElem) =>
+        unless @__element?
+            console.warn "[HtmlShape] Trying to appendChild to an uninitialized component."
+            return
+
+        @__element.domElement.appendChild childElem
