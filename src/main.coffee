@@ -38,7 +38,7 @@ main = (callback) -> install 'basegl-root', 'rsc/', callback
 window.run = main
 
 runExample = -> main (nodeEditor) ->
-    nodeEditor.setBreadcrumb new Breadcrumb
+    nodeEditor.setBreadcrumb
         moduleName: 'Foo'
         items:
             [
@@ -143,15 +143,45 @@ runExample = -> main (nodeEditor) ->
                     typeName: 'D'
                     controls:
                         [
+                            cls: 'Text'
+                            value: 'test'
+                        ,
                             cls: 'Int'
                             min: -10
                             max: 10
                             value: 5
                         ,
-                            cls: 'String'
-                            value: 'test'
-                        ,
                             cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                4:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                5:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                6:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
                             min: -10
                             max: 10
                             value: 5
@@ -241,7 +271,7 @@ runExample = -> main (nodeEditor) ->
             dstNode: 4
             dstPort: 1
         ]
-    nodeEditor.setSearcher new Searcher
+    nodeEditor.setSearcher
         key: 4
         mode: 'node'
         selected: 0

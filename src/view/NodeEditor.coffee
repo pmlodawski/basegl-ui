@@ -24,9 +24,9 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDomModel('dom-top')
-        @topDomSceneNoScale   = @_scene.addDomModelWithNewCamera('dom-top-no-scale')
-
+        @topDomScene = @_scene.addDomModel('dom-top')
+        @topDomScene._renderer.domElement.style.pointerEvents='all'
+        @topDomSceneNoScale = @_scene.addDomModelWithNewCamera('dom-top-no-scale')
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
@@ -151,7 +151,7 @@ export class NodeEditor extends EventEmitter
     unsetDebugLayer: =>
         @withScene (scene) =>
             scene._symbolRegistry.materials.uniforms.displayMode = 0
-            
+
     genericSetComponent: (name, constructor, value) =>
         if value?
             if @[name]?

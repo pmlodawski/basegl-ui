@@ -34,6 +34,8 @@ nodeValYOffset  = -nodeNameYOffset
 portDistance = shape.height / 3
 widgetOffset = 20
 widgetHeight = 20
+inportVDistance = widgetOffset + widgetHeight
+minimalBodyHeight = 60
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -86,10 +88,11 @@ export class ExpressionNode extends ContainerComponent
             selected: @model.selected
             body: [@bodyWidth, @bodyHeight]
 
-        if @changed.value
+        if @changed.value or @changed.expanded
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
+        if @changed.value
             @autoUpdateDef 'value', TextShape, if @__shortValue()?
                 text: @__shortValue()
                 body: [@bodyWidth, @bodyHeight]
@@ -139,8 +142,8 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
-        @bodyHeight = 90
         inPortNumber = 0
+        nonSelfPortNumber = 0
         inPortKeys = Object.keys @model.inPorts
         for inPortKey, inPort of @model.inPorts
             values = {}
@@ -153,9 +156,9 @@ export class ExpressionNode extends ContainerComponent
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [- shape.height/2
-                                  ,- shape.height/2 - inPortNumber * 50]
+                                  ,- shape.height/2 - inPortNumber * inportVDistance]
                 inPortNumber++
-                @bodyHeight += widgetHeight
+                nonSelfPortNumber++
             else
                 values.position = [0,0]
                 values.radius = portDistance
@@ -165,6 +168,7 @@ export class ExpressionNode extends ContainerComponent
                     values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
                 inPortNumber++
             @def('in' + inPortKey).set values
+        @bodyHeight = minimalBodyHeight + inportVDistance * if nonSelfPortNumber > 0 then nonSelfPortNumber - 1 else 0
 
 
     updateOutPorts: =>
