@@ -27,7 +27,7 @@ export class Searcher extends ContainerComponent
         position: [0, 0]
 
     prepare: =>
-        @dom ?= {}
+        @dom = {}
         @addDef 'root', new HtmlShape
                 element: 'div'
                 id: 'searcher-root'
@@ -132,10 +132,10 @@ export class Searcher extends ContainerComponent
     #######################
 
     adjust: (view) =>
-        if @changed.position or @changed.scale
+        if @changed.position
             @__withParentNode (parentNode) =>
-                [posx, posy] = parentNode.model.position.slice()
-                exprPosY     = parentNode.view('expression').position.y
+                [posx, posy] = @model.position.slice()
+                exprPosY = parentNode.view('expression').position.y
                 view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
 
     __withParentNode: (f) =>
@@ -143,7 +143,7 @@ export class Searcher extends ContainerComponent
             @parentNode = @parent.node @model.key
 
         unless @parentNode?
-            console.warn "[Searcher] Trying to perform an action on an unknown parent"
+            @warn "Trying to perform an action on an unknown parent"
 
         f @parentNode
 

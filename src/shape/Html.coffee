@@ -31,6 +31,8 @@ export class HtmlShape extends BasicComponent
             else
                 @root.scene.domModel.model.add @view.obj
 
+    getElement: => @__element
+
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
@@ -42,7 +44,7 @@ export class HtmlShape extends BasicComponent
 
     appendChild: (childElem) =>
         unless @__element?
-            console.warn "[HtmlShape] Trying to appendChild to an uninitialized component."
+            @warn "Trying to appendChild to an uninitialized component."
             return
 
         @__element.domElement.appendChild childElem
