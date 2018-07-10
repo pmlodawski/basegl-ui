@@ -13,13 +13,14 @@ export width     = length * Math.tan angle
 
 bboxHeight = width*2
 bboxWidth = length*5
+overlap = 1
 
 export flatPortExpr = basegl.expr ->
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
     cutterWidth = 'bbox.x' - length
-    cutter = rect cutterWidth, 'bbox.y'
+    cutter = rect cutterWidth + overlap, 'bbox.y' + overlap
         .move (1-'is_output')*length + cutterWidth/2, 'bbox.y'/2
         # .fill color.activeArea
     port = pie -angle

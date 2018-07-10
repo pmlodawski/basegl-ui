@@ -12,7 +12,6 @@ lineWidth = 2
 export connectionExpr = basegl.expr ->
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
-    scaledWidth = scaledWidth + scaledWidth * 'hovered'
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea

@@ -1,10 +1,25 @@
 import * as basegl    from 'basegl'
 
+import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {Component}  from 'abstract/Component'
 
 
+export class Widget extends ContainerComponent
+    initModel: =>
+        minWidth:  0
+        minHeight: 0
+        maxWidth:  Infinity
+        maxHeight: Infinity
+        width:     null
+        height:    null
+        inline:    false
+        siblings:
+            top:    false
+            bottom: false
+            left:   false
+            right:  false
 
-export class Widget extends Component
+export class WidgetOld extends Component
     configure: ({ minWidth:  @minWidth  = @minWidth or 0
                 , minHeight: @minHeight = @minHeight or 0
                 , maxWidth:  @maxWidth  = @maxWidth

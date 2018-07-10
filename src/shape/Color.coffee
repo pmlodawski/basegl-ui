@@ -11,8 +11,12 @@ export valueTogglerColor = white
 
 export transparent = Color.rgb [0, 0, 0, 0]
 export activeArea = transparent
-export hoverAspect = 0.7
+export hoverAspect = 0.9
 
 export varHover = -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b']
         .mix white, 'hovered' * hoverAspect
+
+export sliderColor   = bg.mix white, 0.2
+export sliderBgColor = bg.mix white, 0.1
+export activeGreen = Color.rgb [0, 1, 0, 0.8]
