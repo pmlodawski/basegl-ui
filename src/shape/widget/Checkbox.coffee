@@ -51,6 +51,6 @@ export class CheckboxShape extends BasicComponent
 
     adjust: (view, element) =>
         if @changed.checked
-            applyCheckAnimation @__element, not @model.checked
+            applyCheckAnimation @getElement(), not @model.checked
         if @changed.width or @changed.height
-            @__element.bbox.xy = [@model.width, @model.height]
+            @getElement().bbox.xy = [@model.width, @model.height]

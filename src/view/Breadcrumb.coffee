@@ -20,7 +20,8 @@ export class Breadcrumb extends ContainerComponent
 
     update: =>
         if @changed.once or @changed.items or @changed.moduleName
-            @def('root').__element.domElement.innerHTML = ''
+            domElem = @def('root').getDomElement()
+            domElem.innerHTML = ''
             container = document.createElement 'div'
             container.className = style.luna ['breadcrumbs', 'noselect']
             @model.items[0] =
@@ -28,7 +29,7 @@ export class Breadcrumb extends ContainerComponent
                 link: @model.moduleName?
             @model.items.forEach (item) =>
                 container.appendChild @__renderItem item
-            @def('root').__element.domElement.appendChild container
+            domElem.appendChild container
 
     adjust: (view) =>
         if @changed.once

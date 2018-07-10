@@ -52,5 +52,6 @@ export class ConnectionShape extends BasicComponent
             element.variables.color_b = @model.color[2]
 
     registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
-        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0
+        vars = @getElement().variables
+        view.addEventListener 'mouseover', => vars.hovered = 1
+        view.addEventListener 'mouseout',  => vars.hovered = 0

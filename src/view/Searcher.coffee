@@ -54,7 +54,7 @@ export class Searcher extends ContainerComponent
         @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
         @dom.container.appendChild @dom.results
         @dom.container.appendChild @dom.input
-        @def('root').appendChild @dom.container
+        @def('root').getDomElement().appendChild @dom.container
 
     __createResults: =>
         @dom.results = document.createElement 'div'
@@ -70,7 +70,7 @@ export class Searcher extends ContainerComponent
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
-        omit = if @model.selected == 0 then 0 else @model.selected - 1
+        omit = Math.max(0, @model.selected - 1)
         i = omit + 1
         @model.entries.slice(omit).forEach (entry) =>
             @dom.resultsList.appendChild @__renderResult entry, i == @model.selected
@@ -150,7 +150,7 @@ export class Searcher extends ContainerComponent
     __offsetFromNode: => [searcherBaseOffsetX, searcherBaseOffsetY]
 
     __onPositionChanged: (parentNode) =>
-        @set { position: parentNode.model.position }
+        @set position: parentNode.model.position
 
     ###################################
     ### Register the event handlers ###

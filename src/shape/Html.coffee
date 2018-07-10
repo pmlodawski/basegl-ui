@@ -21,30 +21,20 @@ export class HtmlShape extends BasicComponent
 
     adjust: =>
         if @changed.top or @changed.scalable
+            obj = @getElement().obj
             if @model.still
-                @root.topDomSceneStill.add @__element.obj
+                @root.topDomSceneStill.add obj
             else if not @model.scalable
-                @root.topDomSceneNoScale.model.add @__element.obj
+                @root.topDomSceneNoScale.model.add obj
             else if @model.top
-                @root.topDomScene.model.add @__element.obj
+                @root.topDomScene.model.add obj
                 @__forceUpdatePosition()
             else
                 @root.scene.domModel.model.add @view.obj
 
-    getElement: => @__element
-
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
-        if @__element?
-            if @__element.position.y == 0
-                @__element.position.y = 1
-            else
-                @__element.position.y = 0
-
-    appendChild: (childElem) =>
-        unless @__element?
-            @warn "Trying to appendChild to an uninitialized component."
-            return
-
-        @__element.domElement.appendChild childElem
+        if @getElement()?
+            elem = @getElement()
+            elem.position.y = if elem.position.y == 0 then 1 else 0
