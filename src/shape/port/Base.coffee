@@ -18,5 +18,5 @@ export class PortShape extends BasicComponent
             element.variables.color_b = @model.color[2]
 
     registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
-        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0
+        view.addEventListener 'mouseover', => @getElement().variables.hovered = 1
+        view.addEventListener 'mouseout',  => @getElement().variables.hovered = 0

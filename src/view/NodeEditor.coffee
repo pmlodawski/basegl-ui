@@ -1,4 +1,5 @@
 import {Navigator}          from 'basegl/navigation/Navigator'
+import {ZoomlessCamera}     from 'basegl/navigation/Camera'
 
 import {Breadcrumb}         from 'view/Breadcrumb'
 import {Connection}         from 'view/Connection'
@@ -24,9 +25,14 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene = @_scene.addDomModel('dom-top')
+        @topDomScene          = @_scene.addDomModel('dom-top')
+        @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
+        @topDomSceneNoScale   =
+            @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
         @topDomScene._renderer.domElement.style.pointerEvents='all'
-        @topDomSceneNoScale = @_scene.addDomModelWithNewCamera('dom-top-no-scale')
+        @topDomSceneStill._renderer.domElement.style.pointerEvents='all'
+        @topDomSceneNoScale._renderer.domElement.style.pointerEvents='all'
+
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 

@@ -45,10 +45,11 @@ export class SliderShape extends BasicComponent
     define: => sliderSymbol
 
     adjust: (view) =>
-        if @changed.level       then @__element.variables.level       = Number @model.level
-        if @changed.topLeft     then @__element.variables.topLeft     = Number @model.topLeft
-        if @changed.topRight    then @__element.variables.topRight    = Number @model.topRight
-        if @changed.bottomLeft  then @__element.variables.bottomLeft  = Number @model.bottomLeft
-        if @changed.bottomRight then @__element.variables.bottomRight = Number @model.bottomRight
+        vars = @getElement().variables
+        if @changed.level       then vars.level       = Number @model.level
+        if @changed.topLeft     then vars.topLeft     = Number @model.topLeft
+        if @changed.topRight    then vars.topRight    = Number @model.topRight
+        if @changed.bottomLeft  then vars.bottomLeft  = Number @model.bottomLeft
+        if @changed.bottomRight then vars.bottomRight = Number @model.bottomRight
         if @changed.width or @changed.height
-            @__element.bbox.xy = [@model.width, @model.height]
+            @getElement().bbox.xy = [@model.width, @model.height]

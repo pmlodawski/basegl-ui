@@ -273,8 +273,6 @@ runExample = -> main (nodeEditor) ->
         ]
     nodeEditor.setSearcher
         key: 4
-        mode: 'node'
-        selected: 0
         entries: [
             name: 'bar'
             doc:  'bar description'
@@ -288,6 +286,7 @@ runExample = -> main (nodeEditor) ->
             name: 'foo'
             doc:  'foo multiline\ndescription'
             className: 'Foo'
+            highlights: []
         ,
             name: 'baz'
             doc:  'baz description'

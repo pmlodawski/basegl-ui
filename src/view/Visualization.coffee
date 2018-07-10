@@ -232,7 +232,7 @@ export class Visualization extends WidgetOld
                 @nodeEditor.topDomScene.model.add @view.obj
             else
                 @view.domElement.className = style.luna ['basegl-visualization--fullscreen']
-                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @nodeEditor.topDomSceneStill.model.add @view.obj
                 @__forceUpdatePosition()
 
     updateView: => @withScene (scene) =>
@@ -318,7 +318,7 @@ export class VisualizerMenu extends WidgetOld
             else
                 @view.domElement.className = style.luna ['basegl-dropdown--fullscreen']
                 @menu?.className = style.luna ['basegl-dropdown__menu--fullscreen']
-                @nodeEditor.topDomSceneNoScale.model.add @view.obj
+                @nodeEditor.topDomSceneStill.model.add @view.obj
                 @__forceUpdatePosition()
 
     updateMenu: =>

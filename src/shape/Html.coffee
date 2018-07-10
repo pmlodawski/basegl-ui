@@ -9,6 +9,7 @@ export class HtmlShape extends BasicComponent
         element: 'div'
         top: true
         scalable: true
+        still: false
 
     redefineRequired: =>
         @changed.id or @changed.element
@@ -20,10 +21,13 @@ export class HtmlShape extends BasicComponent
 
     adjust: =>
         if @changed.top or @changed.scalable
-            if @model.top and @model.scalable
-                @root.topDomScene.model.add @__element.obj
+            obj = @getElement().obj
+            if @model.still
+                @root.topDomSceneStill.add obj
+            else if not @model.scalable
+                @root.topDomSceneNoScale.model.add obj
             else if @model.top
-                @root.topDomSceneNoScale.model.add @__element.obj
+                @root.topDomScene.model.add obj
                 @__forceUpdatePosition()
             else
                 @root.scene.domModel.model.add @view.obj
@@ -31,8 +35,6 @@ export class HtmlShape extends BasicComponent
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
-        if @__element?
-            if @__element.position.y == 0
-                @__element.position.y = 1
-            else
-                @__element.position.y = 0
+        if @getElement()?
+            elem = @getElement()
+            elem.position.y = if elem.position.y == 0 then 1 else 0

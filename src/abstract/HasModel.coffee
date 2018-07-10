@@ -58,3 +58,5 @@ export class HasModel extends EventEmitter
     __removeFromGroup: (view) =>
         @__view.removeChild view
         @__view.updateChildrenOrigin()
+
+    warn: (msg) => console.warn "[#{@constructor.name}] #{msg}"
