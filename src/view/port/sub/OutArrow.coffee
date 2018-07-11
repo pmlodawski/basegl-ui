@@ -1,6 +1,7 @@
 import {OutPortShape}         from 'shape/port/Out'
-import {TextShape}            from 'shape/Text'
 import {Subport, nameXOffset} from 'view/port/sub/Base'
+import {TextContainer}        from 'view/Text'
+
 
 export class OutArrow extends Subport
     initModel: =>
@@ -13,7 +14,7 @@ export class OutArrow extends Subport
         @addDef 'port', new OutPortShape angle: @model.angle, @
 
     update: =>
-        @autoUpdateDef 'typeName', TextShape, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'left'
 

@@ -1,4 +1,3 @@
-import * as util         from 'shape/util'
 import {BasicComponent}  from 'abstract/BasicComponent'
 import * as basegl       from 'basegl'
 

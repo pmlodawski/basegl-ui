@@ -1,4 +1,4 @@
-import * as util         from 'shape/util'
+import * as basegl from 'basegl'
 import {BasicComponent}  from 'abstract/BasicComponent'
 
 
@@ -11,14 +11,65 @@ export class TextShape extends BasicComponent
         @changed.text
 
     define: =>
-        util.text str: @model.text
+        createText str: @model.text
 
     adjust: (element) =>
+        size = @size()
         element.position.x =
             if @model.align == 'center'
-                -util.textWidth(element) / 2
+                -size[0] / 2
             else if @model.align == 'right'
-                -util.textWidth(element)
+                -size[0]
             else
                 0
-        element.position.y = - util.textHeight(element)/2
+        element.position.y = - size[1]/2
+
+    size:   =>
+        getTextSize   @__element
+    width:  => getTextWidth  @__element
+    height: => getTextHeight @__element
+
+getTextWidth = (textGroup) =>
+    textMinX = undefined
+    textMaxX = undefined
+    textGroup.children.forEach (child) =>
+        l = child.position.x
+        r = child.position.x + child.bbox.x
+        textMinX = l unless l > textMinX
+        textMaxX = r unless r < textMaxX
+    (textMaxX - textMinX) or 0
+
+
+getTextHeight = (textGroup) =>
+    textMinY = undefined
+    textMaxY = undefined
+    textGroup.children.forEach (child) =>
+        b = child.position.y
+        t = child.position.y + child.bbox.y
+        textMinY = b unless b > textMinY
+        textMaxY = t unless t < textMaxY
+    (textMaxY - textMinY) or 0
+
+getTextSize = (textGroup) =>
+    textMinX = undefined
+    textMaxX = undefined
+    textMinY = undefined
+    textMaxY = undefined
+    textGroup.children.forEach (child) =>
+        l = child.position.x
+        r = child.position.x + child.bbox.x
+        textMinX = l unless l > textMinX
+        textMaxX = r unless r < textMaxX
+        b = child.position.y
+        t = child.position.y + child.bbox.y
+        textMinY = b unless b > textMinY
+        textMaxY = t unless t < textMaxY
+    [(textMaxX - textMinX) or 0, (textMaxY - textMinY) or 0]
+
+createText = (attrs) =>
+    addToScene: (scene) =>
+        attrs.scene = scene
+        attrs.str        ?= ''
+        attrs.fontFamily ?= 'DejaVuSansMono'
+        attrs.size       ?= 12
+        basegl.text attrs

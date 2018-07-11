@@ -11,15 +11,14 @@ import {InPort}             from 'view/port/In'
 import {OutPort}            from 'view/port/Out'
 import * as shape           from 'shape/node/Base'
 import * as togglerShape    from 'shape/node/ValueToggler'
-import * as util            from 'shape/util'
 import * as _               from 'underscore'
 import {BasicComponent}     from 'abstract/BasicComponent'
 import {Component}          from 'abstract/Component'
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import {TextShape}          from 'shape/Text'
 import {NodeShape}          from 'shape/node/Node'
 import {NodeErrorShape}     from 'shape/node/ErrorFrame'
 import {ValueTogglerShape}  from 'shape/node/ValueToggler'
+import {TextContainer}      from 'view/Text'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 ### Utils ###
@@ -52,8 +51,8 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new TextShape text: @model.name, @
-        @addDef 'expression', new TextShape text: @model.expression, @
+        @addDef 'name', new TextContainer text: @model.name, @
+        @addDef 'expression', new TextContainer text: @model.expression, @
         @addDef 'valueToggler', new ValueTogglerShape null, @
 
     update: =>
@@ -93,7 +92,7 @@ export class ExpressionNode extends ContainerComponent
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
         if @changed.value
-            @autoUpdateDef 'value', TextShape, if @__shortValue()?
+            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
                 text: @__shortValue()
                 body: [@bodyWidth, @bodyHeight]
 

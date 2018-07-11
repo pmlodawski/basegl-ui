@@ -1,9 +1,7 @@
 import {HtmlShape} from 'shape/Html'
 import * as layers from 'view/layers'
 import * as style  from 'style'
-import * as util   from 'shape/util'
 import {Widget}    from 'widget/Widget'
-
 
 
 export class TextInput extends Widget

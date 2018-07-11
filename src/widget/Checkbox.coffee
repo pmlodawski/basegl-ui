@@ -1,10 +1,6 @@
-
 import {CheckboxShape} from 'shape/widget/Checkbox'
-import {TextShape}   from 'shape/Text'
-import * as util     from 'shape/util'
 import * as layers   from 'view/layers'
 import {Widget}      from 'widget/Widget'
-
 
 
 export class Checkbox extends Widget

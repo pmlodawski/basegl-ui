@@ -1,7 +1,6 @@
 import * as shape       from 'shape/port/Base'
 
 import {FlatPortShape}      from 'shape/port/Flat'
-import {TextShape}          from 'shape/Text'
 import {Port, defaultColor} from 'view/port/Base'
 import {OutArrow}           from 'view/port/sub/OutArrow'
 
