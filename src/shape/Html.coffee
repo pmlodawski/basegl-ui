@@ -23,7 +23,7 @@ export class HtmlShape extends BasicComponent
         if @changed.top or @changed.scalable
             obj = @getElement().obj
             if @model.still
-                @root.topDomSceneStill.add obj
+                @root.topDomSceneStill.model.add obj
             else if not @model.scalable
                 @root.topDomSceneNoScale.model.add obj
             else if @model.top

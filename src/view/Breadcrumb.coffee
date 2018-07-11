@@ -16,6 +16,7 @@ export class Breadcrumb extends ContainerComponent
                 element: 'div'
                 id: breadcrumbId
                 scalable: false
+                still: true
             , @
 
     update: =>
