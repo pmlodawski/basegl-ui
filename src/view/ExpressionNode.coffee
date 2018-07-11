@@ -187,7 +187,7 @@ export class ExpressionNode extends ContainerComponent
 
     registerEvents: (view) =>
         view.addEventListener 'dblclick', (e) => @pushEvent e
-        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e
+        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e,
             tag: 'ToggleVisualizationsEvent'
         @makeHoverable view
         @makeDraggable view

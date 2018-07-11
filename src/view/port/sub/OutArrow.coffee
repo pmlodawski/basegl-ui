@@ -26,6 +26,12 @@ export class OutArrow extends Subport
             @view('typeName').rotation.z = @model.angle + Math.PI/2
             @view('typeName').position.x = nameXOffset + @model.radius
 
+    registerEvents: (view) =>
+        super view
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent e
+
     connectSources: =>
         @__onTypeNameChange()
         @__onRadiusChange()

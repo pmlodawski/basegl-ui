@@ -34,6 +34,12 @@ export class InArrow extends Subport
             typeNamePosition = [- typeNameXOffset - @model.radius, - typeNameYOffset]
             @view('typeName').position.xy = typeNamePosition
 
+    registerEvents: (view) =>
+        super view
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent e
+
     connectSources: =>
         @__onNameChange()
         @__onTypeNameChange()

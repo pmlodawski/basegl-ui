@@ -34,6 +34,8 @@ export class Checkbox extends Widget
         if @changed.height then @view('checkbox').position.y = -@model.height/2
 
     registerEvents: (view) =>
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
         view.addEventListener 'click', (e) =>
             @set value: not @model.value
             @pushEvent
