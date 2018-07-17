@@ -20,6 +20,7 @@ import {NodeErrorShape}     from 'shape/node/ErrorFrame'
 import {ValueTogglerShape}  from 'shape/node/ValueToggler'
 import {TextContainer}      from 'view/Text'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
+import {VisualizationContainer}   from 'view/visualization/Container'
 
 ### Utils ###
 selectedNode = null
@@ -60,6 +61,7 @@ export class ExpressionNode extends ContainerComponent
                 text: @model.expression
             , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
+        @addDef 'visualization', new VisualizationContainer null, @
 
     update: =>
         @updateDef 'name', text: @model.name
