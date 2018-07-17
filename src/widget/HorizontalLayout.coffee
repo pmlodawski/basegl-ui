@@ -5,44 +5,50 @@ import {lookupWidget}       from 'widget/WidgetDirectory'
 export class HorizontalLayout extends ContainerComponent
     initModel: =>
         key: null
-        widgets: []
+        children: []
         width: null
         height: null
         offset: 3
 
     update: =>
-        if @changed.widgets
-            for own k, widget of @model.widgets
+        if @changed.children
+            for own k, widget of @model.children
                 cons = lookupWidget widget
                 if cons?
                     @autoUpdateDef k, cons, widget
 
-        return unless @model.widgets.length > 0
-        widgets = []
-        minWidth = 0
+        return unless @model.children.length > 0
+        children = []
+        @__minWidth = 0
+        @__maxWidth = 0
+        @__minHeight = 0
+        @__maxHeight = Infinity
         startPoint = [0,0]
-        for i in [0..@model.widgets.length - 1]
-            widgets.push
+        for i in [0..@model.children.length - 1]
+            children.push
                 index  : i
-                widget : @def(i).model
-                width : @def(i).model.minWidth
-            minWidth += @def(i).model.minWidth or 0
+                widget : @def(i)
+                width : @def(i).minWidth()
+            @__minWidth += @def(i).minWidth() or 0
+            @__maxWidth += @def(i).maxWidth() or 0
+            @__minHeight = Math.min @def(i).minHeight(), @__minHeight
+            @__maxHeight = Math.max @def(i).maxHeight(), @__maxHeight
             @updateDef i, siblings:
                 left:  ! (i == 0)
-                right: ! (i == @model.widgets.length - 1)
-        free = @model.width - minWidth - @model.offset * (@model.widgets.length - 1)
-        widgets.sort (a, b) -> a.widget.maxWidth - b.widget.maxWidth
-        for i in [0..widgets.length - 1]
-            w = widgets[i]
-            wfree = free / (widgets.length - i)
-            if (! w.widget.maxWidth?) or w.widget.maxWidth > w.width + wfree
+                right: ! (i == @model.children.length - 1)
+        free = @model.width - @__minWidth - @model.offset * (@model.children.length - 1)
+        children.sort (a, b) -> a.widget.maxWidth() - b.widget.maxWidth()
+        for i in [0..children.length - 1]
+            w = children[i]
+            wfree = free / (children.length - i)
+            if (! w.widget.maxWidth()?) or w.widget.maxWidth() > w.width + wfree
                 free -= wfree
                 w.width += wfree
             else
-                free -= w.widget.maxWidth - w.width
-                w.width = w.widget.maxWidth
-        widgets.sort (a, b) -> a.index - b.index
-        widgets.forEach (w) =>
+                free -= w.widget.maxWidth() - w.width
+                w.width = w.widget.maxWidth()
+        children.sort (a, b) -> a.index - b.index
+        children.forEach (w) =>
             @view(w.index).position.xy = startPoint.slice()
             @updateDef w.index,
                 width: w.width
@@ -50,7 +56,8 @@ export class HorizontalLayout extends ContainerComponent
             startPoint[0] += w.width + @model.offset
 
     __computeHeight: (widget) =>
-        if @model.height < widget.maxHeight
-            @model.height
+        height = @model.height
+        if height < widget.maxHeight()
+            height
         else
-            widget.maxHeight
+            widget.maxHeight()
