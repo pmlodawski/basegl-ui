@@ -110,21 +110,10 @@ export class NodeEditor extends EventEmitter
             @emitProperty 'visualizerLibraries', visLib
     
     setVisualization: (nodeVis) =>
-        key = nodeVis.nodeKey
-        if @visualizations[key]?
-            @visualizations[key].set nodeVis
-        else
-            visView = new NodeVisualizations nodeVis, @
-            @visualizations[key] = visView
-        @node(key).onDispose =>
-            if @visualizations[key]?
-                @visualizations[key].dispose()
-                delete @visualizations[key]
+        @node(nodeVis.nodeKey)?.set visualizations: nodeVis
         
     unsetVisualization: (nodeVis) =>
-        if @visualizations[nodeVis.nodeKey]?
-            @visualizations[nodeVis.nodeKey].dispose()
-            delete @visualizations[nodeVis.nodeKey]
+        @node(nodeVis.nodeKey)?.set visualizations: null
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?

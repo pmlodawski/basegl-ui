@@ -17,7 +17,6 @@ import {Component}          from 'abstract/Component'
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {NodeShape}          from 'shape/node/Node'
 import {NodeErrorShape}     from 'shape/node/ErrorFrame'
-import {ValueTogglerShape}  from 'shape/node/ValueToggler'
 import {TextContainer}      from 'view/Text'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 import {VisualizationContainer}   from 'view/visualization/Container'
@@ -49,19 +48,17 @@ export class ExpressionNode extends ContainerComponent
         selected:   false
         expanded:   false
         hovered:    false
+        visualizations: null
 
     prepare: =>
-        @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new TextContainer
-                align: 'center'
-                text: @model.name
-            , @
-        @addDef 'expression', new TextContainer
-                align: 'center'
-                text: @model.expression
-            , @
-        @addDef 'valueToggler', new ValueTogglerShape null, @
-        @addDef 'visualization', new VisualizationContainer null, @
+        @addDef 'node', NodeShape, expanded: @model.expanded
+        @addDef 'name', TextContainer,
+            align: 'center'
+            text: @model.name
+        @addDef 'expression', TextContainer,
+            align: 'center'
+            text: @model.expression
+        @addDef 'visualization', VisualizationContainer, null
 
     update: =>
         @updateDef 'name', text: @model.name
@@ -99,16 +96,11 @@ export class ExpressionNode extends ContainerComponent
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
-        if @changed.value
-            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
-                align: 'center'
-                text: @__shortValue()
-                body: [@bodyWidth, @bodyHeight]
 
-        @updateDef 'valueToggler',
-            isFolded: @model.value?.contents?.tag != 'Visualization'
-            expanded: @model.expanded
-            body: [@bodyWidth, @bodyHeight]
+        @updateDef 'visualization',
+            value: @model.value
+            visualizers: @model.visualizations?.visualizers
+            visualizations: @model.visualizations?.visualizations
 
     outPort: (key) => @def ('out' + key)
     inPort: (key) => @def ('in' + key)
@@ -116,18 +108,6 @@ export class ExpressionNode extends ContainerComponent
     error: =>
         @model.value? and @model.value.tag == 'Error'
 
-    __shortValue: =>
-        if @model.value? and @model.value.contents?
-            @model.value.contents.contents
-
-    # updateValueView: =>
-    #     valueSize     = [0,0]
-    #     valuePosition = @view('node').position
-    #     if @__shortValue()?
-    #         @view('value').position.y = @view('node').position.y
-    #         valuePosition = @view('value').position
-    #     @view('valueToggler').position.y = @view('node').position.y
-        
     adjust: (view) =>
         if @model.expanded
             for own inPortKey, inPortModel of @model.inPorts
@@ -136,14 +116,12 @@ export class ExpressionNode extends ContainerComponent
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
-        # @updateValueView()
-        if @__shortValue()?
-            @view('value').position.xy =
-                if @model.expanded
-                    [ shape.width/2
-                    , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
-                else
-                    [ 0, - shape.height/2 - togglerShape.size]
+        @view('visualization').position.xy =
+            if @model.expanded
+                [ - shape.width/2
+                , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
+            else
+                [ - shape.width/2, - shape.height/2 - togglerShape.size]
         @view('name').position.y = nodeNameYOffset
         @view('expression').position.y = nodeExprYOffset
         view.position.xy = @model.position.slice()
@@ -195,8 +173,6 @@ export class ExpressionNode extends ContainerComponent
 
     registerEvents: (view) =>
         view.addEventListener 'dblclick', (e) => @pushEvent e
-        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e,
-            tag: 'ToggleVisualizationsEvent'
         @makeHoverable view
         @makeDraggable view
         @makeSelectable view

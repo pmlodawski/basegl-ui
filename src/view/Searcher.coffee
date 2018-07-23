@@ -28,11 +28,10 @@ export class Searcher extends ContainerComponent
 
     prepare: =>
         @dom = {}
-        @addDef 'root', new HtmlShape
-                element: 'div'
-                id: 'searcher-root'
-                scalable: false
-            , @
+        @addDef 'root', HtmlShape,
+            element: 'div'
+            id: 'searcher-root'
+            scalable: false
 
     #############################
     ### Create/update the DOM ###

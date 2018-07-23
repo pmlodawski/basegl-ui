@@ -12,26 +12,25 @@ export class TextContainer extends Widget
         s.textAlign = 'left'
         s.frameColor = [0,0,0]
         s.frameVisible = false
+        s.border = 3
         s
 
     prepare: =>
-        @addDef 'text', new TextShape
-                text: @model.text
-                align: 'left'
-            , @
-        @addDef 'box', new RectangleShape
-                visible: @model.frameVisible
-                color: @model.frameColor
-            , @
+        @addDef 'text', TextShape,
+            text: @model.text
+            align: 'left'
+        @addDef 'box', RectangleShape,
+            visible: @model.frameVisible
+            color: @model.frameColor
 
     update: =>
         if @changed.text
             @updateDef 'text',
                 text: @model.text
-        if @changed.text
+        if @changed.text or @changed.border
             size = @def('text').size()
-            @__minWidth = size[0]
-            @__minHeight = size[1]
+            @__minWidth = size[0] + 2 * @model.border
+            @__minHeight = size[1] + 2 * @model.border
             unless @model.height
                 @updateDef 'box', height: @__minHeight
             unless @model.width
@@ -62,5 +61,5 @@ export class TextContainer extends Widget
                 else
                     x
 
-            @view('text').position.x = textX
+            @view('text').position.x = textX + @model.border
             @view('box').position.xy = [x, -height/2]

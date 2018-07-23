@@ -23,17 +23,9 @@ valueTogglerSymbol.variables.isFolded = 0
 
 export class ValueTogglerShape extends BasicComponent
     initModel: =>
-        body: [100, 100]
         isFolded: false
-        expanded: false
     define: => valueTogglerSymbol
-    adjust: (element, view) =>
+    adjust: (element) =>
         if @changed.isFolded
             element.variables.isFolded = Number not @model.isFolded
         element.position.xy = [- size/2, - size/2]
-
-        view.position.xy =
-            if @model.expanded
-                [- baseNode.width/2 + @model.body[0]/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
-            else
-                [0, - baseNode.height/2]

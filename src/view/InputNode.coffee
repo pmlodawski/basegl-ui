@@ -13,7 +13,7 @@ export class InputNode extends ContainerComponent
         position: [0, 0]
 
     prepare: =>
-        @addDef 'add', new AddPortShape null, @
+        @addDef 'add', AddPortShape, null
 
     update: =>
         i = 0

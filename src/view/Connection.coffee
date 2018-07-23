@@ -11,8 +11,8 @@ export class Connection extends ContainerComponent
         dstPort: null
 
     prepare: =>
-        @addDef 'src', new ConnectionShape src: true, @parent
-        @addDef 'dst', new ConnectionShape src: false, @parent
+        @addDef 'src', ConnectionShape, src: true
+        @addDef 'dst', ConnectionShape, src: false
 
     update: =>
         if @changed.srcNode or @changed.srcPort

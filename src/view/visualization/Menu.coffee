@@ -1,34 +1,33 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import {VisualizerButton} from 'shape/visualization/Button'
-import {TextContainer}    from 'view/Text'
-import {VerticalLayout} from 'widget/VerticalLayout'
+import {VisualizerButton}   from 'shape/visualization/Button'
+import {TextContainer}      from 'view/Text'
+import {VerticalLayout}     from 'widget/VerticalLayout'
 
 export class VisualizerMenu extends ContainerComponent
     initModel: =>
-        key : null
-        mode : null
         visualizers : null
-        visualizer : null
-        position : [0, 0]
+        menuVisible: false
 
     prepare: =>
-        @addDef 'button', new VisualizerButton null, @
-        @addDef 'menu', new VerticalLayout
-                # width: 400
-                children:
-                    [
-                        cons: TextContainer
-                        text: 'test'
-                    ,
-                        cons: TextContainer
-                        text: 'a'
-                    ,
-                        cons: TextContainer
-                        text: 'very long text'
-                    ]
-            , @
+        @addDef 'button', VisualizerButton, null
 
+    update: =>
+        if @changed.menuVisible or @changed.visualizers
+            children = []
+            if @model.visualizers?
+                for visualizer in @model.visualizers
+                    children.push
+                        cons: TextContainer
+                        text: visualizer.visualizerName
+                        align: 'right'
+                @autoUpdateDef 'list', VerticalLayout, if @model.menuVisible
+                    children: children
+    adjust: =>
+        @view('list')?.position.xy = [10, -15]
 
+    registerEvents: =>
+        @view('button').addEventListener 'mousedown', =>
+            @set menuVisible: not @model.menuVisible
 
 # export class VisualizerMenu extends ContainerComponent
 #     initModel: =>
@@ -39,7 +38,7 @@ export class VisualizerMenu extends ContainerComponent
 #         position : [0, 0]
 
 #     prepare: =>
-#         @addDef 'root', new HtmlShape element: 'div', @
+#         @addDef 'root', HtmlShape, element: 'div'
 
 #     update: =>
 #         if @changed.visualizer or @changed.visualizers

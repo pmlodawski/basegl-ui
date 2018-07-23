@@ -6,6 +6,7 @@ export class HtmlShape extends BasicComponent
     initModel: =>
         id: null
         element: 'div'
+        style: null
         top: true
         scalable: true
         still: false
@@ -16,6 +17,7 @@ export class HtmlShape extends BasicComponent
     define: =>
         root = document.createElement @model.element
         root.id = @model.id if @model.id?
+        root.style = @model.style if @model.style?
         basegl.symbol root
 
     adjust: =>
@@ -29,7 +31,7 @@ export class HtmlShape extends BasicComponent
                 @root.topDomScene.model.add obj
                 @__forceUpdatePosition()
             else
-                @root.scene.domModel.model.add @view.obj
+                @root._scene.domModel.model.add @__element.obj
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
