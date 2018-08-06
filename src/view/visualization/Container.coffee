@@ -1,8 +1,8 @@
 import {ContainerComponent}  from 'abstract/ContainerComponent'
-import {VisualizerMenu}      from 'view/visualization/Menu'
+import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {TextContainer}       from 'view/Text'
-import {ValueTogglerShape}   from 'shape/node/ValueToggler'
 import {VisualizationIFrame} from 'view/visualization/IFrame'
+import {VisualizerMenu}      from 'view/visualization/Menu'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
 export class VisualizationContainer extends ContainerComponent
@@ -38,8 +38,9 @@ export class VisualizationContainer extends ContainerComponent
         @view('valueToggler').position.xy = [30, 0]
 
     registerEvents: =>
-        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e,
-            tag: 'ToggleVisualizationsEvent'
+        @view('valueToggler').addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent tag: 'ToggleVisualizationsEvent'
 
     __shortValue: =>
         if @model.value? and @model.value.contents?

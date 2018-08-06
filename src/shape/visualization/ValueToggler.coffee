@@ -6,7 +6,7 @@ import {valueTogglerColor}    from 'shape/Color'
 import * as baseNode     from 'shape/node/Base'
 
 
-export size = 10 
+export size = 10
 
 valueTogglerExpr = basegl.expr ->
     isFolded = 'isFolded'

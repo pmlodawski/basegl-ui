@@ -20,13 +20,20 @@ export class VisualizerMenu extends ContainerComponent
                         cons: TextContainer
                         text: visualizer.visualizerName
                         align: 'right'
+                        onclick: (e) =>
+                            e.stopPropagation()
+                            @pushEvent
+                                tag: 'SelectVisualizerEvent'
+                                visualizerId: visualizer
+                            @set menuVisible: false
                 @autoUpdateDef 'list', VerticalLayout, if @model.menuVisible
                     children: children
     adjust: =>
         @view('list')?.position.xy = [10, -15]
 
     registerEvents: =>
-        @view('button').addEventListener 'mousedown', =>
+        @view('button').addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
             @set menuVisible: not @model.menuVisible
 
 # export class VisualizerMenu extends ContainerComponent

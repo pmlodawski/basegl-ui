@@ -3,7 +3,7 @@ import * as _            from 'underscore'
 import * as basegl       from 'basegl'
 import * as style        from 'style'
 import * as nodeShape    from 'shape/node/Base'
-import * as togglerShape from 'shape/node/ValueToggler'
+import * as togglerShape from 'shape/visualization/ValueToggler'
 import * as shape        from 'shape/Visualization'
 
 import {group}                from 'basegl/display/Symbol'

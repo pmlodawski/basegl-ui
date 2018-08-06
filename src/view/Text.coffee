@@ -6,14 +6,15 @@ import {Widget}             from 'widget/Widget'
 
 export class TextContainer extends Widget
     initModel: =>
-        s = super()
-        s.text = ''
-        s.align = 'left'
-        s.textAlign = 'left'
-        s.frameColor = [0,0,0]
-        s.frameVisible = false
-        s.border = 3
-        s
+        model = super()
+        model.text = ''
+        model.align = 'left'
+        model.textAlign = 'left'
+        model.frameColor = [0,0,0]
+        model.frameVisible = false
+        model.border = 3
+        model.onclick = =>
+        model
 
     prepare: =>
         @addDef 'text', TextShape,
@@ -63,3 +64,7 @@ export class TextContainer extends Widget
 
             @view('text').position.x = textX + @model.border
             @view('box').position.xy = [x, -height/2]
+
+    registerEvents: (view) =>
+        view.addEventListener 'click', (e) =>
+            @model.onclick e
