@@ -3,6 +3,7 @@ import * as path         from 'path'
 import * as style        from 'style'
 import {Widget} from 'widget/Widget'
 import {HtmlShape} from 'shape/Html'
+import {VisualizerMenu}      from 'view/visualization/Menu'
 
 width = 300
 height = 300
@@ -16,6 +17,7 @@ export class VisualizationIFrame extends Widget
         selectedVisualizers: null
 
     prepare: =>
+        @addDef 'menu', VisualizerMenu, null
         @addDef 'root', HtmlShape,
             element: 'div'
             top: false
@@ -31,7 +33,6 @@ export class VisualizationIFrame extends Widget
                 while domElem.hasChildNodes()
                     domElem.removeChild domElem.firstChild
                 domElem.appendChild iframe
-
     adjust: =>
         @view('root').position.xy = [width/2, -height/2]
 
@@ -54,3 +55,9 @@ export class VisualizationIFrame extends Widget
             iframe.className = style.luna ['basegl-visualization-iframe']
             iframe.src       = url
             iframe
+
+    registerEvents: =>
+        updateMenu = => @updateDef 'menu',
+            visualizers: @parent.parent.model.visualizers
+        updateMenu()
+        @addDisposableListener @parent.parent, 'visualizers', updateMenu

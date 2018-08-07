@@ -10,7 +10,6 @@ import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
-import {NodeVisualizations} from 'view/Visualization'
 import {visualizationCover} from 'view/Visualization'
 
 import * as _ from 'underscore'

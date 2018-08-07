@@ -2,17 +2,15 @@ import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {TextContainer}       from 'view/Text'
 import {VisualizationIFrame} from 'view/visualization/IFrame'
-import {VisualizerMenu}      from 'view/visualization/Menu'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
 export class VisualizationContainer extends ContainerComponent
     initModel: =>
         visualizers : null
-        visualizations: null
+        visualizations: {}
         value: null
 
     prepare: =>
-        @addDef 'menu', VisualizerMenu, null
         @addDef 'valueToggler', ValueTogglerShape, null
 
     update: =>
@@ -21,12 +19,10 @@ export class VisualizationContainer extends ContainerComponent
                 text: @__shortValue()
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
-        if @changed.visualizers
-            @updateDef 'menu', visualizers: @model.visualizers
-        if @changed.visualizations
+        if @changed.visualizations or @changed.visualizers
             visualizations = []
             if @model.visualizations?
-                for visualization in @model.visualizations
+                for k, visualization of @model.visualizations
                     visualization.visualizers = @model.visualizers
                     visualization.cons = VisualizationIFrame
                     visualizations.push visualization
