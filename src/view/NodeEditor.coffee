@@ -180,7 +180,7 @@ export class NodeEditor extends EventEmitter
                 @[name].push newValue
         else if values.length > 0
             for i in [0..values.length - 1]
-                @[name][i].set value[i]
+                @[name][i].set values[i]
 
     destruct: =>
         @breadcrumb?.dispose()
