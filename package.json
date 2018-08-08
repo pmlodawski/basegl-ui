@@ -1,6 +1,6 @@
 {
   "name": "luna-basegl-ui",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Luna node editor using basegl.",
   "homepage": "https://github.com/luna/basegl-ui",
   "author": "The Luna Team <contact@luna-lang.org>",
