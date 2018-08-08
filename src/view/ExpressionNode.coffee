@@ -9,6 +9,7 @@ import {Composable, fieldMixin} from "basegl/object/Property"
 
 import {InPort}             from 'view/port/In'
 import {OutPort}            from 'view/port/Out'
+import {EditableText}       from 'view/EditableText'
 import * as shape           from 'shape/node/Base'
 import * as togglerShape    from 'shape/node/ValueToggler'
 import * as _               from 'underscore'
@@ -25,9 +26,9 @@ import {HorizontalLayout}   from 'widget/HorizontalLayout'
 selectedNode = null
 
 
-
+exprOffset = 25
 nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + 15
+nodeNameYOffset = nodeExprYOffset + exprOffset
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
@@ -35,6 +36,12 @@ widgetOffset = 20
 widgetHeight = 20
 inportVDistance = widgetOffset + widgetHeight
 minimalBodyHeight = 60
+
+testEntries = [
+    { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
+    { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
+    { name: 'baz', doc:  'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
+]
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -51,13 +58,15 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new TextContainer
-                align: 'center'
-                text: @model.name
+        @addDef 'name', new EditableText
+                text:     @model.name
+                entries:  []
+                kind:     EditableText.NAME
             , @
-        @addDef 'expression', new TextContainer
-                align: 'center'
-                text: @model.expression
+        @addDef 'expression', new EditableText
+                text:    @model.expression
+                entries: []
+                kind:    EditableText.EXPRESSION
             , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
 
@@ -118,14 +127,9 @@ export class ExpressionNode extends ContainerComponent
         if @model.value? and @model.value.contents?
             @model.value.contents.contents
 
-    # updateValueView: =>
-    #     valueSize     = [0,0]
-    #     valuePosition = @view('node').position
-    #     if @__shortValue()?
-    #         @view('value').position.y = @view('node').position.y
-    #         valuePosition = @view('value').position
-    #     @view('valueToggler').position.y = @view('node').position.y
-        
+    setSearcher: (searcherModel) =>
+        @def(searcherModel.targetField)?.setSearcher searcherModel
+
     adjust: (view) =>
         if @model.expanded
             for own inPortKey, inPortModel of @model.inPorts
@@ -134,7 +138,7 @@ export class ExpressionNode extends ContainerComponent
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
-        # @updateValueView()
+
         if @__shortValue()?
             @view('value').position.xy =
                 if @model.expanded
