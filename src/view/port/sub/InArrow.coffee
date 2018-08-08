@@ -1,5 +1,5 @@
-import {InPortShape}        from 'shape/port/In'
-import {TextShape}          from 'shape/Text'
+import {InPortShape}   from 'shape/port/In'
+import {TextContainer} from 'view/Text'
 import {Subport, nameXOffset, typeNameXOffset, typeNameYOffset} from 'view/port/sub/Base'
 
 export class InArrow extends Subport
@@ -14,10 +14,10 @@ export class InArrow extends Subport
         @addDef 'port', new InPortShape angle: @model.angle, @
 
     update: =>
-        @autoUpdateDef 'name', TextShape,
+        @autoUpdateDef 'name', TextContainer,
             text: @model.name
             align: 'right'
-        @autoUpdateDef 'typeName', TextShape, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'right'
 
@@ -33,6 +33,12 @@ export class InArrow extends Subport
             @view('typeName').rotation.z = @model.angle - Math.PI/2
             typeNamePosition = [- typeNameXOffset - @model.radius, - typeNameYOffset]
             @view('typeName').position.xy = typeNamePosition
+
+    registerEvents: (view) =>
+        super view
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent e
 
     connectSources: =>
         @__onNameChange()

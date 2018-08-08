@@ -11,3 +11,5 @@ export class Port extends ContainerComponent
         delete subports[key]
         @deleteDef ('sub' + key)
         @set subports: subports
+
+export defaultColor = [0.3, 0.3, 0.3]

@@ -10,18 +10,19 @@ export class Breadcrumb extends ContainerComponent
     initModel: =>
         moduleName: null
         items: []
-        position: [0,0]
-        scale: 0
 
     prepare: =>
         @addDef 'root', new HtmlShape
                 element: 'div'
                 id: breadcrumbId
+                scalable: false
+                still: true
             , @
 
     update: =>
         if @changed.once or @changed.items or @changed.moduleName
-            @def('root').__element.domElement.innerHTML = ''
+            domElem = @def('root').getDomElement()
+            domElem.innerHTML = ''
             container = document.createElement 'div'
             container.className = style.luna ['breadcrumbs', 'noselect']
             @model.items[0] =
@@ -29,13 +30,12 @@ export class Breadcrumb extends ContainerComponent
                 link: @model.moduleName?
             @model.items.forEach (item) =>
                 container.appendChild @__renderItem item
-            @def('root').__element.domElement.appendChild container
+            domElem.appendChild container
 
     adjust: (view) =>
-        if @changed.position
-            view.position.xy = @model.position.slice()
-        if @changed.scale
-            view.scale.xy = [@model.scale, @model.scale]
+        if @changed.once
+            @withScene (scene) =>
+                view.position.y = scene.height
 
     __renderItem: (item) =>
         item.link ?= item.breadcrumb?
@@ -47,15 +47,3 @@ export class Breadcrumb extends ContainerComponent
                 tag: 'NavigateEvent'
                 to: item.breadcrumb
         return div
-
-    __align: (scene) =>
-        campos = scene.camera.position
-        position = [ (campos.x + scene.width  / 2) / campos.z - scene.width/2
-                   , (campos.y + scene.height / 2) / campos.z + scene.height/2]
-        @set
-            position: position
-            scale: campos.z
-
-    registerEvents: =>
-        @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', => @__align scene

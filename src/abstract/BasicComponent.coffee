@@ -32,6 +32,10 @@ export class BasicComponent extends HasModel
             @__view = null
         super()
 
+    getElement: => @__element
+
+    getDomElement: => @getElement()?.domElement
+
     # # implement following methods when deriving: #
     # ##############################################
     #

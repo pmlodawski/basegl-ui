@@ -1,6 +1,7 @@
 import {SelfPortShape}            from 'shape/port/Self'
-import {TextShape}                from 'shape/Text'
 import {Subport, typeNameXOffset} from 'view/port/sub/Base'
+import {TextContainer}            from 'view/Text'
+
 
 export class Self extends Subport
     initModel: =>
@@ -14,7 +15,7 @@ export class Self extends Subport
         @addDef 'port', new SelfPortShape null, @
 
     update: =>
-        @autoUpdateDef 'typeName', TextShape, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'left'
 

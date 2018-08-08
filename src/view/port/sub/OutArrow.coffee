@@ -1,6 +1,7 @@
 import {OutPortShape}         from 'shape/port/Out'
-import {TextShape}            from 'shape/Text'
 import {Subport, nameXOffset} from 'view/port/sub/Base'
+import {TextContainer}        from 'view/Text'
+
 
 export class OutArrow extends Subport
     initModel: =>
@@ -13,7 +14,7 @@ export class OutArrow extends Subport
         @addDef 'port', new OutPortShape angle: @model.angle, @
 
     update: =>
-        @autoUpdateDef 'typeName', TextShape, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'left'
 
@@ -25,6 +26,12 @@ export class OutArrow extends Subport
         if @view('typeName')?
             @view('typeName').rotation.z = @model.angle + Math.PI/2
             @view('typeName').position.x = nameXOffset + @model.radius
+
+    registerEvents: (view) =>
+        super view
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent e
 
     connectSources: =>
         @__onTypeNameChange()

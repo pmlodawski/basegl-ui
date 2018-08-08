@@ -1,9 +1,8 @@
 import * as shape       from 'shape/port/Base'
 
-import {FlatPortShape} from 'shape/port/Flat'
-import {TextShape}     from 'shape/Text'
-import {Port}          from 'view/port/Base'
-import {OutArrow}      from 'view/port/sub/OutArrow'
+import {FlatPortShape}      from 'shape/port/Flat'
+import {Port, defaultColor} from 'view/port/Base'
+import {OutArrow}           from 'view/port/sub/OutArrow'
 
 
 export class OutPort extends Port
@@ -12,7 +11,7 @@ export class OutPort extends Port
         typeName: ''
         angle:    0
         radius:   0
-        color:    [0, 1, 0]
+        color:    defaultColor
         subports: {}
 
     update: =>
