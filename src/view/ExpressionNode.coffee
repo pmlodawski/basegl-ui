@@ -118,10 +118,10 @@ export class ExpressionNode extends ContainerComponent
                     @view('widget' + inPortKey).position.xy = startPoint
         @view('visualization').position.xy =
             if @model.expanded
-                [ - shape.width/2
+                [ 0
                 , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
             else
-                [ - shape.width/2, - shape.height/2 - togglerShape.size]
+                [ 0, - shape.height/2 - togglerShape.size]
         @view('name').position.y = nodeNameYOffset
         @view('expression').position.y = nodeExprYOffset
         view.position.xy = @model.position.slice()

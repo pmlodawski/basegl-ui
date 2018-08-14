@@ -1,5 +1,6 @@
 import * as basegl               from 'basegl'
 import {ContainerComponent}      from 'abstract/ContainerComponent'
+import * as shape                from 'shape/Visualization'
 import {VisualizationCoverShape} from 'shape/Visualization'
 import {ValueTogglerShape}       from 'shape/visualization/ValueToggler'
 import {TextContainer}           from 'view/Text'
@@ -8,40 +9,27 @@ import {VerticalLayout}          from 'widget/VerticalLayout'
 
 export class VisualizationContainer extends ContainerComponent
     initModel: =>
-        visualizers : null
-        visualizations: {}
-        value: null
+        visualization: null
+        visualizers:   null
 
     prepare: =>
-        @addDef 'valueToggler', ValueTogglerShape, null
         @addDef 'container', VisualizationCoverShape, null
+        @addDef 'iframe', VisualizationIframe, null
+        @addDef 'menu', VisualizerMenu, null
 
     update: =>
-        if @changed.value
-            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
-                text: @__shortValue()
-            @updateDef 'valueToggler',
-                isFolded: @model.value?.contents?.tag != 'Visualization'
-        if @changed.visualizations or @changed.visualizers
-            visualizations = []
-            if @model.visualizations?
-                for k, visualization of @model.visualizations
-                    visualization.visualizers = @model.visualizers
-                    visualization.cons = VisualizationIFrame
-                    visualizations.push visualization
-            @autoUpdateDef 'visualizations', VerticalLayout, if visualizations.length > 0
-                children: visualizations
+        if @changed.visualization
+            @autoUpdateDef 'iframe', VisualizationIframe, @model.visualization
+        if @changed.visualizers
+            @autoUpdateDef 'menu', VisualizerMenu, @model.visualizers
 
     adjust: =>
-        @view('value')?.position.xy = [50, 0]
-        @view('valueToggler').position.xy = [30, 0]
+        # we should consider mode here and make adjustment. VisualizerMenu does not need mode if it is positioned here. Iframe needs it to be moved to correct layer
+        @view('container').position.xy     = [-shape.width/2, -shape.height]
+        @view('visualization').position.xy = [-shape.width/2, -shape.height]
+        @view('menu').position.xy          = [-shape.width/2 - 10, 0]
 
     registerEvents: =>
-        @view('valueToggler').addEventListener 'mousedown', (e) =>
+        @view('container').addEventListener 'mousedown', (e) =>
             e.stopPropagation()
-            @pushEvent tag: 'ToggleVisualizationsEvent'
-
-    __shortValue: =>
-        if @model.value? and @model.value.contents?
-            @model.value.contents.contents
-
+            @pushEvent tag: 'FocusVisualizationEvent'

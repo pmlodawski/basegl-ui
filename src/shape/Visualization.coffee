@@ -14,15 +14,6 @@ transparent = Color.rgb [0,0,0,0]
 export width  = 300
 export height = 300
 
-
-__mkVisualizationDiv = ->
-    div              = document.createElement 'div'
-    div.style.width  = width + 'px'
-    div.style.height = height + 'px'
-    div
-
-export visualizationDiv = __mkVisualizationDiv()
-
 export visualizationCoverShape = basegl.expr ->
     shape = plane()
     shape = shape.fill transparent
@@ -34,3 +25,5 @@ visualizationCoverSymbol.bbox.xy       = [width, height]
 
 export class VisualizationCoverShape extends BasicComponent
     define: => visualizationCoverSymbol
+    adjust: (element) =>
+        element.position.xy = [-width/2, -height]

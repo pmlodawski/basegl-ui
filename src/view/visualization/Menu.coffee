@@ -7,13 +7,15 @@ export class VisualizerMenu extends ContainerComponent
     initModel: =>
         key: null
         visualizers : null
-        menuVisible: false
+        selectedVisualizer: null # needed for highlight
+        expanded: false
 
     prepare: =>
         @addDef 'button', VisualizerButton, null
 
     update: =>
-        if @changed.menuVisible or @changed.visualizers
+        # use selectedVisualizer to highlight current one
+        if @changed.expanded or @changed.visualizers or @changed.selectedVisualizer
             children = []
             if @model.visualizers?
                 @model.visualizers.forEach (visualizer) =>
@@ -26,13 +28,14 @@ export class VisualizerMenu extends ContainerComponent
                             @pushEvent
                                 tag: 'SelectVisualizerEvent'
                                 visualizerId: visualizer
-                            @set menuVisible: false
-                @autoUpdateDef 'list', VerticalLayout, if @model.menuVisible
+                            @set expanded: false
+                @autoUpdateDef 'list', VerticalLayout, if @model.expanded
                     children: children
     adjust: =>
         @view('list')?.position.xy = [10, -15]
 
+    # I am not sure if this is safe
     registerEvents: =>
         @view('button').addEventListener 'mousedown', (e) =>
             e.stopPropagation()
-            @set menuVisible: not @model.menuVisible
+            @set expanded: not @model.expanded

@@ -14,10 +14,8 @@ export class VisualizationIFrame extends Widget
         iframeId: null
         currentVisualizer: null
         mode: null
-        selectedVisualizers: null
 
     prepare: =>
-        @addDef 'menu', VisualizerMenu, null
         @addDef 'root', HtmlShape,
             element: 'div'
             top: false
@@ -26,7 +24,7 @@ export class VisualizationIFrame extends Widget
                 height: height + 'px'
 
     update: =>
-        if @changed.currentVisualizer
+        if @changed.currentVisualizer or @changed.iframeId
             iframe = @__mkIframe()
             if iframe?
                 domElem = @def('root').getDomElement()
@@ -34,7 +32,7 @@ export class VisualizationIFrame extends Widget
                     domElem.removeChild domElem.firstChild
                 domElem.appendChild iframe
     adjust: =>
-        @view('root').position.xy = [width/2, -height/2]
+        @view('root').position.xy = [0, -height/2]
 
     __mkIframe: =>
         if @model.currentVisualizer?
@@ -55,9 +53,3 @@ export class VisualizationIFrame extends Widget
             iframe.className = style.luna ['basegl-visualization-iframe']
             iframe.src       = url
             iframe
-
-    registerEvents: =>
-        updateMenu = => @updateDef 'menu',
-            visualizers: @parent.parent.model.visualizers
-        updateMenu()
-        @addDisposableListener @parent.parent, 'visualizers', updateMenu
