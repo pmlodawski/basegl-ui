@@ -51,7 +51,7 @@ export class VisualizationIFrame extends Widget
 
         if url?
             iframe           = document.createElement 'iframe'
-            iframe.name      = @iframeId
+            iframe.name      = @model.iframeId
             iframe.className = style.luna ['basegl-visualization-iframe']
             iframe.src       = url
             iframe
