@@ -10,7 +10,7 @@ import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
-import {visualizationCover} from 'view/Visualization'
+import {VisualizationCover} from 'view/visualization/Container'
 
 import * as _ from 'underscore'
 
@@ -31,9 +31,6 @@ export class NodeEditor extends EventEmitter
         @topDomScene._renderer.domElement.style.pointerEvents='all'
         @topDomSceneStill._renderer.domElement.style.pointerEvents='all'
         @topDomSceneNoScale._renderer.domElement.style.pointerEvents='all'
-
-        visCoverFamily = @_scene.register visualizationCover
-        visCoverFamily.zIndex = -1
 
     withScene: (fun) =>
         action = => fun @_scene if @_scene?

@@ -1,8 +1,10 @@
-import {ContainerComponent}  from 'abstract/ContainerComponent'
-import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
-import {TextContainer}       from 'view/Text'
-import {VisualizationIFrame} from 'view/visualization/IFrame'
-import {VerticalLayout}      from 'widget/VerticalLayout'
+import * as basegl               from 'basegl'
+import {ContainerComponent}      from 'abstract/ContainerComponent'
+import {VisualizationCoverShape} from 'shape/Visualization'
+import {ValueTogglerShape}       from 'shape/visualization/ValueToggler'
+import {TextContainer}           from 'view/Text'
+import {VisualizationIFrame}     from 'view/visualization/IFrame'
+import {VerticalLayout}          from 'widget/VerticalLayout'
 
 export class VisualizationContainer extends ContainerComponent
     initModel: =>
@@ -12,6 +14,7 @@ export class VisualizationContainer extends ContainerComponent
 
     prepare: =>
         @addDef 'valueToggler', ValueTogglerShape, null
+        @addDef 'container', VisualizationCoverShape, null
 
     update: =>
         if @changed.value
