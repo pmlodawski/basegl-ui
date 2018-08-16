@@ -7,9 +7,6 @@ import {group}        from 'basegl/display/Symbol'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
 
-import {InPort}             from 'view/port/In'
-import {OutPort}            from 'view/port/Out'
-import {EditableText}       from 'view/EditableText'
 import * as shape           from 'shape/node/Base'
 import * as togglerShape    from 'shape/node/ValueToggler'
 import * as _               from 'underscore'
@@ -19,7 +16,12 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import {NodeShape}          from 'shape/node/Node'
 import {NodeErrorShape}     from 'shape/node/ErrorFrame'
 import {ValueTogglerShape}  from 'shape/node/ValueToggler'
+import {EditableText}       from 'view/EditableText'
+import {InPort}             from 'view/port/In'
+import {NewPort}            from 'view/port/New'
+import {OutPort}            from 'view/port/Out'
 import {TextContainer}      from 'view/Text'
+import {SetView}            from 'view/SetView'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 ### Utils ###
@@ -51,6 +53,7 @@ export class ExpressionNode extends ContainerComponent
         value:      null
         inPorts:    {}
         outPorts:   {}
+        newPortKey: null
         position:   [0, 0]
         selected:   false
         expanded:   false
@@ -69,17 +72,16 @@ export class ExpressionNode extends ContainerComponent
                 kind:    EditableText.EXPRESSION
             , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
+        @addDef 'inPorts',  new SetView cons: InPort, @
+        @addDef 'outPorts', new SetView cons: OutPort, @
+        @addDef 'newPort', new NewPort null, @
 
     update: =>
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
-
+        @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
-            setInPort  = (k, inPort)  =>
-                @autoUpdateDef ('in'  + k),  InPort, inPort
-
-            for own k, inPort of @model.inPorts
-                setInPort k, inPort
+            @updateDef 'inPorts', elems: @model.inPorts
             @updateInPorts()
         if @model.expanded
             setWidget = (k) =>
@@ -90,11 +92,8 @@ export class ExpressionNode extends ContainerComponent
                     height: widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
-
         if @changed.outPorts
-            setOutPort = (k, outPort) => @autoUpdateDef ('out' + k), OutPort, outPort
-            for own k, outPort of @model.outPorts
-                setOutPort k, outPort
+            @updateDef 'outPorts', elems: @model.outPorts
             @updateOutPorts()
 
         @updateDef 'node',
@@ -117,8 +116,8 @@ export class ExpressionNode extends ContainerComponent
             expanded: @model.expanded
             body: [@bodyWidth, @bodyHeight]
 
-    outPort: (key) => @def ('out' + key)
-    inPort: (key) => @def ('in' + key)
+    outPort: (key) => @def('outPorts').def(key)
+    inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
@@ -133,7 +132,7 @@ export class ExpressionNode extends ContainerComponent
     adjust: (view) =>
         if @model.expanded
             for own inPortKey, inPortModel of @model.inPorts
-                inPort = @def('in' + inPortKey)
+                inPort = @def('inPorts').def(inPortKey)
                 if inPortModel.controls?
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
@@ -152,13 +151,16 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
-        inPortNumber = 0
-        nonSelfPortNumber = 0
-        inPortKeys = Object.keys @model.inPorts
-        for inPortKey, inPort of @model.inPorts
+        inPortNumber = 1
+        inPortsCount = 0
+        for k, inPort of @model.inPorts
+            unless inPort.mode == 'self'
+                inPortsCount++
+
+        portProperties = (port) =>
             values = {}
             values.locked = @model.expanded
-            if inPort.mode == 'self'
+            if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [0, 0]
@@ -166,33 +168,30 @@ export class ExpressionNode extends ContainerComponent
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [- shape.height/2
-                                  ,- shape.height/2 - inPortNumber * inportVDistance]
+                                  ,- shape.height/2 - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
-                nonSelfPortNumber++
             else
                 values.position = [0,0]
                 values.radius = portDistance
-                if inPortKeys.length == 1
-                    values.angle = Math.PI/2
-                else
-                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+                values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
-            @def('in' + inPortKey).set values
-        @bodyHeight = minimalBodyHeight + inportVDistance * if nonSelfPortNumber > 0 then nonSelfPortNumber - 1 else 0
+            values
+
+        for inPortKey, inPort of @model.inPorts
+            @def('inPorts').def(inPortKey).set portProperties inPort
+        @def('newPort').set portProperties mode:'phantom'
+        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
 
 
     updateOutPorts: =>
-        outPortNumber = 0
-        outPortKeys = Object.keys @model.outPorts
+        outPortNumber = 1
+        outPortsNumber = Object.keys(@model.outPorts).length
         for own outPortKey, outPort of @model.outPorts
             values = {}
             unless outPort.angle?
-                if outPortKeys.length == 1
-                    values.angle = Math.PI*3/2
-                else
-                    values.angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
+                values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
                 values.radius = portDistance
-            @def('out' + outPortKey).set values
+            @def('outPorts').def(outPortKey).set values
             outPortNumber++
 
     registerEvents: (view) =>
