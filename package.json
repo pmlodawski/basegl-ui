@@ -1,11 +1,10 @@
 {
   "name": "luna-basegl-ui",
-  "license": "AGPL-3.0",
+  "license": "GNU Affero General Public License v3.0",
   "version": "0.0.5",
   "description": "Luna node editor using basegl.",
   "homepage": "https://github.com/luna/basegl-ui",
   "author": "The Luna Team <contact@luna-lang.org>",
-  "license": "GNU Affero General Public License v3.0",
   "main": "./dist/js/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
