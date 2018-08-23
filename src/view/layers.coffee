@@ -19,3 +19,4 @@ export widget = 300
 export slider = widget
 
 export text = 1000
+export textFrame = text - 1

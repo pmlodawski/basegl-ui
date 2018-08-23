@@ -10,39 +10,43 @@ unArray = (ref, obj) =>
         ret
     else
         obj
+
 export class HasModel extends EventEmitter
     cons: (values, @parent) =>
         super()
+        @root =  @parent?.root or @parent or @
 
     init: (values) =>
         super()
         @__view = basegl.group []
         @model = @initModel?() or {}
         @changed = {}
-        @withScene =>
-            @__setValues values, true
-            @changed.once = true
-            @prepare?()
-            @onModelUpdate values
-            @connectSources?()
-            @registerEvents? @__view
-            @changed.once = false
+        @__setValues values, true
+        @changed.once = true
+        @prepare?()
+        @onModelUpdate values
+        @connectSources?()
+        @registerEvents? @__view
+        @changed.once = false
 
-    withScene: (fun) => @parent.withScene fun if @parent?
+    withScene: (fun) => @parent?.withScene fun
 
     set: (values) =>
         return if @disposed
-        @withScene =>
-            @__setValues values
+        @__setValues values
+        if @__anythingChanged
             @onModelUpdate values
+            @performEmit 'modelUpdated', values
 
     __setValues: (values, once = false) =>
         values ?= {}
+        @__anythingChanged = once
         for own key of @model
             @changed[key] = once
             value = unArray @model[key], values[key]
-            if value? and not _.isEqual @model[key], value
+            if value != undefined and not _.isEqual @model[key], value
                 @changed[key] = true
+                @__anythingChanged = true
                 @model[key] = value
                 @performEmit key, value
 
@@ -53,3 +57,6 @@ export class HasModel extends EventEmitter
     __removeFromGroup: (view) =>
         @__view.removeChild view
         @__view.updateChildrenOrigin()
+
+    log:  (msg) => console.log  "[#{@constructor.name}]", msg
+    warn: (msg) => console.warn "[#{@constructor.name}]", msg

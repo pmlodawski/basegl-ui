@@ -1,4 +1,5 @@
 import {Navigator}          from 'basegl/navigation/Navigator'
+import {ZoomlessCamera}     from 'basegl/navigation/Camera'
 
 import {Breadcrumb}         from 'view/Breadcrumb'
 import {Connection}         from 'view/Connection'
@@ -24,26 +25,15 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDOMScene('dom-top')
-        @topDomSceneNoScale   = @_scene.addDOMSceneWithNewCamera('dom-top-no-scale')
+        @topDomScene          = @_scene.addDomModel('dom-top')
+        @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
+        @topDomSceneNoScale   =
+            @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
 
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
-    withScene: (fun) =>
-        action = => fun @_scene if @_scene?
-        if @inTransaction
-            @pending.push action
-        else
-            action()
-
-    beginTransaction: => @inTransaction = true
-
-    commitTransaction: =>
-        @inTransaction = false
-        for pending in @pending
-            pending()
-        @pending = []
+    withScene: (fun) => fun @_scene if @_scene?
 
     initialize: =>
         @withScene (scene) =>
@@ -96,13 +86,11 @@ export class NodeEditor extends EventEmitter
         @genericSetComponent 'inputNode', InputNode, inputNode
     setOutputNode: (outputNode) =>
         @genericSetComponent 'outputNode', OutputNode, outputNode
-    setSearcher: (searcher) =>
-        @genericSetComponent 'searcher', Searcher, searcher
-    
+
     setVisualizerLibraries: (visLib) =>
         unless _.isEqual(@visualizerLibraries, visLib)
             @emitProperty 'visualizerLibraries', visLib
-    
+
     setVisualization: (nodeVis) =>
         key = nodeVis.nodeKey
         if @visualizations[key]?
@@ -114,7 +102,7 @@ export class NodeEditor extends EventEmitter
             if @visualizations[key]?
                 @visualizations[key].dispose()
                 delete @visualizations[key]
-        
+
     unsetVisualization: (nodeVis) =>
         if @visualizations[nodeVis.nodeKey]?
             @visualizations[nodeVis.nodeKey].dispose()
@@ -151,7 +139,7 @@ export class NodeEditor extends EventEmitter
     unsetDebugLayer: =>
         @withScene (scene) =>
             scene._symbolRegistry.materials.uniforms.displayMode = 0
-            
+
     genericSetComponent: (name, constructor, value) =>
         if value?
             if @[name]?
@@ -174,7 +162,7 @@ export class NodeEditor extends EventEmitter
                 @[name].push newValue
         else if values.length > 0
             for i in [0..values.length - 1]
-                @[name][i].set value[i]
+                @[name][i].set values[i]
 
     destruct: =>
         @breadcrumb?.dispose()
@@ -187,3 +175,34 @@ export class NodeEditor extends EventEmitter
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
+
+    setSearcher: (searcherModel) =>
+        unless searcherModel?
+            @unregisterSearcher()
+            return
+
+        node = @node(searcherModel.key)
+        unless node?
+            @warn "No node to attatch the Searcher to."
+            return
+
+        node.setSearcher searcherModel
+
+    unregisterSearcher: =>
+        if @openSearcher?
+            closingSearcher = @openSearcher
+            @openSearcher = null
+            closingSearcher.hideSearcher()
+
+    registerSearcher: (searcher) =>
+        if @openSearcher? and searcher.key != @openSearcher.key
+            @openSearcher.hideSearcher()
+        @openSearcher = searcher
+
+    log: (msg) => console.log "[NodeEditor]", msg
+
+    nodeByName: (name) => #added for debug purposes
+        for own k, n of @nodes
+            if n.model.name == name
+                return n
+        return undefined

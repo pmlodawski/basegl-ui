@@ -1,5 +1,5 @@
-import {InPortShape}        from 'shape/port/In'
-import {TextShape}          from 'shape/Text'
+import {InPortShape}   from 'shape/port/In'
+import {TextContainer} from 'view/Text'
 import {Subport, nameXOffset, typeNameXOffset, typeNameYOffset} from 'view/port/sub/Base'
 
 export class InArrow extends Subport
@@ -14,10 +14,10 @@ export class InArrow extends Subport
         @addDef 'port', new InPortShape angle: @model.angle, @
 
     update: =>
-        @autoUpdateDef 'name', TextShape,
+        @autoUpdateDef 'name', TextContainer,
             text: @model.name
             align: 'right'
-        @autoUpdateDef 'typeName', TextShape, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'right'
 
@@ -34,6 +34,12 @@ export class InArrow extends Subport
             typeNamePosition = [- typeNameXOffset - @model.radius, - typeNameYOffset]
             @view('typeName').position.xy = typeNamePosition
 
+    registerEvents: (view) =>
+        super view
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
+            @pushEvent e
+
     connectSources: =>
         @__onNameChange()
         @__onTypeNameChange()
@@ -44,7 +50,7 @@ export class InArrow extends Subport
         @addDisposableListener @parent, 'typeName', => @__onTypeNameChange()
         @addDisposableListener @parent, 'radius', => @__onRadiusChange()
         @addDisposableListener @parent, 'color', => @__onColorChange()
-        @addDisposableListener @parent.parent, 'hovered', => @__onHoverChange()
+        @addDisposableListener @parent.parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
 
     __onNameChange: =>
         @set name: @parent.model.name
@@ -55,4 +61,4 @@ export class InArrow extends Subport
     __onColorChange: =>
         @updateDef 'port', color: @parent.model.color
     __onHoverChange: =>
-        @set hovered: @parent.parent.model.hovered
+        @set hovered: @parent.parent.parent.model.hovered

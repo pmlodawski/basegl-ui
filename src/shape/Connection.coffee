@@ -17,7 +17,7 @@ export connectionExpr = basegl.expr ->
         .fill color.activeArea
     connection = rect 'bbox.x', scaledWidth
        .move 'bbox.x'/2, 'bbox.y'/2
-       .fill Color.rgb ['color_r', 'color_g', 'color_b']
+       .fill color.varHover()
     activeArea + connection
 
 connectionSymbol = basegl.symbol connectionExpr
@@ -26,6 +26,7 @@ connectionSymbol.bbox.y = width
 connectionSymbol.variables.color_r = 1
 connectionSymbol.variables.color_g = 0
 connectionSymbol.variables.color_b = 0
+connectionSymbol.variables.hovered = 0
 
 export class ConnectionShape extends BasicComponent
     initModel: =>
@@ -50,3 +51,7 @@ export class ConnectionShape extends BasicComponent
             element.variables.color_g = @model.color[1]
             element.variables.color_b = @model.color[2]
 
+    registerEvents: (view) =>
+        vars = @getElement().variables
+        view.addEventListener 'mouseover', => vars.hovered = 1
+        view.addEventListener 'mouseout',  => vars.hovered = 0

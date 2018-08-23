@@ -7,31 +7,43 @@ import {group}        from 'basegl/display/Symbol'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
 
-import {InPort}             from 'view/port/In'
-import {OutPort}            from 'view/port/Out'
 import * as shape           from 'shape/node/Base'
 import * as togglerShape    from 'shape/node/ValueToggler'
-import * as util            from 'shape/util'
 import * as _               from 'underscore'
 import {BasicComponent}     from 'abstract/BasicComponent'
 import {Component}          from 'abstract/Component'
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import {TextShape}          from 'shape/Text'
 import {NodeShape}          from 'shape/node/Node'
 import {NodeErrorShape}     from 'shape/node/ErrorFrame'
 import {ValueTogglerShape}  from 'shape/node/ValueToggler'
+import {EditableText}       from 'view/EditableText'
+import {InPort}             from 'view/port/In'
+import {NewPort}            from 'view/port/New'
+import {OutPort}            from 'view/port/Out'
+import {TextContainer}      from 'view/Text'
+import {SetView}            from 'view/SetView'
+import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 ### Utils ###
 selectedNode = null
 
 
-
+exprOffset = 25
 nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + 15
+nodeNameYOffset = nodeExprYOffset + exprOffset
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
+widgetOffset = 20
+widgetHeight = 20
+inportVDistance = widgetOffset + widgetHeight
+minimalBodyHeight = 60
 
+testEntries = [
+    { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
+    { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
+    { name: 'baz', doc:  'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
+]
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -41,6 +53,7 @@ export class ExpressionNode extends ContainerComponent
         value:      null
         inPorts:    {}
         outPorts:   {}
+        newPortKey: null
         position:   [0, 0]
         selected:   false
         expanded:   false
@@ -48,33 +61,53 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new TextShape text: @model.name, @
-        @addDef 'expression', new TextShape text: @model.expression, @
+        @addDef 'name', new EditableText
+                text:     @model.name
+                entries:  []
+                kind:     EditableText.NAME
+            , @
+        @addDef 'expression', new EditableText
+                text:    @model.expression
+                entries: []
+                kind:    EditableText.EXPRESSION
+            , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
+        @addDef 'inPorts',  new SetView cons: InPort, @
+        @addDef 'outPorts', new SetView cons: OutPort, @
+        @addDef 'newPort', new NewPort null, @
 
     update: =>
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
-
-        setInPort  = (k, inPort)  => @autoUpdateDef ('in'  + k),  InPort,  inPort
-        for own k, inPort of @model.inPorts
-            setInPort k, inPort
-        setOutPort = (k, outPort) => @autoUpdateDef ('out' + k), OutPort, outPort
-        for own k, outPort of @model.outPorts
-            setOutPort k, outPort
-        @updateInPorts()
-        @updateOutPorts()
+        @updateDef 'newPort', key: @model.newPortKey
+        if @changed.inPorts or @changed.expanded
+            @updateDef 'inPorts', elems: @model.inPorts
+            @updateInPorts()
+        if @model.expanded
+            setWidget = (k) =>
+                @autoUpdateDef ('widget' + k), HorizontalLayout,
+                    key: k
+                    children: inPort.controls
+                    width: @bodyWidth - widgetOffset
+                    height: widgetHeight
+            for own k, inPort of @model.inPorts
+                setWidget k, inPort
+        if @changed.outPorts
+            @updateDef 'outPorts', elems: @model.outPorts
+            @updateOutPorts()
 
         @updateDef 'node',
             expanded: @model.expanded
             selected: @model.selected
             body: [@bodyWidth, @bodyHeight]
 
-        if @changed.value
+        if @changed.value or @changed.expanded
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
-            @autoUpdateDef 'value', TextShape, if @__shortValue()?
+        if @changed.value
+            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
+                align: 'center'
                 text: @__shortValue()
                 body: [@bodyWidth, @bodyHeight]
 
@@ -83,11 +116,8 @@ export class ExpressionNode extends ContainerComponent
             expanded: @model.expanded
             body: [@bodyWidth, @bodyHeight]
 
-
-        # @widgets ?= {}
-
-    outPort: (key) => @def ('out' + key)
-    inPort: (key) => @def ('in' + key)
+    outPort: (key) => @def('outPorts').def(key)
+    inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
@@ -96,54 +126,18 @@ export class ExpressionNode extends ContainerComponent
         if @model.value? and @model.value.contents?
             @model.value.contents.contents
 
-    # drawWidgets: (widgets, startPoint, width) =>
-    #     return unless widgets.length > 0
-    #     ws = []
-    #     minWidth = 0
-    #     for i in [0..widgets.length - 1]
-    #         ws.push
-    #             index  : i
-    #             widget : widgets[i]
-    #             width : widgets[i].minWidth
-    #         minWidth += widgets[i].minWidth
-    #         widgets[i].configure siblings:
-    #             left:  ! (i == 0)
-    #             right: ! (i == widgets.length - 1)
-    #     offset = 3
-    #     free = width - minWidth - offset * (widgets.length - 1)
-    #     ws.sort (a, b) -> a.widget.maxWidth - b.widget.maxWidth
-    #     for i in [0..ws.length - 1]
-    #         w = ws[i]
-    #         wfree = free / (ws.length - i)
-    #         if (! w.widget.maxWidth?) or w.widget.maxWidth > w.width + wfree
-    #             free -= wfree
-    #             w.width += wfree
-    #         else
-    #             free -= w.widget.maxWidth - w.width
-    #             w.width = w.widget.maxWidth
-    #     ws.forEach (w) ->
-    #         widgets[w.index].set position: startPoint.slice()
-    #         widgets[w.index].configure width: w.width
-    #         startPoint[0] += w.width + offset
+    setSearcher: (searcherModel) =>
+        @def(searcherModel.targetField)?.setSearcher searcherModel
 
-    # updateValueView: =>
-    #     valueSize     = [0,0]
-    #     valuePosition = @view('node').position
-    #     if @__shortValue()?
-    #         @view('value').position.y = @view('node').position.y
-    #         valuePosition = @view('value').position
-    #     @view('valueToggler').position.y = @view('node').position.y
-        
     adjust: (view) =>
-        # if @model.expanded
-        #     for own inPortKey, inPort of @inPorts
-        #         widgets = @widgets[inPortKey]
-        #         if widgets?
-        #             leftOffset = 50
-        #             startPoint = [inPort.position[0] + leftOffset, inPort.position[1]]
-        #             width = @bodyWidth - 20
-        #             @drawWidgets widgets, startPoint, width
-        # @updateValueView()
+        if @model.expanded
+            for own inPortKey, inPortModel of @model.inPorts
+                inPort = @def('inPorts').def(inPortKey)
+                if inPortModel.controls?
+                    leftOffset = 50
+                    startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
+                    @view('widget' + inPortKey).position.xy = startPoint
+
         if @__shortValue()?
             @view('value').position.xy =
                 if @model.expanded
@@ -156,12 +150,17 @@ export class ExpressionNode extends ContainerComponent
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
-        inPortNumber = 0
-        inPortKeys = Object.keys @model.inPorts
-        for inPortKey, inPort of @model.inPorts
+        @bodyWidth = 200
+        inPortNumber = 1
+        inPortsCount = 0
+        for k, inPort of @model.inPorts
+            unless inPort.mode == 'self'
+                inPortsCount++
+
+        portProperties = (port) =>
             values = {}
             values.locked = @model.expanded
-            if inPort.mode == 'self'
+            if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [0, 0]
@@ -169,52 +168,35 @@ export class ExpressionNode extends ContainerComponent
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [- shape.height/2
-                                  ,- shape.height/2 - inPortNumber * 50]
+                                  ,- shape.height/2 - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else
                 values.position = [0,0]
                 values.radius = portDistance
-                if inPortKeys.length == 1
-                    values.angle = Math.PI/2
-                else
-                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+                values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
-            @def('in' + inPortKey).set values
+            values
 
-            # if @model.expanded
-            #     unless @widgets[inPortKey]?
-            #         @widgets[inPortKey] = []
-            #         inPort.widgets.forEach (widgetCreate) =>
-            #             widget = widgetCreate @parent
-            #             @onDispose => widget.dispose()
-            #             @widgets[inPortKey].push widget
-            # else
-            #     if @widgets[inPortKey]?
-            #         @widgets[inPortKey].forEach (widget) =>
-            #             widget.detach()
-            #         delete @widgets[inPortKey]
-            # inPort.set values
-        # Those values should be calculated based on informations about port widgets
-        @bodyWidth = 200
-        @bodyHeight = 300
+        for inPortKey, inPort of @model.inPorts
+            @def('inPorts').def(inPortKey).set portProperties inPort
+        @def('newPort').set portProperties mode:'phantom'
+        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
+
 
     updateOutPorts: =>
-        outPortNumber = 0
-        outPortKeys = Object.keys @model.outPorts
+        outPortNumber = 1
+        outPortsNumber = Object.keys(@model.outPorts).length
         for own outPortKey, outPort of @model.outPorts
             values = {}
             unless outPort.angle?
-                if outPortKeys.length == 1
-                    values.angle = Math.PI*3/2
-                else
-                    values.angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
+                values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
                 values.radius = portDistance
-            @def('out' + outPortKey).set values
+            @def('outPorts').def(outPortKey).set values
             outPortNumber++
 
     registerEvents: (view) =>
-        view.addEventListener 'dblclick',  @pushEvent
-        @view('valueToggler').addEventListener 'mouseup', => @pushEvent
+        view.addEventListener 'dblclick', (e) => @pushEvent e
+        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e,
             tag: 'ToggleVisualizationsEvent'
         @makeHoverable view
         @makeDraggable view

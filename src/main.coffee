@@ -11,7 +11,6 @@ import {InputNode}          from 'view/InputNode'
 import {NodeEditor}         from 'view/NodeEditor'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
-import {Slider}             from 'view/Slider'
 import {runPerformance}     from './performance'
 import * as layers          from 'view/layers'
 import * as test            from './test'
@@ -43,10 +42,8 @@ main = (callback) -> install 'basegl-root', 'rsc/', callback
 
 window.run = main
 
-mkWidget  = (cons, args) -> (parent) -> new cons args, parent
-
 runExample = -> main (nodeEditor) ->
-    nodeEditor.setBreadcrumb new Breadcrumb
+    nodeEditor.setBreadcrumb
         moduleName: 'Foo'
         items:
             [
@@ -123,47 +120,76 @@ runExample = -> main (nodeEditor) ->
                 1:
                     name: 'port1'
                     typeName: 'B'
-                    widgets:
+                    controls:
                         [
-                            mkWidget Slider,
-                                min: 0
-                                max: 100
-                                value: 49
+                            cls: 'Int'
+                            min: 0
+                            max: 100
+                            value: 49
                         ,
-                            mkWidget Slider,
-                                min: -50
-                                max: 50
-                                value: 11
+                            cls: 'Bool'
+                            value: true
+                        ,
+                            cls: 'Bool'
+                            value: false
                         ]
                 2:
                     name: 'port2'
                     typeName: 'C'
-                    widgets:
+                    controls:
                         [
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
                         ]
                 3:
                     name: 'port3'
                     typeName: 'D'
-                    widgets:
+                    controls:
                         [
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Text'
+                            value: 'test'
                         ,
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
                         ,
-                            mkWidget Slider,
-                                min: -10
-                                max: 10
-                                value: 5
+                            cls: 'Int'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                4:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                5:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
+                        ]
+                6:
+                    name: 'port2'
+                    typeName: 'C'
+                    controls:
+                        [
+                            cls: 'Real'
+                            min: -10
+                            max: 10
+                            value: 5
                         ]
             outPorts:
                 1: {}
@@ -249,33 +275,6 @@ runExample = -> main (nodeEditor) ->
             srcPort: 1
             dstNode: 4
             dstPort: 1
-        ]
-    nodeEditor.setSearcher new Searcher
-        key: 4
-        mode: 'node'
-        selected: 0
-        entries: [
-            name: 'bar'
-            doc:  'bar description'
-            className: 'Bar'
-            highlights:
-                [
-                    start: 1
-                    end: 2
-                ]
-        ,
-            name: 'foo'
-            doc:  'foo multiline\ndescription'
-            className: 'Foo'
-        ,
-            name: 'baz'
-            doc:  'baz description'
-            className: 'Test'
-            highlights:
-                [
-                    start: 1
-                    end: 3
-                ]
         ]
 
     nodeEditor.setVisualizerLibraries
