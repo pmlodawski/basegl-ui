@@ -30,6 +30,7 @@ export class Searcher extends ContainerComponent
             element: 'div'
             id: 'searcher-root'
             scalable: false
+            cssClassName: style.luna ['searcher__root']
 
     #############################
     ### Create/update the DOM ###
@@ -52,7 +53,7 @@ export class Searcher extends ContainerComponent
 
     __createContainer: =>
         @dom.container = document.createElement 'div'
-        @dom.container.className = 'native-key-bindings ' + style.luna ['input', 'searcher', 'searcher--node']
+        @dom.container.className = 'native-key-bindings ' + style.luna ['searcher__container']
         @dom.container.appendChild @dom.results
         @dom.container.appendChild @dom.input
         @def('root').getDomElement().appendChild @dom.container

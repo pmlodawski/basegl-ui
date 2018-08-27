@@ -1,5 +1,5 @@
-import {BasicComponent}  from 'abstract/BasicComponent'
-import * as basegl       from 'basegl'
+import {BasicComponent} from 'abstract/BasicComponent'
+import * as basegl      from 'basegl'
 
 
 export class HtmlShape extends BasicComponent
@@ -12,6 +12,7 @@ export class HtmlShape extends BasicComponent
         scalable: true
         still: false
         clickable: true
+        cssClassName: []
 
     redefineRequired: => @changed.element
 
@@ -28,6 +29,9 @@ export class HtmlShape extends BasicComponent
             @getDomElement().style.height = @model.height
         if @changed.clickable
             @getDomElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
+        if @changed.cssClassName
+            @getDomElement().className = @model.cssClassName
+
         if @changed.top or @changed.scalable or @changed.still
             obj = @getElement().obj
             if @model.still
