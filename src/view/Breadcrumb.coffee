@@ -12,12 +12,11 @@ export class Breadcrumb extends ContainerComponent
         items: []
 
     prepare: =>
-        @addDef 'root', new HtmlShape
-                element: 'div'
-                id: breadcrumbId
-                scalable: false
-                still: true
-            , @
+        @addDef 'root', HtmlShape,
+            element: 'div'
+            id: breadcrumbId
+            scalable: false
+            still: true
 
     update: =>
         if @changed.once or @changed.items or @changed.moduleName

@@ -16,13 +16,11 @@ export class TextContainer extends Widget
         model
 
     prepare: =>
-        @addDef 'text', new TextShape
-                text: @model.text
-                align: 'left'
-            , @
-        @addDef 'box', new RectangleShape
-                color: @model.frameColor
-            , @
+        @addDef 'text', TextShape,
+            text: @model.text
+            align: 'left'
+        @addDef 'box', RectangleShape,
+            color: @model.frameColor
 
     update: =>
         if @changed.text
