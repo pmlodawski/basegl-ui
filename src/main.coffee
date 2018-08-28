@@ -290,7 +290,7 @@ runExample = -> main (nodeEditor) ->
                 visualizerId:
                     visualizerName: 'base: json'
                     visualizerType: 'LunaVisualizer'
-                visualizerPath: 'base/json/json.html'
+                visualizerPath: 'visualizers/data/base/json/json.html'
             iframeId: '1'
             mode: 'Default'
             selectedVisualizer:
@@ -307,7 +307,7 @@ runExample = -> main (nodeEditor) ->
                 visualizerId:
                     visualizerName: 'internal: error'
                     visualizerType: '"InternalVisualizer"'
-                visualizerPath: '"internal/error/error.html"'
+                visualizerPath: '"visualizers/internal/error/error.html"'
             iframeId: '2'
             mode: 'Default'
             selectedVisualizer:

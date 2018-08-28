@@ -18,6 +18,9 @@ export class VisualizationIFrame extends ContainerComponent
         @addDef 'root', HtmlShape,
             element: 'div'
             clickable: false
+        @shadow = @def('root').getDomElement().attachShadow?(mode: 'open')
+        @shadow ?= @def('root').getDomElement()
+
 
     __isModeDefault: => @model.mode == 'Default'
     __isModePreview: => @model.mode == 'Preview'
@@ -38,16 +41,18 @@ export class VisualizationIFrame extends ContainerComponent
 
 
         if @changed.currentVisualizer
-            @iframe = @__mkIframe()
-            if @iframe?
-                domElem = @def('root').getDomElement()
-                while domElem.hasChildNodes()
-                    domElem.removeChild domElem.firstChild
-                domElem.appendChild @iframe
-        if @changed.iframeId
-            @iframe?.name = @model.iframeId
-        @iframe?.style.width  = @__width() + 'px'
-        @iframe?.style.height = @__height() + 'px'
+            @__cleanShadow()
+            @__attachVisualizer()
+        #     @iframe = @__mkIframe()
+        #     if @iframe?
+        #         domElem = @def('root').getDomElement()
+        #         while domElem.hasChildNodes()
+        #             domElem.removeChild domElem.firstChild
+        #         domElem.appendChild @iframe
+        # if @changed.iframeId
+        #     @iframe?.name = @model.iframeId
+        # @iframe?.style.width  = @__width() + 'px'
+        # @iframe?.style.height = @__height() + 'px'
 
     adjust: (view) =>
         if @changed.mode
@@ -59,7 +64,13 @@ export class VisualizationIFrame extends ContainerComponent
                 @def('root').__element.position.xy = [0,0]
         @view('root').position.xy = [@__width()/2,-@__height()/2]
 
-    __mkIframe: =>
+    __cleanShadow: =>
+        console.log 'clean shaodw'
+        while @shadow.hasChildNodes()
+            console.log 'remove', @shadow.firstChild
+            @shadow.removeChild @shadow.firstChild
+
+    __attachVisualizer: =>
         if @model.currentVisualizer?
             visPaths = @root.visualizerLibraries
             visType = @model.currentVisualizer.visualizerId.visualizerType
@@ -72,8 +83,35 @@ export class VisualizationIFrame extends ContainerComponent
         if pathPrefix?
             url = path.join pathPrefix, @model.currentVisualizer.visualizerPath
 
-        if url?
-            iframe           = document.createElement 'iframe'
-            iframe.className = style.luna ['basegl-visualization-iframe']
-            iframe.src       = url
-            iframe
+        return unless url?
+        console.log 'url=', url
+        # @shadow.innerHTML='<object type="text/html" data="' + url + '"></object>'
+
+        s = @shadow
+        xhr= new XMLHttpRequest()
+        xhr.open 'GET', url, true
+        xhr.onreadystatechange = ->
+            return if @readyState != 4
+            return if @status != 200
+            console.log @responseText
+            s.innerHTML= @responseText
+        xhr.send()
+
+    # __mkIframe: =>
+    #     if @model.currentVisualizer?
+    #         visPaths = @root.visualizerLibraries
+    #         visType = @model.currentVisualizer.visualizerId.visualizerType
+    #         pathPrefix = if visType == 'InternalVisualizer'
+    #                 visPaths.internalVisualizersPath
+    #             else if visType == 'LunaVisualizer'
+    #                 visPaths.lunaVisualizersPath
+    #             else visPaths.projectVisualizersPath
+
+    #     if pathPrefix?
+    #         url = path.join pathPrefix, @model.currentVisualizer.visualizerPath
+
+    #     if url?
+    #         iframe           = document.createElement 'div'
+    #         iframe.className = style.luna ['basegl-visualization-iframe']
+    #         iframe.src       = url
+    #         iframe
