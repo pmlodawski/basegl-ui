@@ -1,6 +1,8 @@
 import {EventEmitter} from "abstract/EventEmitter"
 import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
+import {mat4}         from 'gl-matrix'
+
 
 unArray = (ref, obj) =>
     if ref? and (not Array.isArray ref) and Array.isArray obj
@@ -50,13 +52,14 @@ export class HasModel extends EventEmitter
                 @model[key] = value
                 @performEmit key, value
 
-    __addToGroup:      (view) =>
+    __addToGroup: (view) =>
         @__view.addChild view
         @__view.updateChildrenOrigin()
 
     __removeFromGroup: (view) =>
         @__view.removeChild view
         @__view.updateChildrenOrigin()
+        view.setOrigin mat4.create()
 
     log:  (msg) => console.log  "[#{@constructor.name}]", msg
     warn: (msg) => console.warn "[#{@constructor.name}]", msg

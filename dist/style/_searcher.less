@@ -7,7 +7,21 @@
 //         searcher        //
 /////////////////////////////
 
-@searcherWidth:      400px;
+
+@entry-height:      unit(@luna-superline-height, px);
+@border-radius:     unit(@luna-searcher-border-radius,px);
+@border-radius-big: unit(@luna-searcher-border-radius + @luna-connection-width, px);
+@searcher-width:    400px;
+@searcher-height:   11 * @entry-height;
+// NOTE: Calculating the offset.
+// In basegl the (0, 0) (and thus the point of reference) of a component is its center,
+// in html: its top left corner. We would like the (0, 0) of the searcher to be
+// the center of the input field. This means that we do the following transform:
+// 1. move the whole searcher down by @searcher-height / 2
+// 2. move it up by 1/2 of the height of the input field.
+// Now we are in the middle of the input field and everything is aligned.
+@searcher-center-offset: -@searcher-height / 2 + @entry-height / 2;
+
 
 .luna-studio-window--has-searcher {
     .luna-studio-window__center {
@@ -15,37 +29,42 @@
     }
 }
 
-.luna-searcher {
-    z-index:  @luna-zindex-searcher;
+.luna-searcher__root {
+    width:    @searcher-width;
+    height:   @searcher-height;
     position: absolute;
 }
 
-.luna-searcher__root {
-    width:  0;
-    height: 0;
+.luna-searcher__container {
+    z-index:   @luna-zindex-searcher;
+    width:     @searcher-width;
+    height:    @searcher-height;
+    position:  relative;
+    transform: translateY(@searcher-center-offset);
 }
 
 .luna-searcher__input {
     background:     #1d1d19;
-    border-radius:  0px 0px (@luna-searcher-border-radius + @luna-connection-width) * 1px (@luna-searcher-border-radius + @luna-connection-width) * 1px;;
+    border-radius:  0px 0px @border-radius-big @border-radius-big;
     color:          @luna-syntax-text-color;
     font-family:    @fontDefault;
-    font-size:      calc(@ui ~'*' 12px);
+    font-size:      12px;
     font-weight:    300;
-    height:         calc(@ui ~'*' @luna-superline-height * 1px);
-    line-height:    calc(@ui ~'*' @luna-superline-height * 1px);
+    height:         @entry-height;
+    line-height:    @entry-height;
     letter-spacing: 0.5px; // Matching Atom styles. TODO: Apply to the whole graph?
     overflow:       inherit;
+    position:       absolute;
+    bottom:         0px;
     text-align:     center;
-    transform:      translateX(-37%);
-    width:          calc(@ui ~'*' @searcherWidth);
+    width:          @searcher-width;
     &:focus {
         outline: 0;
     }
 }
 
 .luna-searcher__no-results {
-    border-radius: (@luna-searcher-border-radius + @luna-connection-width) * 1px;
+    border-radius: @border-radius;
 }
 
 .luna-searcher__input--selected {
@@ -55,41 +74,40 @@
 .luna-searcher__results {
     display:        flex;
     flex-direction: column-reverse;
-    bottom:         calc(@ui ~'*' 28px);
+    bottom:         @entry-height;
     position:       absolute;
-    left:           calc(@ui ~'*' (-@searcherWidth/4));
-    width:          calc(@ui ~'*' @searcherWidth + 2px);
-    border:         calc(@ui ~'*' @luna-connection-width * 1px) solid transparent; //TODO: add this border to children instead (with proper color)
-    transform:      translate(@searcherWidth * -0.125px, @luna-connection-width * 2px);
-    height:         calc(@ui ~'*' @luna-superline-height * 10px);
+    width:          @searcher-width;
+    height:         10 * @entry-height;
     overflow:       hidden;
+    // NOTE: there used to be a (transparent) border around the results.
+    // however, it adds padding between the results and the input,
+    // which in my opinion doesn't look well. If you want it back, uncomment:
+    // border: unit(@luna-connection-width, px) solid transparent;
 }
 
 .luna-searcher__results__list {
     .background(@a);
     overflow:       hidden;
-    display:        flex;
+    display:        flex;   
     flex-direction: column-reverse;
     text-align:     center;
-    border-radius:  unit(@luna-searcher-border-radius,px) unit(@luna-searcher-border-radius,px) 0 0;
+    border-radius:  @border-radius @border-radius 0 0;
     padding:        0;
-    width:          calc(@ui ~'*' @searcherWidth);
-    max-height:     calc(@ui ~'*' @luna-superline-height * 10px);  
+    width:          @searcher-width;
+    max-height:     10 * @entry-height;  
 }
 
 .luna-searcher__doc {
-    @y: calc(@ui ~'*' @luna-superline-height * 10px);
+    @y: @searcher-height - @entry-height;
     .background(@a);
-    font-size:     calc(@ui ~'*' 10px);
-    border-radius: unit(@luna-searcher-border-radius, px) 
-                    unit(@luna-searcher-border-radius, px) 
-                    unit(@luna-searcher-border-radius, px) 0 !important;
+    font-size:     10px;
+    border-radius: @border-radius @border-radius @border-radius 0 !important;
     box-sizing:    border-box;
     position:      absolute;
     bottom:        30px;
-    left:          calc(@ui ~'*' @searcherWidth/4 + 2px);
+    left:          @searcher-width / 4 + 2px;
     height:        @y;
-    width:         calc(@ui ~'*' @searcherWidth/2);
+    width:         @searcher-width / 2;
     white-space:   normal;
     &.luna-visualization--active {
         .luna-visualization-container {
@@ -98,16 +116,16 @@
     }
     .luna-visualization-container {
         background: inherit !important;
-        width:      200px;
+        width:      @searcher-width / 2;
     }
     iframe {
-        width: 100%;
+        width:  100%;
         height: @y;
     }
 }
 
 .luna-searcher__results__item {
-    line-height: calc(@ui ~'*' @luna-superline-height * 1px);
+    line-height: @entry-height;
 }
 
 .luna-searcher__results__item--selected {
@@ -121,7 +139,7 @@
 
 .luna-searcher__results__item::before {
     position: absolute;
-    left:     calc(@ui ~'*' 7px);
+    left:     7px;
     opacity:  .5;
 }
 .luna-searcher__results__item:nth-of-type(1)::before { content: "⌘1" }
@@ -137,7 +155,7 @@
 
 .luna-searcher__pre,
 .luna-searcher__pre + span {
-    height:     calc(@ui ~'*' @luna-superline-height * 1px);
+    height:     @entry-height;
     display:    block;
     text-align: left;
     width:      50%;
