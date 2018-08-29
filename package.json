@@ -10,7 +10,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --progress --watch",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "prepublish": "npm run build",
+    "postpublish": "rm dist/js/bundle.js",
+    "deploy": "npm install && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
