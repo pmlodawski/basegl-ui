@@ -10,10 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --progress --watch",
-    "start": "webpack-dev-server --open",
-    "prepublish": "npm run build",
-    "postpublish": "rm dist/js/bundle.js",
-    "deploy": "npm install && git commit -am \"Version bump\" && git push origin basegl-npm && npm version patch && npm publish"
+    "start": "webpack-dev-server --open"
   },
   "repository": {
     "type": "git",
