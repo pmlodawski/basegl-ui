@@ -19,6 +19,7 @@ export class VisualizationIFrame extends ContainerComponent
             element: 'div'
             clickable: false
         @shadow = @def('root').getDomElement().attachShadow?(mode: 'open')
+        @shadow ?= @def('root').getDomElement().createShadowRoot?()
         @shadow ?= @def('root').getDomElement()
 
 
