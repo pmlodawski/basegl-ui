@@ -62,4 +62,6 @@
   window.addEventListener("message", function (evt) {
     if(evt.data.data) render(evt.data.data);
   });
+  console.log('THIS WONT PRINT')
 }());
+console.log('THIS WONT PRINT ALSO')

@@ -188,7 +188,7 @@ runExample = -> main (nodeEditor) ->
                         ]
             outPorts:
                 1: {}
-            position: [500, 300]
+            position: [800, 800]
             expanded: true
             error: true
             value:
@@ -278,25 +278,25 @@ runExample = -> main (nodeEditor) ->
         projectVisualizersPath:  ''
 
 
-    nodeEditor.setVisualization
-        nodeKey: 2
-        visualizers: [
-            {visualizerName: 'base: json', visualizerType: 'LunaVisualizer'},
-            {visualizerName: 'base: yaml', visualizerType: 'LunaVisualizer'}
-        ]
-        visualizations: [
-            key: 900
-            currentVisualizer:
-                visualizerId:
-                    visualizerName: 'base: json'
-                    visualizerType: 'LunaVisualizer'
-                visualizerPath: 'visualizers/data/base/json/json.html'
-            iframeId: '1'
-            mode: 'Default'
-            selectedVisualizer:
-                visualizerName: 'base: json'
-                visualizerType: 'LunaVisualizer'
-        ]
+    # nodeEditor.setVisualization
+    #     nodeKey: 2
+    #     visualizers: [
+    #         {visualizerName: 'base: json', visualizerType: 'LunaVisualizer'},
+    #         {visualizerName: 'base: yaml', visualizerType: 'LunaVisualizer'}
+    #     ]
+    #     visualizations: [
+    #         key: 900
+    #         currentVisualizer:
+    #             visualizerId:
+    #                 visualizerName: 'base: json'
+    #                 visualizerType: 'LunaVisualizer'
+    #             visualizerPath: 'visualizers/data/base/json/json.html'
+    #         iframeId: '1'
+    #         mode: 'Default'
+    #         selectedVisualizer:
+    #             visualizerName: 'base: json'
+    #             visualizerType: 'LunaVisualizer'
+    #     ]
     
     nodeEditor.setVisualization
         nodeKey: 3
@@ -307,7 +307,7 @@ runExample = -> main (nodeEditor) ->
                 visualizerId:
                     visualizerName: 'internal: error'
                     visualizerType: '"InternalVisualizer"'
-                visualizerPath: '"visualizers/internal/error/error.html"'
+                visualizerPath: 'visualizers/internal/error/error.html'
             iframeId: '2'
             mode: 'Default'
             selectedVisualizer:
@@ -321,29 +321,29 @@ runExample = -> main (nodeEditor) ->
     #         reversed: false
     #     ]
 
-    subscribeEvents (path, event, key) =>
-        console.log path.join('.'), event, key
-        if event.tag == 'FocusVisualizationEvent'
-            nodeKey = path[2]
-            nodeEditor.setVisualization
-                nodeKey: nodeKey
-                visualizations: [
-                    key: 900
-                    mode: 'Focused'
-                ]
-        if event.tag == 'MouseEvent' and event.type == 'mouseup'
-            nodeEditor.setVisualization
-                nodeKey: 2
-                visualizations: [
-                    key: 900
-                    mode: 'Default'
-                ]
-            nodeEditor.setVisualization
-                nodeKey: 3
-                visualizations: [
-                    key: 901
-                    mode: 'Default'
-                ]
+    # subscribeEvents (path, event, key) =>
+    #     console.log path.join('.'), event, key
+    #     if event.tag == 'FocusVisualizationEvent'
+    #         nodeKey = path[2]
+    #         nodeEditor.setVisualization
+    #             nodeKey: nodeKey
+    #             visualizations: [
+    #                 key: 900
+    #                 mode: 'Focused'
+    #             ]
+    #     if event.tag == 'MouseEvent' and event.type == 'mouseup'
+    #         nodeEditor.setVisualization
+    #             nodeKey: 2
+    #             visualizations: [
+    #                 key: 900
+    #                 mode: 'Default'
+    #             ]
+    #         nodeEditor.setVisualization
+    #             nodeKey: 3
+    #             visualizations: [
+    #                 key: 901
+    #                 mode: 'Default'
+    #             ]
 
 if NODE_EDITOR_EXAMPLE? then runExample()
 else if NODE_EDITOR_PERFORMANCE? then main runPerformance
