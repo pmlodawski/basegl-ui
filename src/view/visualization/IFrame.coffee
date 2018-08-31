@@ -18,9 +18,10 @@ export class VisualizationIFrame extends ContainerComponent
         @addDef 'root', HtmlShape,
             element: 'div'
             clickable: false
-        @shadow = @def('root').getDomElement().attachShadow?(mode: 'open')
-        @shadow ?= @def('root').getDomElement().createShadowRoot?()
-        @shadow ?= @def('root').getDomElement()
+        @rootElem = @def('root').getDomElement()
+        @shadow = @rootElem.attachShadow?(mode: 'open')
+        @shadow ?= @rootElem.createShadowRoot?()
+        @shadow ?= @rootElem
 
 
     __isModeDefault: => @model.mode == 'Default'
@@ -86,17 +87,32 @@ export class VisualizationIFrame extends ContainerComponent
 
         return unless url?
         console.log 'url=', url
+        link = document.createElement 'link'
+        link.rel = 'import'
+        link.href = url
+        link.onload = (e) =>
+            console.log 'loaded', e, link
+            window.link = link
+            node = document.importNode(link.import.querySelector('#vis').content, true)
+            @shadow.appendChild node
+
+        @rootElem.appendChild link
         # @shadow.innerHTML='<object type="text/html" data="' + url + '"></object>'
 
-        s = @shadow
-        xhr= new XMLHttpRequest()
-        xhr.open 'GET', url, true
-        xhr.onreadystatechange = ->
-            return if @readyState != 4
-            return if @status != 200
-            console.log @responseText
-            s.innerHTML= @responseText
-        xhr.send()
+        # s = @shadow
+        # # object = document.createElement 'div'
+        # # object.type = 'text/html'
+        # # object.data
+        # # <object type="text/html" data="x.html"></object>
+        # xhr= new XMLHttpRequest()
+        # xhr.open 'GET', url, true
+        # xhr.onreadystatechange = ->
+        #     return if @readyState != 4
+        #     return if @status != 200
+        #     window.cont = @responseText
+        #     console.log @responseText
+        #     s.innerHTML= @responseText
+        # xhr.send()
 
     # __mkIframe: =>
     #     if @model.currentVisualizer?

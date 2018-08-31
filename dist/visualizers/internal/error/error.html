@@ -1,12 +1,13 @@
 <!doctype html>
-<html>
+<template id="vis">
+    <head>
+        <link rel="stylesheet" type="text/css" href="/visualizers/visualization-common.css">
+        <link rel="stylesheet" type="text/css" href="/visualizers/internal/common.css">
+        <link rel="stylesheet" type="text/css" href="/visualizers/internal/error/error.css">
 
-    <link rel="stylesheet" type="text/css" href="/visualizers/internal/error/../../visualization-common.css">
-    <link rel="stylesheet" type="text/css" href="/visualizers/internal/error/../common.css">
-    <link rel="stylesheet" type="text/css" href="/visualizers/internal/error/error.css">
-
-    <script>alert('Hello from the component');</script>
-    <script type="text/javascript" src="/visualizers/internal/error/error.js"></script>
-    <script type="text/javascript" src="/visualizers/internal/error/../../visualization-common.js"></script>
-
-</html>
+        <script>alert("hello from js");</script>
+        <script type="text/javascript" src="/visualizers/internal/error/error.js"></script>
+        <script type="text/javascript" src="/visualizers/visualization-common.js"></script>
+    </head>
+    <body><div id='entry'>erro</div></body>
+</template>

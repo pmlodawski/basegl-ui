@@ -50,60 +50,60 @@ runExample = -> main (nodeEditor) ->
             ]
 
     nodeEditor.setNodes [
-            key: 1
-            name: 'number1'
-            expression: '12'
-            inPorts:
-                1:
-                    name: 'onlyPort'
-                    typeName: 'Int'
-            outPorts:
-                1:
-                    typeName: 'A'
-                2:
-                    typeName: 'B'
-            position: [200, 300]
-            expanded: false
-            selected: false
-            error: true
-            value:
-                tag: 'Error'
-                contents:
-                    tag: 'ShortValue'
-                    contents: 'Another error description'
-            hovered: true
-        ,
-            key: 2
-            name: 'bar'
-            expression: '54'
-            inPorts:
-                0:
-                    name: 'self'
-                    mode: 'self'
-                    typeName: 'A'
-                1:
-                    name: 'port1'
-                    typeName: 'A'
-                2:
-                    name: 'port2'
-                    typeName: 'A'
-                3:
-                    name: 'port3'
-                    typeName: 'A'
-                4:
-                    name: 'port4'
-                    typeName: 'B'
-            outPorts:
-                1:
-                    typeName: 'A'
-            position: [200, 600]
-            expanded: false
-            selected: false
-            value:
-                tag: 'Value'
-                contents:
-                    tag: 'Visualization'
-        ,
+        #     key: 1
+        #     name: 'number1'
+        #     expression: '12'
+        #     inPorts:
+        #         1:
+        #             name: 'onlyPort'
+        #             typeName: 'Int'
+        #     outPorts:
+        #         1:
+        #             typeName: 'A'
+        #         2:
+        #             typeName: 'B'
+        #     position: [200, 300]
+        #     expanded: false
+        #     selected: false
+        #     error: true
+        #     value:
+        #         tag: 'Error'
+        #         contents:
+        #             tag: 'ShortValue'
+        #             contents: 'Another error description'
+        #     hovered: true
+        # ,
+        #     key: 2
+        #     name: 'bar'
+        #     expression: '54'
+        #     inPorts:
+        #         0:
+        #             name: 'self'
+        #             mode: 'self'
+        #             typeName: 'A'
+        #         1:
+        #             name: 'port1'
+        #             typeName: 'A'
+        #         2:
+        #             name: 'port2'
+        #             typeName: 'A'
+        #         3:
+        #             name: 'port3'
+        #             typeName: 'A'
+        #         4:
+        #             name: 'port4'
+        #             typeName: 'B'
+        #     outPorts:
+        #         1:
+        #             typeName: 'A'
+        #     position: [200, 600]
+        #     expanded: false
+        #     selected: false
+        #     # value:
+        #     #     tag: 'Value'
+        #     #     contents:
+        #     #         tag: 'Visualization'
+        # ,
             key: 3
             name: 'baz'
             expression: 'foo bar baz'
@@ -188,7 +188,7 @@ runExample = -> main (nodeEditor) ->
                         ]
             outPorts:
                 1: {}
-            position: [800, 800]
+            position: [200, 700]
             expanded: true
             error: true
             value:
@@ -196,18 +196,18 @@ runExample = -> main (nodeEditor) ->
                 contents:
                     tag: 'Visualization'
             selected: false
-        ,
-            key: 4
-            name: 'node1'
-            inPorts:
-                1:
-                    name: 'onlyPort'
-                    typeName: 'A'
-            outPorts:
-                1: {}
-            position: [500, 600]
-            expanded: false
-            selected: false
+        # ,
+        #     key: 4
+        #     name: 'node1'
+        #     inPorts:
+        #         1:
+        #             name: 'onlyPort'
+        #             typeName: 'A'
+        #     outPorts:
+        #         1: {}
+        #     position: [500, 600]
+        #     expanded: false
+        #     selected: false
         ]
 
     nodeEditor.setInputNode
@@ -228,49 +228,49 @@ runExample = -> main (nodeEditor) ->
             2:
                 name: 'output2'
                 color: [0.2, 0.5, 0.3]
-    nodeEditor.setConnections [
-            key: 0
-            srcNode: 'in'
-            srcPort: 2
-            dstNode: 1
-            dstPort: 1
-        ,
-            key: 1
-            srcNode: 1
-            srcPort: 1
-            dstNode: 2
-            dstPort: 0
-        ,
-            key: 2
-            srcNode: 2
-            srcPort: 1
-            dstNode: 3
-            dstPort: 1
-        ,
-            key: 3
-            srcNode: 3
-            srcPort: 1
-            dstNode: 4
-            dstPort: 1
-        ,
-            key: 4
-            srcNode: 4
-            srcPort: 1
-            dstNode: 'out'
-            dstPort: 2
-        ,
-            key: 5
-            srcNode: 1
-            srcPort: 2
-            dstNode: 3
-            dstPort: 0
-        ,
-            key: 6
-            srcNode: 1
-            srcPort: 1
-            dstNode: 4
-            dstPort: 1
-        ]
+    # nodeEditor.setConnections [
+    #         key: 0
+    #         srcNode: 'in'
+    #         srcPort: 2
+    #         dstNode: 1
+    #         dstPort: 1
+    #     ,
+    #         key: 1
+    #         srcNode: 1
+    #         srcPort: 1
+    #         dstNode: 2
+    #         dstPort: 0
+    #     ,
+    #         key: 2
+    #         srcNode: 2
+    #         srcPort: 1
+    #         dstNode: 3
+    #         dstPort: 1
+    #     ,
+    #         key: 3
+    #         srcNode: 3
+    #         srcPort: 1
+    #         dstNode: 4
+    #         dstPort: 1
+    #     ,
+    #         key: 4
+    #         srcNode: 4
+    #         srcPort: 1
+    #         dstNode: 'out'
+    #         dstPort: 2
+    #     ,
+    #         key: 5
+    #         srcNode: 1
+    #         srcPort: 2
+    #         dstNode: 3
+    #         dstPort: 0
+    #     ,
+    #         key: 6
+    #         srcNode: 1
+    #         srcPort: 1
+    #         dstNode: 4
+    #         dstPort: 1
+    #     ]
 
     nodeEditor.setVisualizerLibraries
         internalVisualizersPath: ''
