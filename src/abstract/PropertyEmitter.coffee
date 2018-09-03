@@ -12,5 +12,5 @@ export class PropertyEmitter extends Disposable
             @performEmit name, property
 
     performEmit: (name, property) =>
-        propertyEvent = new CustomEvent name, value: property
+        propertyEvent = new CustomEvent name, detail: property
         @dispatchEvent propertyEvent if @dispatchEvent?
