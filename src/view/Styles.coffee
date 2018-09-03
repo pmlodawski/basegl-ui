@@ -8,7 +8,9 @@ import {ContinousSlider}    from 'widget/Slider'
 export class Styles extends ContainerComponent
     initModel: =>
         connection_lineWidth: 2
-    
+        node_widgetOffset: 20
+        node_widgetHeight: 20
+
     enable: =>
         @addDef 'vertical', VerticalLayout,
             width: 300
@@ -40,9 +42,10 @@ export class Styles extends ContainerComponent
                 ]
         @updateDef 'vertical', children: children
 
-        for own key, val of @def('vertical').model.children
-            name = val.children[0].text
-            @def('vertical').def(key).def(1).addEventListener 'value', (e) =>
+        @def('vertical').model.children.forEach (c, key) =>
+            child = @def('vertical').def(key)
+            child.def(1).addEventListener 'value', (e) =>
+                name = child.def(0).model.text
                 x = {}
                 x[name] = e.detail
                 @set x
@@ -64,3 +67,5 @@ export class Styles extends ContainerComponent
             window.addEventListener 'mouseup', dragFinish
             window.addEventListener 'mousemove', moveNodes
         @view('vertical').addEventListener 'mousedown', dragHandler
+
+        @__view.position.xy = [700, 300]

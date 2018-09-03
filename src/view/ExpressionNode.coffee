@@ -33,9 +33,6 @@ nodeNameYOffset = nodeExprYOffset + exprOffset
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
-widgetOffset = 20
-widgetHeight = 20
-inportVDistance = widgetOffset + widgetHeight
 minimalBodyHeight = 60
 
 testEntries = [
@@ -58,8 +55,12 @@ export class ExpressionNode extends ContainerComponent
         expanded:   false
         hovered:    false
         visualizations: null
+        widgetOffset: null
+        widgetHeight: null
 
     prepare: =>
+        @connectStyles 'node_widgetOffset', 'widgetOffset'
+        @connectStyles 'node_widgetHeight', 'widgetHeight'
         @addDef 'node', NodeShape, expanded: @model.expanded
         @addDef 'name', EditableText,
                 text:     @model.name
@@ -78,16 +79,16 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
         @updateDef 'newPort', key: @model.newPortKey
-        if @changed.inPorts or @changed.expanded
+        if @changed.inPorts or @changed.expanded or @changed.widgetOffset or @changed.widgetHeight
             @updateDef 'inPorts', elems: @model.inPorts
             @updateInPorts()
-        if @model.expanded
+        if @model.expanded or @changed.widgetOffset or @changed.widgetHeight
             setWidget = (k) =>
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
                     children: inPort.controls
-                    width: @bodyWidth - widgetOffset
-                    height: widgetHeight
+                    width: @bodyWidth - @model.widgetOffset
+                    height: @model.widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
         if @changed.outPorts
@@ -138,6 +139,7 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
+        inportVDistance = @model.widgetOffset + @model.widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts

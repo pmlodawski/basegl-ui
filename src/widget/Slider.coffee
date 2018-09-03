@@ -65,5 +65,5 @@ export class DiscreteSlider extends Slider
     cls: 'Int'
 
 export class ContinousSlider extends Slider
-    nextValue: (delta) => Math.round(@model.value * 10 + delta/2)/10
+    nextValue: (delta) => Math.round(@model.value * 100 + delta/2)/100
     cls: 'Real'

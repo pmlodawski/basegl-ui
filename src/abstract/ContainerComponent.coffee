@@ -58,6 +58,13 @@ export class ContainerComponent extends HasModel
         for own k of @__defs
             @deleteDef k
 
+    connectStyles: (src, dst) =>
+        @model[dst] = @root.styles.model[src]
+        @root.styles.addEventListener src, (e) =>
+            vars = {}
+            vars[dst] = e.detail
+            @set vars
+
     # # implement following methods when deriving: #
     # ##############################################
     #

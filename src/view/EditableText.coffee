@@ -32,9 +32,6 @@ export class EditableText extends ContainerComponent
     #############################
 
     update: =>
-        anyChanged = Object.values(@changed).some((v) -> v)
-        return unless anyChanged
-
         @autoUpdateDef 'searcher', Searcher, if @model.edited
             key:            @model.key
             input:          @model.input || ""
