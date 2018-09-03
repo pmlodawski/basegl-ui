@@ -35,6 +35,9 @@ export class VisualizationIFrame extends ContainerComponent
                 top: not @__isModeDefault()
                 scalable: not @__isModePreview()
                 still: @__isModePreview()
+        if @changed.iframeId
+            @updateDef 'root',
+                id: @model.iframeId
 
 
         if @changed.currentVisualizer

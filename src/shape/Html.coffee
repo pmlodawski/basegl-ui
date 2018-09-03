@@ -22,7 +22,10 @@ export class HtmlShape extends BasicComponent
 
     adjust: =>
         if @changed.id
-            @getDomElement().id = @model.id
+            if @model.id?
+                @getDomElement().id = @model.id
+            else
+                delete @getDomElement().id
         if @changed.width
             @getDomElement().style.width = @model.width
         if @changed.height
