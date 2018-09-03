@@ -10,6 +10,7 @@ import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
+import {Styles}             from 'view/Styles'
 
 import * as _ from 'underscore'
 
@@ -37,6 +38,8 @@ export class NodeEditor extends EventEmitter
             @addDisposableListener scene, 'dblclick',  @pushEvent
             @addDisposableListener scene, 'mousedown', @pushEvent
             @addDisposableListener scene, 'mouseup',   @pushEvent
+        @styles = new Styles null, @
+        # @styles.enable()
 
     getMousePosition: => @withScene (scene) =>
         campos = scene.camera.position

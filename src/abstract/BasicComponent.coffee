@@ -35,6 +35,12 @@ export class BasicComponent extends HasModel
 
     getDomElement: => @getElement()?.domElement
 
+    connectStyles: (src, dst) =>
+        vars = @getElement().variables
+        vars[dst] = @root.styles.model[src]
+        @root.styles.addEventListener src, (e) =>
+            vars[dst] = e.detail
+
     # # implement following methods when deriving: #
     # ##############################################
     #

@@ -5,9 +5,6 @@ import {rect}           from 'basegl/display/Shape'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
 
-export width     = 30
-
-lineWidth = 2
 
 export rectangleExpr = basegl.expr ->
     rect 'bbox.x', 'bbox.y'

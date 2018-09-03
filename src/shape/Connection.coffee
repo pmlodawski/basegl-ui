@@ -7,11 +7,10 @@ import * as layers      from 'view/layers'
 
 export width     = 30
 
-lineWidth = 2
 
 export connectionExpr = basegl.expr ->
     eye         = 'scaledEye.z'
-    scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
+    scaledWidth = 'lineWidth' * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
@@ -27,6 +26,7 @@ connectionSymbol.variables.color_r = 1
 connectionSymbol.variables.color_g = 0
 connectionSymbol.variables.color_b = 0
 connectionSymbol.variables.hovered = 0
+connectionSymbol.variables.lineWidth = 2
 
 export class ConnectionShape extends BasicComponent
     initModel: =>
@@ -55,3 +55,4 @@ export class ConnectionShape extends BasicComponent
         vars = @getElement().variables
         view.addEventListener 'mouseover', => vars.hovered = 1
         view.addEventListener 'mouseout',  => vars.hovered = 0
+        @connectStyles 'connection_lineWidth', 'lineWidth'

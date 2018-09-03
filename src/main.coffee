@@ -65,12 +65,12 @@ runExample = -> main (nodeEditor) ->
             position: [200, 300]
             expanded: false
             selected: false
-            error: true
-            value:
-                tag: 'Error'
-                contents:
-                    tag: 'ShortValue'
-                    contents: 'Another error description'
+            # error: true
+            # value:
+            #     tag: 'Error'
+            #     contents:
+            #         tag: 'ShortValue'
+            #         contents: 'Another error description'
             hovered: true
         ,
             key: 2
@@ -190,11 +190,11 @@ runExample = -> main (nodeEditor) ->
                 1: {}
             position: [500, 300]
             expanded: true
-            error: true
-            value:
-                tag: 'Error'
-                contents:
-                    tag: 'Visualization'
+            # error: true
+            # value:
+            #     tag: 'Error'
+            #     contents:
+            #         tag: 'Visualization'
             selected: false
         ,
             key: 4
