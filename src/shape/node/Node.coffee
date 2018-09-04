@@ -7,48 +7,52 @@ import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path
     , plane, triangle} from 'basegl/display/Shape'
 import {vector}        from 'basegl/math/Vector'
 import {nodeBg, selectionColor} from 'shape/Color'
-import {BasicComponent}  from 'abstract/BasicComponent'
+import {BasicComponent, memoizedSymbol}  from 'abstract/BasicComponent'
 import * as layers       from 'view/layers'
 import * as baseNode         from 'shape/node/Base'
 
 #### shapes with frames and selections ####
 
-compactNodeExpr = basegl.expr ->
+compactNodeExpr = (styles) -> basegl.expr ->
     node = baseNode.compactNodeExpr()
-    node   = node.fill nodeBg
+    node   = node.fill nodeBg styles
 
     eye    = 'scaledEye.z'
     border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
 
-    sc     = selectionColor.copy()
+    sc     = selectionColor styles
     sc.a   = 'selected'
     border = border.fill sc
 
     border + node
 
-compactNodeSymbol = basegl.symbol compactNodeExpr
-compactNodeSymbol.defaultZIndex = layers.compactNode
-compactNodeSymbol.variables.selected = 0
-compactNodeSymbol.bbox.xy = [baseNode.width, baseNode.height]
+compactNodeSymbol = memoizedSymbol (styles) ->
+    symbol = basegl.symbol compactNodeExpr styles
+    symbol.defaultZIndex = layers.compactNode
+    symbol.variables.selected = 0
+    symbol.bbox.xy = [baseNode.width, baseNode.height]
+    symbol
 
-expandedNodeExpr = basegl.expr ->
+expandedNodeExpr = (styles) -> basegl.expr ->
     node   = baseNode.expandedNodeExpr()
-    node   = node.fill nodeBg
+    node   = node.fill nodeBg styles
 
     eye    = 'scaledEye.z'
     border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
 
-    sc     = selectionColor.copy()
+    sc     = selectionColor styles
     sc.a   = 'selected'
     border = border.fill sc
 
     border + node
 
-expandedNodeSymbol = basegl.symbol expandedNodeExpr
-expandedNodeSymbol.defaultZIndex = layers.expandedNode
-expandedNodeSymbol.variables.selected = 0
-expandedNodeSymbol.variables.bodyWidth = 200
-expandedNodeSymbol.variables.bodyHeight = 300
+expandedNodeSymbol = memoizedSymbol (styles) ->
+    symbol = basegl.symbol expandedNodeExpr styles
+    symbol.defaultZIndex = layers.expandedNode
+    symbol.variables.selected = 0
+    symbol.variables.bodyWidth = 200
+    symbol.variables.bodyHeight = 300
+    symbol
 
 applySelectAnimation = (symbol, rev=false) ->
     if symbol.selectionAnimation?
@@ -73,10 +77,9 @@ export class NodeShape extends BasicComponent
     redefineRequired: => @changed.expanded
     define: =>
         if @model.expanded
-            expandedNodeSymbol
+            expandedNodeSymbol @styles
         else
-            compactNodeSymbol
-
+            compactNodeSymbol @styles
     adjust: (element) =>
         if @model.expanded
             element.position.xy = [-baseNode.width/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
@@ -88,3 +91,5 @@ export class NodeShape extends BasicComponent
         if @changed.selected
             applySelectAnimation element, not @model.selected
 
+    registerEvents: =>
+        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b', 'node_selection_h', 'node_selection_s', 'node_selection_l', 'node_selection_a'

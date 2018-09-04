@@ -1,11 +1,11 @@
 import * as basegl       from 'basegl'
 import {halfplane, rect} from 'basegl/display/Shape'
-import {BasicComponent}  from 'abstract/BasicComponent'
+import {BasicComponent, memoizedSymbol}  from 'abstract/BasicComponent'
 import * as color        from 'shape/Color'
 import * as layers       from 'view/layers'
 
 
-sliderExpr = basegl.expr ->
+sliderExpr = (styles) -> basegl.expr ->
     topLeft     = 'bbox.y'/2 * 'topLeft'
     topRight    = 'bbox.y'/2 * 'topRight'
     bottomLeft  = 'bbox.y'/2 * 'bottomLeft'
@@ -13,24 +13,25 @@ sliderExpr = basegl.expr ->
     valueWidth  = 'bbox.x' * 'level'
     background = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
         .move 'bbox.x'/2, 'bbox.y'/2
-        .fill color.sliderBgColor
+        .fill color.sliderBgColor(styles)
     slider = rect 'bbox.x', 'bbox.y', topLeft, topRight, bottomLeft, bottomRight
         .move 'bbox.x'/2, 'bbox.y'/2
     cutter = halfplane -Math.PI/2, true
         .move valueWidth, 0
     slider = slider - cutter
-    slider = slider.fill color.sliderColor
+    slider = slider.fill color.sliderColor(styles)
     background + slider
 
-sliderSymbol = basegl.symbol sliderExpr
-sliderSymbol.defaultZIndex = layers.slider
-sliderSymbol.bbox.xy = [100, 20]
-sliderSymbol.variables.level = 0
-sliderSymbol.variables.topLeft     = 0
-sliderSymbol.variables.topRight    = 0
-sliderSymbol.variables.bottomLeft  = 0
-sliderSymbol.variables.bottomRight = 0
-
+sliderSymbol = memoizedSymbol (styles) ->
+    symbol = basegl.symbol sliderExpr styles
+    symbol.defaultZIndex = layers.slider
+    symbol.bbox.xy = [100, 20]
+    symbol.variables.level = 0
+    symbol.variables.topLeft     = 0
+    symbol.variables.topRight    = 0
+    symbol.variables.bottomLeft  = 0
+    symbol.variables.bottomRight = 0
+    symbol
 
 export class SliderShape extends BasicComponent
     initModel: =>
@@ -42,7 +43,7 @@ export class SliderShape extends BasicComponent
         width       : null
         height      : null
 
-    define: => sliderSymbol
+    define: => sliderSymbol @styles
 
     adjust: (view) =>
         vars = @getElement().variables
@@ -53,3 +54,6 @@ export class SliderShape extends BasicComponent
         if @changed.bottomRight then vars.bottomRight = Number @model.bottomRight
         if @changed.width or @changed.height
             @getElement().bbox.xy = [@model.width, @model.height]
+
+    registerEvents: =>
+        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b', 'bgColor_h', 'bgColor_s', 'bgColor_l'

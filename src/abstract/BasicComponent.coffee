@@ -15,7 +15,7 @@ export class BasicComponent extends HasModel
             @__element = null
 
     onModelUpdate: =>
-        if (@redefineRequired? and @redefineRequired(@changed)) or (not @__def?)
+        if (@redefineRequired? and @redefineRequired(@changed)) or @changed.once
             def = @define()
             if def?
                 @__undraw()
@@ -66,3 +66,16 @@ export class BasicComponent extends HasModel
     #     ...
     #     element.rotation = @values.angle
     #     ...
+
+export memoizedSymbol = (symbolFun) =>
+    lastRevision = null
+    cachedSymbol = null
+    return (styles) =>
+        if lastRevision == styles.revision
+            console.log 'Fetching from cache'
+            return cachedSymbol
+        else
+            console.log 'Calculating result'
+            cachedSymbol = symbolFun styles.model
+            lastRevision = styles.revision
+            return cachedSymbol

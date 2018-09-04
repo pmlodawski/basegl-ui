@@ -1,16 +1,15 @@
-import {BasicComponent} from 'abstract/BasicComponent'
+import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as basegl      from 'basegl'
 import * as Color       from 'basegl/display/Color'
 import {rect}           from 'basegl/display/Shape'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
-
 export width     = 30
 
 
-export connectionExpr = basegl.expr ->
+export connectionExpr = (styles) -> basegl.expr ->
     eye         = 'scaledEye.z'
-    scaledWidth = 'lineWidth' * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
+    scaledWidth = styles.connection_lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
@@ -19,14 +18,16 @@ export connectionExpr = basegl.expr ->
        .fill color.varHover()
     activeArea + connection
 
-connectionSymbol = basegl.symbol connectionExpr
-connectionSymbol.defaultZIndex = layers.connection
-connectionSymbol.bbox.y = width
-connectionSymbol.variables.color_r = 1
-connectionSymbol.variables.color_g = 0
-connectionSymbol.variables.color_b = 0
-connectionSymbol.variables.hovered = 0
-connectionSymbol.variables.lineWidth = 2
+connectionSymbol = memoizedSymbol (styles) ->
+    symbol = basegl.symbol connectionExpr(styles)
+    symbol.defaultZIndex = layers.connection
+    symbol.bbox.y = width
+    symbol.variables.color_r = 1
+    symbol.variables.color_g = 0
+    symbol.variables.color_b = 0
+    symbol.variables.hovered = 0
+    symbol
+
 
 export class ConnectionShape extends BasicComponent
     initModel: =>
@@ -36,7 +37,7 @@ export class ConnectionShape extends BasicComponent
         color: [1,0,0]
 
     define: =>
-        connectionSymbol
+        connectionSymbol @styles
 
     adjust: (element, view) =>
         if @changed.length
@@ -55,4 +56,4 @@ export class ConnectionShape extends BasicComponent
         vars = @getElement().variables
         view.addEventListener 'mouseover', => vars.hovered = 1
         view.addEventListener 'mouseout',  => vars.hovered = 0
-        @connectStyles 'connection_lineWidth', 'lineWidth'
+        @watchStyles 'connection_lineWidth'

@@ -55,12 +55,8 @@ export class ExpressionNode extends ContainerComponent
         expanded:   false
         hovered:    false
         visualizations: null
-        widgetOffset: null
-        widgetHeight: null
 
     prepare: =>
-        @connectStyles 'node_widgetOffset', 'widgetOffset'
-        @connectStyles 'node_widgetHeight', 'widgetHeight'
         @addDef 'node', NodeShape, expanded: @model.expanded
         @addDef 'name', EditableText,
                 text:     @model.name
@@ -79,16 +75,16 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
         @updateDef 'newPort', key: @model.newPortKey
-        if @changed.inPorts or @changed.expanded or @changed.widgetOffset or @changed.widgetHeight
+        if @changed.inPorts or @changed.expanded
             @updateDef 'inPorts', elems: @model.inPorts
             @updateInPorts()
-        if @model.expanded or @changed.widgetOffset or @changed.widgetHeight
+        if @model.expanded
             setWidget = (k) =>
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
                     children: inPort.controls
-                    width: @bodyWidth - @model.widgetOffset
-                    height: @model.widgetHeight
+                    width: @bodyWidth - @styles.model.node_widgetOffset
+                    height: @styles.model.node_widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
         if @changed.outPorts
@@ -139,7 +135,7 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
-        inportVDistance = @model.widgetOffset + @model.widgetHeight
+        inportVDistance = @styles.model.node_widgetOffset + @styles.model.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts
@@ -188,6 +184,7 @@ export class ExpressionNode extends ContainerComponent
         @makeHoverable view
         @makeDraggable view
         @makeSelectable view
+        @watchStyles 'node_widgetOffset', 'node_widgetHeight'
 
     makeHoverable: (view) =>
         view.addEventListener 'mouseenter', => @set hovered: true

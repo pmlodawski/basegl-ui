@@ -7,9 +7,22 @@ import {ContinousSlider}    from 'widget/Slider'
 
 export class Styles extends ContainerComponent
     initModel: =>
+        baseColor_r: 1
+        baseColor_g: 1
+        baseColor_b: 1
+        bgColor_h: 40
+        bgColor_s: 0.08
+        bgColor_l: 0.09
+        node_selection_h: 50
+        node_selection_s: 1
+        node_selection_l: 0.6
+        node_selection_a: 0.8
         connection_lineWidth: 2
         node_widgetOffset: 20
         node_widgetHeight: 20
+
+    prepare: =>
+        @revision = 0
 
     enable: =>
         @addDef 'vertical', VerticalLayout,
@@ -48,6 +61,7 @@ export class Styles extends ContainerComponent
                 name = child.def(0).model.text
                 x = {}
                 x[name] = e.detail
+                @revision++
                 @set x
 
         dragHandler = (e) =>
