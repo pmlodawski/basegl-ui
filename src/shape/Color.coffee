@@ -18,9 +18,9 @@ export transparent = Color.rgb [0, 0, 0, 0]
 export activeArea = transparent
 export hoverAspect = 0.9
 
-export varHover = -> basegl.expr ->
+export varHover = (styles) -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix white, 'hovered' * hoverAspect
+        .mix base(styles), 'hovered' * hoverAspect
 
 export varAlpha = -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b', 'color_a']

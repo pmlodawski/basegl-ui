@@ -15,7 +15,7 @@ export connectionExpr = (styles) -> basegl.expr ->
         .fill color.activeArea
     connection = rect 'bbox.x', scaledWidth
        .move 'bbox.x'/2, 'bbox.y'/2
-       .fill color.varHover()
+       .fill color.varHover styles
     activeArea + connection
 
 connectionSymbol = memoizedSymbol (styles) ->
@@ -56,4 +56,4 @@ export class ConnectionShape extends BasicComponent
         vars = @getElement().variables
         view.addEventListener 'mouseover', => vars.hovered = 1
         view.addEventListener 'mouseout',  => vars.hovered = 0
-        @watchStyles 'connection_lineWidth'
+        @watchStyles 'connection_lineWidth', 'baseColor_r', 'baseColor_g', 'baseColor_b'
