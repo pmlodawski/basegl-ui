@@ -24,23 +24,32 @@ export class VisualizationIFrame extends ContainerComponent
             element: 'div'
             clickable: false
 
+        @html = @def('root')
+        @sceneId = "basegl-root-layer-" + @html.sceneId
+        @scene   = document.getElementById(@sceneId)
+
     __isModeDefault: => @model.mode == 'Default'
+    __isModeFocused: => @model.mode == 'Focused'
     __isModePreview: => @model.mode == 'Preview'
 
     __width: =>
-        if @__isModePreview() then @root._scene.width else width
+        if @__isModePreview() then @root._scene.width - 10  else width
 
     __height: =>
-        if @__isModePreview() then @root._scene.height else height
+        if @__isModePreview() then @root._scene.height - 10 else height
 
     update: =>
         if @changed.mode
             console.log "NEW MODE: ", @model.mode
-            @updateDef 'root',
-                clickable: not @__isModeDefault()
-                top: not @__isModeDefault()
-                scalable: not @__isModePreview()
-                still: @__isModePreview()
+            if @model.mode == 'Preview'
+                @html.makeStill()
+            else
+                @html.makeMovable()
+            # @updateDef 'root',
+            #     clickable: not @__isModeDefault()
+            #     top: not @__isModeDefault()
+            #     scalable: not @__isModePreview()
+            #     still: @__isModePreview()
         if @changed.iframeId
             @updateDef 'root',
                 id: @model.iframeId
@@ -49,7 +58,7 @@ export class VisualizationIFrame extends ContainerComponent
         if @changed.currentVisualizer
             @iframe = @__mkIframe()
             if @iframe?
-                domElem = @def('root').getDomElement()
+                domElem = @html.getDomElement()
                 while domElem.hasChildNodes()
                     domElem.removeChild domElem.firstChild
                 domElem.appendChild @iframe
@@ -60,13 +69,24 @@ export class VisualizationIFrame extends ContainerComponent
 
     adjust: (view) =>
         if @changed.mode
-            if @__isModePreview()
-                @def('root').__removeFromGroupIFRAME @def('root').__element
-                @def('root').__element.position.xy = [@__width()/2, @__height()/2]
-            else
-                @def('root').__addToGroupIFRAME @def('root').__element
-                @def('root').__element.position.xy = [0,0]
-        @view('root').position.xy = [@__width()/2,-@__height()/2]
+            console.log "@width: #{@__width()}, @height: #{@__height()}"
+            if @__isModeDefault()
+                @scene.style.zIndex = 0
+                # @html.__addToGroup @html.__element
+                window.visElement = @html.__element
+                window.rootElement = @view('root')
+                @html.__element.position.xy = [width/2, -height/2]
+            else if @__isModeFocused()
+                @scene.style.zIndex = 10
+                @html.__element.position.xy = [width/2, -height/2]
+            else if @__isModePreview()
+                @scene.style.zIndex = 10
+                @html.__element.position.xy = [0, 0]
+                # @html.__addToGroup @html.__element
+                # @html.__element.position.xy = [0,0]
+
+        console.log "Root position: ", @view('root').position.xy
+        console.log "StillCamera position: ", @html.stillCamera.position
 
     __mkIframe: =>
         if @model.currentVisualizer?
@@ -81,6 +101,7 @@ export class VisualizationIFrame extends ContainerComponent
         if pathPrefix?
             url = path.join pathPrefix, @model.currentVisualizer.visualizerPath
 
+        console.log "URL: ", url    
         if url?
             iframe           = document.createElement 'iframe'
             iframe.className = style.luna ['basegl-visualization-iframe']

@@ -34,7 +34,6 @@ export class OutArrow extends Subport
             @pushEvent e
 
     connectSources: =>
-        @log "CONNECT SOURCES"
         @__onTypeNameChange()
         @__onRadiusChange()
         @__onColorChange()

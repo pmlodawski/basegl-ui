@@ -23,7 +23,6 @@ export class TextContainer extends Widget
             color: @model.frameColor
 
     update: =>
-        @log "Updating with: ", @model.text
         if @changed.text
             @updateDef 'text', text: @model.text
 

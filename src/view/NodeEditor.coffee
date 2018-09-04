@@ -24,7 +24,11 @@ export class NodeEditor extends EventEmitter
         @inTransaction        = false
         @pending              = []
         @topDomScene          = @_scene.addDomModel('dom-top')
+        console.log @_scene
+        # @_scene._dom.
+        # @topDomScene._renderer.domElement.style.zIndex = 10
         @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
+        console.log "topDomSceneStill: ", @topDomSceneStill
         @topDomSceneNoScale   =
             @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
 

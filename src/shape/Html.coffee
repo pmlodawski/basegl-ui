@@ -58,12 +58,22 @@ export class HtmlShape extends BasicComponent
 export class HtmlShapeWithScene extends HtmlShape
     define: =>
         @dom    = document.createElement @model.element
-        @camera = @root._scene.camera
-        sceneId = @model.id + '_scene'
-        @scene  = @root._scene.addDomModelWithNewCamera(sceneId, @camera) 
+        @camera = @root._scene._camera
+        @stillCamera = @root.topDomSceneStill.camera
+        @sceneId = @model.id
+        @scene  = @root._scene.addDomModelWithNewCamera(@sceneId, @camera) 
+        # @stillCamera.position.xy = [@root._scene.width/2, @root._scene.height/2]
+        window.stillCamera = @stillCamera
+        window.rootScene   = @root._scene
         basegl.symbol @dom
 
     adjust: =>
         if @scene? and (not @addedToScene)
             @scene.model.add @getElement().obj
             @addedToScene = true
+
+    makeStill: =>
+        @scene._camera = @stillCamera
+    
+    makeMovable: =>
+        @scene._camera = @camera

@@ -38,7 +38,6 @@ export class Visualization extends Widget
             @view('cover').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
 
     connectSources: =>
-        @log "CONNECT SOURCES"
         updateMenu = => @updateDef 'menu',
             visualizers: @parent.parent.model.visualizers
         updateMenu()

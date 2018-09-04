@@ -42,7 +42,6 @@ export class VisualizerMenu extends ContainerComponent
         @view('list')?.position.xy = listPosition
 
     registerEvents: =>
-        @log "REGISTER EVENTS"
         @view('button').addEventListener 'click', (e) =>
             e.stopImmediatePropagation()
             @set expanded: not @model.expanded

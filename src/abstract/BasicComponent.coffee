@@ -6,11 +6,11 @@ export class BasicComponent extends HasModel
     __draw: (def) =>
         @withScene (scene) =>
             @__element = scene.add def
-            @__addToGroupBASIC @__element
+            @__addToGroup @__element
 
     __undraw: =>
         if @__element?
-            @__removeFromGroupBASIC @__element
+            @__addToGroup @__element
             @__element.dispose()
             @__element = null
 

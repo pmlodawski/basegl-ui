@@ -47,53 +47,16 @@ export class HasModel extends EventEmitter
             @changed[key] = once
             value = unArray @model[key], values[key]
             if value != undefined and not _.isEqual @model[key], value
-                if key == 'text'
-                    console.log "@model[key]: ", @model[key], ", value: ", value
                 @changed[key] = true
                 @__anythingChanged = true
                 @model[key] = value
                 @performEmit key, value
 
     __addToGroup: (view) =>
-        @log "ADD TO GROUP"
-        @__view.addChild view
-        @__view.updateChildrenOrigin()
-
-    __addToGroupIFRAME: (view) =>
-        @log "ADD TO GROUP IFRAME"
         @__view.addChild view
         @__view.updateChildrenOrigin()
 
     __removeFromGroup: (view) =>
-        @log "REMOVE FROM GROUP"
-        @__view.removeChild view
-        @__view.updateChildrenOrigin()
-        view.setOrigin mat4.create()
-
-    __removeFromGroupIFRAME: (view) =>
-        @log "REMOVE FROM GROUP IFRAME"
-        @__view.removeChild view
-        @__view.updateChildrenOrigin()
-        view.setOrigin mat4.create()
-
-    __addToGroupBASIC: (view) =>
-        @log "ADD TO GROUP BASIC"
-        @__view.addChild view
-        @__view.updateChildrenOrigin()
-
-    __removeFromGroupBASIC: (view) =>
-        @log "REMOVE FROM GROUP BASIC"
-        @__view.removeChild view
-        @__view.updateChildrenOrigin()
-        view.setOrigin mat4.create()
-
-    __addToGroupCONTAINER: (view) =>
-        @log "ADD TO GROUP CONTAINER"
-        @__view.addChild view
-        @__view.updateChildrenOrigin()
-
-    __removeFromGroupCONTAINER: (view) =>
-        @log "REMOVE FROM GROUP CONTAINER"
         @__view.removeChild view
         @__view.updateChildrenOrigin()
         view.setOrigin mat4.create()

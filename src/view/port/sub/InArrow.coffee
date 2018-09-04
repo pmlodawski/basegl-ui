@@ -41,7 +41,6 @@ export class InArrow extends Subport
             @pushEvent e
 
     connectSources: =>
-        @log "CONNECT SOURCES"
         @__onNameChange()
         @__onTypeNameChange()
         @__onRadiusChange()
