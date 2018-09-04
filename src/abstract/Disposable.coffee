@@ -12,8 +12,9 @@ export class Disposable extends Composable
         @disposed = true
 
     addDisposableListener: (target, name, handler) =>
+        console.log "addDisposableListener", @constructor.name, name
         target.addEventListener name, handler
-        @onDispose => target.removeEventListener name, handler
+        @onDispose => console.log "DUPA"; target.removeEventListener name, handler
 
     onDispose: (finalizer) =>
         @disposables.push finalizer

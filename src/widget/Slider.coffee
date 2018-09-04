@@ -57,6 +57,7 @@ class Slider extends Widget
                     document.exitPointerLock()
                     document.removeEventListener 'mousemove', onMouseMove
                     document.removeEventListener 'mouseup', onMouseUp
+                @log "MOUSEDOWN"
                 @addDisposableListener document, 'mouseup', onMouseUp
                 @addDisposableListener document, 'mousemove', onMouseMove
 

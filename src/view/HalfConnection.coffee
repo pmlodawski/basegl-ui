@@ -20,6 +20,7 @@ export class HalfConnection extends ContainerComponent
             @__onPositionChange()
 
     connectSources: =>
+        @log "CONNECT SOURCES"
         @__onColorChange()
         @__onPositionChange()
         @addDisposableListener @srcPort, 'color', (color) => @__onColorChange()
@@ -37,6 +38,7 @@ export class HalfConnection extends ContainerComponent
                 @set dstPos: [x, y]
 
     __rebind: =>
+        console.log "REBIND KURWA"
         srcNode = @parent.node @model.srcNode
         srcPort =
             if @model.reversed

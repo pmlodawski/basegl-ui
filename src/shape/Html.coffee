@@ -53,3 +53,17 @@ export class HtmlShape extends BasicComponent
         elem = @getElement()
         if elem?
             elem.position.y = if elem.position.y == 0 then 1 else 0
+
+
+export class HtmlShapeWithScene extends HtmlShape
+    define: =>
+        @dom    = document.createElement @model.element
+        @camera = @root._scene.camera
+        sceneId = @model.id + '_scene'
+        @scene  = @root._scene.addDomModelWithNewCamera(sceneId, @camera) 
+        basegl.symbol @dom
+
+    adjust: =>
+        if @scene? and (not @addedToScene)
+            @scene.model.add @getElement().obj
+            @addedToScene = true

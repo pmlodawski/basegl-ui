@@ -1,13 +1,15 @@
 import * as path         from 'path'
 
 import * as style           from 'style'
-import {HtmlShape}          from 'shape/Html'
+import {HtmlShapeWithScene} from 'shape/Html'
 import {ContainerComponent} from 'abstract/ContainerComponent'
 
 width = 300
 height = 300
 
 export class VisualizationIFrame extends ContainerComponent
+    @ctr = 0
+
     initModel: =>
         key: null
         iframeId: null
@@ -15,7 +17,10 @@ export class VisualizationIFrame extends ContainerComponent
         mode: 'Default' # Default|Focused|Preview
 
     prepare: =>
-        @addDef 'root', HtmlShape,
+        id = 'iframe-containter-' + VisualizationIFrame.ctr
+        VisualizationIFrame.ctr += 1
+        @addDef 'root', HtmlShapeWithScene,
+            id: id
             element: 'div'
             clickable: false
 
@@ -30,6 +35,7 @@ export class VisualizationIFrame extends ContainerComponent
 
     update: =>
         if @changed.mode
+            console.log "NEW MODE: ", @model.mode
             @updateDef 'root',
                 clickable: not @__isModeDefault()
                 top: not @__isModeDefault()
@@ -55,10 +61,10 @@ export class VisualizationIFrame extends ContainerComponent
     adjust: (view) =>
         if @changed.mode
             if @__isModePreview()
-                @def('root').__removeFromGroup @def('root').__element
+                @def('root').__removeFromGroupIFRAME @def('root').__element
                 @def('root').__element.position.xy = [@__width()/2, @__height()/2]
             else
-                @def('root').__addToGroup @def('root').__element
+                @def('root').__addToGroupIFRAME @def('root').__element
                 @def('root').__element.position.xy = [0,0]
         @view('root').position.xy = [@__width()/2,-@__height()/2]
 
@@ -80,3 +86,12 @@ export class VisualizationIFrame extends ContainerComponent
             iframe.className = style.luna ['basegl-visualization-iframe']
             iframe.src       = url
             iframe
+
+    registerEvents: (view) =>
+        window.addEventListener 'keyup', (event) =>
+            if event.key == 'z'
+                @set(mode: 'Default')
+            if event.key == 'x'
+                @set(mode: 'Focused')
+            if event.key == 'c'
+                @set(mode: 'Preview')

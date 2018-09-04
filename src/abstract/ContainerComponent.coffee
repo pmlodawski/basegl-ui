@@ -32,16 +32,16 @@ export class ContainerComponent extends HasModel
         def = new cons value, @
         unless @__defs[key]?
             @__defs[key] = def
-            @__addToGroup def.__view
+            @__addToGroupCONTAINER def.__view
         else unless _.isEqual @__defs[key], def
-            @__removeFromGroup @__defs[key].__view
+            @__removeFromGroupCONTAINER @__defs[key].__view
             @__defs[key].dispose()
-            @__addToGroup def.__view
+            @__addToGroupCONTAINER def.__view
             @__defs[key] = def
 
     deleteDef: (key) =>
         if @__defs[key]?
-            @__removeFromGroup @__defs[key].__view
+            @__removeFromGroupCONTAINER @__defs[key].__view
             @__defs[key].dispose()
             delete @__defs[key]
 

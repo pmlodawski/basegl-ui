@@ -26,6 +26,7 @@ export class Self extends Subport
             @view('typeName').position.xy = typeNamePosition
 
     connectSources: =>
+        @log "CONNECT SOURCES"
         @__onTypeNameChange()
         @__onRadiusChange()
         @__onColorChange()

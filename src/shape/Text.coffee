@@ -9,6 +9,12 @@ export class TextShape extends BasicComponent
         align: 'center'
 
     redefineRequired: =>
+        if @changed.text
+            console.log "======================"
+            @log "YES, REQUIRES REDEFINE"
+            console.log @changed
+            console.log @model.text
+            console.log "======================"
         @changed.text
 
     define: =>

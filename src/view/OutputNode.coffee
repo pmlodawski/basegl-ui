@@ -40,6 +40,7 @@ export class OutputNode extends ContainerComponent
         @set position: [x, y]
 
     connectSources: =>
+        @log "CONNECT SOURCES"
         @withScene (scene) =>
             @_align scene
             @addDisposableListener scene.camera, 'move', => @_align scene

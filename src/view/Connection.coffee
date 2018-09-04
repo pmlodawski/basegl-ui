@@ -26,6 +26,7 @@ export class Connection extends ContainerComponent
         registerDisconnect 'dst', false
 
     connectSources: =>
+        @log "CONNECT SOURCES"
         @__onColorChange()
         @__onPositionChange()
         @addDisposableListener @srcNode, 'position', => @__onPositionChange()
