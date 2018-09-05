@@ -35,8 +35,8 @@ class StyleProvider
         setTimeout component.addDisposableListener styles, prop, =>
             component.forceReset()
 
-export class Styles extends ContainerComponent
-    initModel: =>
+presets =
+    [
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
@@ -57,11 +57,51 @@ export class Styles extends ContainerComponent
         hoverAspect: 0.9
         sliderFront: 0.2
         sliderBg: 0.1
+    ,
+        baseColor_r: 0.5
+        baseColor_g: 0.5
+        baseColor_b: 0.5
+        bgColor_h: 40
+        bgColor_s: 0.08
+        bgColor_l: 0.09
+        node_selection_h: 50
+        node_selection_s: 0.5
+        node_selection_l: 0.6
+        node_selection_a: 0.8
+        connection_lineWidth: 2
+        node_widgetOffset: 20
+        node_widgetHeight: 20
+        colorActiveGreen_r: 0
+        colorActiveGreen_g: 0
+        colorActiveGreen_b: 1
+        colorActiveGreen_a: 0.8
+        hoverAspect: 0.9
+        sliderFront: 0.2
+        sliderBg: 0.1
+    ]
+
+currentPreset = 0
+
+export class Styles extends ContainerComponent
+    initModel: =>
+        Object.assign {}, presets[currentPreset]
 
     prepare: =>
         @revision = 0
 
     enable: =>
+        @addDef 'dump', TextContainer,
+            text: 'DUMP'
+            frameColor: [0.3, 0.3, 0.3]
+        @view('dump').position.y = 20
+        @view('dump').addEventListener 'click', => @__dumpSettings()
+
+        @addDef 'switch', TextContainer,
+            text: 'SWITCH'
+            frameColor: [0.3, 0.3, 0.3]
+        @view('switch').position.xy = [50, 20]
+        @view('switch').addEventListener 'click', => @__switchModel()
+
         @addDef 'vertical', VerticalLayout,
             width: 300
 
@@ -124,3 +164,18 @@ export class Styles extends ContainerComponent
     install: (component) =>
         sp = new StyleProvider @, component
         component.style = new Proxy @, sp
+
+    __dumpSettings: =>
+        str = ''
+        for own k, v of @model
+             str += k + ': ' + v.toString() + '\n'
+        console.log str
+
+    __switchModel: =>
+        if currentPreset == 0
+            currentPreset = 1
+        else
+            currentPreset = 0
+        @revision++
+        console.log 'switching', currentPreset, @revision, presets[currentPreset]
+        @set presets[currentPreset]

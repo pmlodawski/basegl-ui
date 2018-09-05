@@ -65,10 +65,7 @@ export memoizedSymbol = (symbolFun) =>
     lastRevision = null
     cachedSymbol = null
     return (style) =>
-        if lastRevision == style.revision
-            console.log 'Fetching from cache'
-        else
-            console.log 'Calculating result'
+        unless lastRevision == style.revision
             lastRevision = style.revision
             cachedSymbol = symbolFun style
         return cachedSymbol
