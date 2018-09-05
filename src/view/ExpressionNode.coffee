@@ -83,8 +83,8 @@ export class ExpressionNode extends ContainerComponent
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
                     children: inPort.controls
-                    width: @bodyWidth - @styles.model.node_widgetOffset
-                    height: @styles.model.node_widgetHeight
+                    width: @bodyWidth - @style.node_widgetOffset
+                    height: @style.node_widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
         if @changed.outPorts
@@ -135,7 +135,7 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
-        inportVDistance = @styles.model.node_widgetOffset + @styles.model.node_widgetHeight
+        inportVDistance = @style.node_widgetOffset + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts
@@ -184,7 +184,6 @@ export class ExpressionNode extends ContainerComponent
         @makeHoverable view
         @makeDraggable view
         @makeSelectable view
-        @watchStyles 'node_widgetOffset', 'node_widgetHeight'
 
     makeHoverable: (view) =>
         view.addEventListener 'mouseenter', => @set hovered: true

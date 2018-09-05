@@ -15,7 +15,7 @@ bboxHeight = width*2
 bboxWidth = length*5
 overlap = 1
 
-export flatPortExpr = (styles) -> basegl.expr ->
+export flatPortExpr = (style) -> basegl.expr ->
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
@@ -27,11 +27,11 @@ export flatPortExpr = (styles) -> basegl.expr ->
         .rotate -Math.PI /2
         .move (bboxWidth*'is_output' + length*(1-'is_output')), bboxHeight/2
     port = port - cutter
-    port = port.fill color.varHover styles
+    port = port.fill color.varHover style
     activeArea + port
 
-flatPortSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol flatPortExpr styles
+flatPortSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol flatPortExpr style
     symbol.bbox.xy = [bboxWidth, bboxHeight]
     symbol.variables.color_r = 1
     symbol.variables.color_g = 0
@@ -46,13 +46,10 @@ export class FlatPortShape extends PortShape
         model = super()
         model.output = null
         model
-    define: => flatPortSymbol @styles
+    define: => flatPortSymbol @style
     adjust: (element) =>
         super element
         if @changed.output
             x = if @model.output then (- bboxWidth) else 0
             element.variables.is_output = Number @model.output
             element.position.xy = [x, -bboxHeight/2]
-    registerEvents: (view) =>
-        super view
-        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b'

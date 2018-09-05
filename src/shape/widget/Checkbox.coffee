@@ -10,19 +10,19 @@ import * as Easing    from 'basegl/animation/Easing'
 offset = 4
 aspect = 1.6
 
-checkboxExpr = (styles) -> basegl.expr ->
+checkboxExpr = (style) -> basegl.expr ->
     corner = 'bbox.y'/2
     background = rect 'bbox.x', 'bbox.y', corner
         .move 'bbox.x'/2, 'bbox.y'/2
-        .fill color.sliderBgColor(styles)
-    switcherColor = color.sliderColor(styles).mix color.activeGreen, 'checked'
+        .fill color.sliderBgColor(style)
+    switcherColor = color.sliderColor(style).mix color.activeGreen, 'checked'
     switcher = circle corner - offset
         .move corner + ('bbox.x' - 2*corner) * 'checked', corner
         .fill switcherColor
     background + switcher
 
-checkboxSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol checkboxExpr (styles)
+checkboxSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol checkboxExpr (style)
     symbol.defaultZIndex = layers.slider
     symbol.bbox.xy = [100, 20]
     symbol.variables.checked = 0
@@ -48,13 +48,10 @@ export class CheckboxShape extends BasicComponent
         width       : null
         height      : null
 
-    define: => checkboxSymbol @styles
+    define: => checkboxSymbol @style
 
     adjust: (view, element) =>
         if @changed.checked
             applyCheckAnimation @getElement(), not @model.checked
         if @changed.width or @changed.height
             @getElement().bbox.xy = [@model.width, @model.height]
-
-    registerEvents: =>
-        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b', 'bgColor_h', 'bgColor_s', 'bgColor_l'

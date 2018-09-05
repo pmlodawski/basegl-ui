@@ -5,6 +5,36 @@ import {TextContainer}      from 'view/Text'
 import {ContinousSlider}    from 'widget/Slider'
 
 
+
+dependencyCache = {} # constructor.name -> (style, Set prop)
+
+class StyleProvider
+    constructor: (@styles, @component) ->
+        dependencyCache[@component.constructor.name] ?=
+            components: new Set
+            props: new Set
+            styles: @styles
+        cached = dependencyCache[@component.constructor.name]
+        cached.props.forEach (prop) =>
+            @__addHandler @component, cached.styles, prop
+        cached.components.add @component
+        @component.onDispose => cached.components.delete @component
+
+    get: (styles, prop) =>
+        return if prop == '__isMixin__'
+        if prop == 'revision'
+            return styles[prop]
+        cached = dependencyCache[@component.constructor.name]
+        unless cached.props.has prop
+            cached.props.add prop
+            cached.components.forEach (component) =>
+                @__addHandler component, styles, prop
+        styles.model[prop]
+
+    __addHandler: (component, styles, prop) =>
+        setTimeout component.addDisposableListener styles, prop, =>
+            component.forceReset()
+
 export class Styles extends ContainerComponent
     initModel: =>
         baseColor_r: 1
@@ -83,3 +113,7 @@ export class Styles extends ContainerComponent
         @view('vertical').addEventListener 'mousedown', dragHandler
 
         @__view.position.xy = [700, 300]
+
+    install: (component) =>
+        sp = new StyleProvider @, component
+        component.style = new Proxy @, sp

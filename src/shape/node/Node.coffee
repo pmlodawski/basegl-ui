@@ -13,41 +13,41 @@ import * as baseNode         from 'shape/node/Base'
 
 #### shapes with frames and selections ####
 
-compactNodeExpr = (styles) -> basegl.expr ->
+compactNodeExpr = (style) -> basegl.expr ->
     node = baseNode.compactNodeExpr()
-    node   = node.fill nodeBg styles
+    node   = node.fill nodeBg style
 
     eye    = 'scaledEye.z'
     border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
 
-    sc     = selectionColor styles
+    sc     = selectionColor style
     sc.a   = 'selected'
     border = border.fill sc
 
     border + node
 
-compactNodeSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol compactNodeExpr styles
+compactNodeSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol compactNodeExpr style
     symbol.defaultZIndex = layers.compactNode
     symbol.variables.selected = 0
     symbol.bbox.xy = [baseNode.width, baseNode.height]
     symbol
 
-expandedNodeExpr = (styles) -> basegl.expr ->
+expandedNodeExpr = (style) -> basegl.expr ->
     node   = baseNode.expandedNodeExpr()
-    node   = node.fill nodeBg styles
+    node   = node.fill nodeBg style
 
     eye    = 'scaledEye.z'
     border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
 
-    sc     = selectionColor styles
+    sc     = selectionColor style
     sc.a   = 'selected'
     border = border.fill sc
 
     border + node
 
-expandedNodeSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol expandedNodeExpr styles
+expandedNodeSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol expandedNodeExpr style
     symbol.defaultZIndex = layers.expandedNode
     symbol.variables.selected = 0
     symbol.variables.bodyWidth = 200
@@ -77,9 +77,9 @@ export class NodeShape extends BasicComponent
     redefineRequired: => @changed.expanded
     define: =>
         if @model.expanded
-            expandedNodeSymbol @styles
+            expandedNodeSymbol @style
         else
-            compactNodeSymbol @styles
+            compactNodeSymbol @style
     adjust: (element) =>
         if @model.expanded
             element.position.xy = [-baseNode.width/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
@@ -90,6 +90,3 @@ export class NodeShape extends BasicComponent
         element.variables.selected = if @model.selected then 1 else 0
         if @changed.selected
             applySelectAnimation element, not @model.selected
-
-    registerEvents: =>
-        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b', 'node_selection_h', 'node_selection_s', 'node_selection_l', 'node_selection_a'

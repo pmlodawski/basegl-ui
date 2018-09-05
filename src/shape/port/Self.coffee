@@ -11,13 +11,13 @@ radius = length
 export width = 2 * radius
 export height = 2 * radius
 
-export selfPortExpr = (styles) -> basegl.expr ->
+export selfPortExpr = (style) -> basegl.expr ->
     c = circle radius
        .move radius, radius
-       .fill color.varHover styles
+       .fill color.varHover style
 
-selfPortSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol selfPortExpr styles
+selfPortSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol selfPortExpr style
     symbol.bbox.xy = [width, height]
     symbol.variables.color_r = 1
     symbol.variables.color_g = 0
@@ -27,10 +27,7 @@ selfPortSymbol = memoizedSymbol (styles) ->
     symbol
 
 export class SelfPortShape extends PortShape
-    define: => selfPortSymbol @styles
+    define: => selfPortSymbol @style
     adjust: (element) =>
         super element
         element.position.xy = [-width/2, -height/2]
-    registerEvents: (view) =>
-        super view
-        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b'

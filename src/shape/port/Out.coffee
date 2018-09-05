@@ -11,7 +11,7 @@ areaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5
 bboxHeight = 2 *  bboxWidth * Math.tan areaAngle
 
-export outPortExpr = (styles) -> basegl.expr ->
+export outPortExpr = (style) -> basegl.expr ->
     r = outArrowRadius
     c = circle r
        .move bboxWidth/2, 0
@@ -20,7 +20,7 @@ export outPortExpr = (styles) -> basegl.expr ->
        .move bboxWidth/2, h2 + r
     port = p - c
     port = port.move 0, - r + length - h2 + distanceFromCenter
-        .fill color.varHover styles
+        .fill color.varHover style
     activeCutter = circle nodeRadius
         .move bboxWidth/2, 0
     activeArea = pie areaAngle
@@ -30,8 +30,8 @@ export outPortExpr = (styles) -> basegl.expr ->
     activeArea = activeArea - activeCutter
     activeArea + port
 
-outPortSymbol = memoizedSymbol (styles) ->
-    symbol = basegl.symbol outPortExpr styles
+outPortSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol outPortExpr style
     symbol.bbox.xy = [bboxWidth,bboxHeight]
     symbol.variables.color_r = 1
     symbol.variables.color_g = 0
@@ -41,10 +41,7 @@ outPortSymbol = memoizedSymbol (styles) ->
     symbol
 
 export class OutPortShape extends PortShape
-    define: => outPortSymbol @styles
+    define: => outPortSymbol @style
     adjust: (element) =>
         super element
         element.position.xy = [-bboxWidth/2, -distanceFromCenter]
-    registerEvents: (view) =>
-        super view
-        @watchStyles 'baseColor_r', 'baseColor_g', 'baseColor_b'

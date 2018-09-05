@@ -35,12 +35,6 @@ export class BasicComponent extends HasModel
 
     getDomElement: => @getElement()?.domElement
 
-    connectStyles: (src, dst) =>
-        vars = @getElement().variables
-        vars[dst] = @root.styles.model[src]
-        @root.styles.addEventListener src, (e) =>
-            vars[dst] = e.detail
-
     # # implement following methods when deriving: #
     # ##############################################
     #
@@ -70,12 +64,11 @@ export class BasicComponent extends HasModel
 export memoizedSymbol = (symbolFun) =>
     lastRevision = null
     cachedSymbol = null
-    return (styles) =>
-        if lastRevision == styles.revision
+    return (style) =>
+        if lastRevision == style.revision
             console.log 'Fetching from cache'
-            return cachedSymbol
         else
             console.log 'Calculating result'
-            cachedSymbol = symbolFun styles.model
-            lastRevision = styles.revision
-            return cachedSymbol
+            lastRevision = style.revision
+            cachedSymbol = symbolFun style
+        return cachedSymbol

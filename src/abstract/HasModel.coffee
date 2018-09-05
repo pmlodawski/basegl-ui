@@ -17,7 +17,7 @@ export class HasModel extends EventEmitter
     cons: (values, @parent) =>
         super()
         @root =  @parent?.root or @parent or @
-        @styles = @root?.styles
+        @style = @root?.styles?.install @
 
     init: (values) =>
         super()
@@ -31,10 +31,6 @@ export class HasModel extends EventEmitter
         @connectSources?()
         @registerEvents? @__view
         @changed.once = false
-        @root.styles?.addEventListener 'x', =>
-            for own key of @model
-                @changed[key] = true
-                @onModelUpdate @model
 
     withScene: (fun) => @parent?.withScene fun
 
@@ -43,6 +39,12 @@ export class HasModel extends EventEmitter
         @__setValues values
         if @__anythingChanged
             @__updateModel values
+
+    forceReset: =>
+        for own key of @model
+            @changed[key] = true
+        @changed.once = true
+        @__updateModel @model
 
     __updateModel: (values) =>
             @onModelUpdate values
@@ -71,14 +73,6 @@ export class HasModel extends EventEmitter
         @__view.removeChild view
         @__view.updateChildrenOrigin()
         # view.setOrigin mat4.create()
-
-    watchStyles: (keys...) =>
-        for key in keys
-            @root.styles?.addEventListener key, =>
-                for own key of @model
-                    @changed[key] = true
-                @changed.once = true
-                @__updateModel @model
 
     log:  (msg) => console.log  "[#{@constructor.name}]", msg
     warn: (msg) => console.warn "[#{@constructor.name}]", msg
