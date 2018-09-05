@@ -187,9 +187,13 @@ export class NodeEditor extends EventEmitter
             @openSearcher.hideSearcher()
         @openSearcher = searcher
 
-    log: (msg) => console.log "[NodeEditor]", msg
+    log: (msg) =>
+        if window.DEBUG
+            console.log "[NodeEditor]", msg
 
     nodeByName: (name) => #added for debug purposes
+        return unless window.DEBUG
+
         for own k, n of @nodes
             if n.model.name == name
                 return n
