@@ -50,6 +50,13 @@ export class Styles extends ContainerComponent
         connection_lineWidth: 2
         node_widgetOffset: 20
         node_widgetHeight: 20
+        colorActiveGreen_r: 0
+        colorActiveGreen_g: 1
+        colorActiveGreen_b: 0
+        colorActiveGreen_a: 0.8
+        hoverAspect: 0.9
+        sliderFront: 0.2
+        sliderBg: 0.1
 
     prepare: =>
         @revision = 0

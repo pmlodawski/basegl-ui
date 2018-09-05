@@ -16,21 +16,21 @@ export visualizationMenu = valueTogglerColor
 
 export transparent = Color.rgb [0, 0, 0, 0]
 export activeArea = transparent
-export hoverAspect = 0.9
 
 export varHover = (style) -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix base(style), 'hovered' * hoverAspect
+        .mix base(style), 'hovered' * style.hoverAspect
 
 export varAlpha = -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b', 'color_a']
 
-export varAlphaHover = -> basegl.expr ->
+export varAlphaHover = (style) -> basegl.expr ->
     Color.rgb ['color_r', 'color_g', 'color_b', 'color_a']
-        .mix white, 'hovered' * hoverAspect
+        .mix base(style), 'hovered' * style.hoverAspect
 
 export sliderColor   = (style) -> basegl.expr ->
-    bg(style).mix base(style), 0.2
+    bg(style).mix base(style), style.sliderFront
 export sliderBgColor = (style) -> basegl.expr ->
-    bg(style).mix base(style), 0.1
-export activeGreen = Color.rgb [0, 1, 0, 0.8]
+    bg(style).mix base(style), style.sliderBg
+export activeGreen = (style) -> basegl.expr ->
+    Color.rgb [style.colorActiveGreen_r, style.colorActiveGreen_g, style.colorActiveGreen_b, style.colorActiveGreen_a]

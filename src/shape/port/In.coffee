@@ -3,7 +3,7 @@ import * as Animation      from 'basegl/animation/Animation'
 import * as Easing         from 'basegl/animation/Easing'
 import * as Color          from 'basegl/display/Color'
 import {circle, pie, rect} from 'basegl/display/Shape'
-import {BasicComponent}    from 'abstract/BasicComponent'
+import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as color          from 'shape/Color'
 import {nodeRadius}        from 'shape/node/Base'
 import * as layers         from 'view/layers'
@@ -14,7 +14,7 @@ areaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5
 bboxHeight = 2 *  bboxWidth * Math.tan areaAngle
 
-export inPortExpr = basegl.expr ->
+inPortExpr = (style) -> basegl.expr ->
     r = inArrowRadius
     c = circle r
        .move bboxWidth/2, 0
@@ -22,7 +22,7 @@ export inPortExpr = basegl.expr ->
        .rotate Math.PI
        .move bboxWidth/2, distanceFromCenter
     port = c * p
-    port = port.fill color.varAlphaHover()
+    port = port.fill color.varAlphaHover style
     activeCutter = circle nodeRadius
         .move bboxWidth/2, 0
     activeArea = pie areaAngle
@@ -32,17 +32,19 @@ export inPortExpr = basegl.expr ->
     activeArea = activeArea - activeCutter
     activeArea + port
 
-inPortSymbol = basegl.symbol inPortExpr
-inPortSymbol.bbox.xy = [bboxWidth, bboxHeight]
-inPortSymbol.variables.color_r = 1
-inPortSymbol.variables.color_g = 0
-inPortSymbol.variables.color_b = 0
-inPortSymbol.variables.color_a = 1
-inPortSymbol.variables.hovered = 0
-inPortSymbol.defaultZIndex = layers.inPort
+inPortSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol inPortExpr style
+    symbol.bbox.xy = [bboxWidth, bboxHeight]
+    symbol.variables.color_r = 1
+    symbol.variables.color_g = 0
+    symbol.variables.color_b = 0
+    symbol.variables.color_a = 1
+    symbol.variables.hovered = 0
+    symbol.defaultZIndex = layers.inPort
+    symbol
 
 export class InPortShape extends PortShape
-    define: => inPortSymbol
+    define: => inPortSymbol @style
     adjust: (element) =>
         super element
         element.position.xy = [-bboxWidth/2, -distanceFromCenter]

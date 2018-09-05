@@ -15,7 +15,7 @@ checkboxExpr = (style) -> basegl.expr ->
     background = rect 'bbox.x', 'bbox.y', corner
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.sliderBgColor(style)
-    switcherColor = color.sliderColor(style).mix color.activeGreen, 'checked'
+    switcherColor = color.sliderColor(style).mix color.activeGreen(style), 'checked'
     switcher = circle corner - offset
         .move corner + ('bbox.x' - 2*corner) * 'checked', corner
         .fill switcherColor
