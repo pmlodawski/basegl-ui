@@ -35,6 +35,7 @@ class StyleProvider
         setTimeout component.addDisposableListener styles, prop, =>
             component.forceReset()
 
+blacklist = new Set ['enabled', 'presetNo']
 presets =
     [
         baseColor_r: 1
@@ -80,86 +81,91 @@ presets =
         sliderBg: 0.1
     ]
 
-currentPreset = 0
 
 export class Styles extends ContainerComponent
     initModel: =>
-        Object.assign {}, presets[currentPreset]
+        model =
+            enabled: false
+            presetNo: 0
+        Object.assign model, presets[model.presetNo]
 
     prepare: =>
         @revision = 0
 
-    enable: =>
-        @addDef 'dump', TextContainer,
-            text: 'DUMP'
-            frameColor: [0.3, 0.3, 0.3]
-        @view('dump').position.y = 20
-        @view('dump').addEventListener 'click', => @__dumpSettings()
+    update: =>
+        console.log @changed.presetNo, @changed.bgColor_h, @model.bgColor_h
+        if @changed.enabled or @changed.presetNo
+            @autoUpdateDef 'dump', TextContainer, if @model.enabled
+                text: 'DUMP'
+                frameColor: [0.3, 0.3, 0.3]
+            @autoUpdateDef 'switch', TextContainer, if @model.enabled
+                text: 'SWITCH'
+                frameColor: [0.3, 0.3, 0.3]
+            @autoUpdateDef 'vertical', VerticalLayout, if @model.enabled
+                width: 300
+                children: for own key, val of @model
+                    continue if blacklist.has key
+                    console.log key, val
+                    minVal =
+                        if val < -1
+                            -100
+                        else if val < 0
+                            -1
+                        else
+                            0
+                    maxVal =
+                        if val > 1
+                            100
+                        else
+                            1
+                    cons: HorizontalLayout
+                    height: 10
+                    children:
+                        [
+                            cons: TextContainer
+                            text: key
+                        ,
+                            cons: ContinousSlider
+                            value: val
+                            min: minVal
+                            max: maxVal
+                        ]
+        if (@changed.enabled or @changed.presetNo) and @model.enabled
+            @def('vertical').model.children.forEach (c, key) =>
+                child = @def('vertical').def(key)
+                child.def(1).addEventListener 'value', (e) =>
+                    name = child.def(0).model.text
+                    x = {}
+                    x[name] = e.detail
+                    @revision++
+                    @set x
 
-        @addDef 'switch', TextContainer,
-            text: 'SWITCH'
-            frameColor: [0.3, 0.3, 0.3]
-        @view('switch').position.xy = [50, 20]
-        @view('switch').addEventListener 'click', => @__switchModel()
+    adjust: (view) =>
+        if (@changed.enabled or @changed.presetNo) and @model.enabled
+            @view('dump').position.y = 20
+            @view('dump').addEventListener 'click', => @__dumpSettings()
 
-        @addDef 'vertical', VerticalLayout,
-            width: 300
+            @view('switch').position.xy = [50, 20]
+            @view('switch').addEventListener 'click', => @__switchModel()
+        if @changed.once
+            dragHandler = (e) =>
+                if e.button != 0 then return
+                moveNodes = (e) =>
+                    @withScene (scene) =>
+                        x = @__view.position.x + e.movementX * scene.camera.zoomFactor
+                        y = @__view.position.y - e.movementY * scene.camera.zoomFactor
+                        @__view.position.xy = [x, y]
 
-        children = for own key, val of @model
-            minVal =
-                if val < -1
-                    -100
-                else if val < 0
-                    -1
-                else
-                    0
-            maxVal =
-                if val > 1
-                    100
-                else
-                    1 
-            cons: HorizontalLayout
-            height: 10
-            children:
-                [
-                    cons: TextContainer
-                    text: key
-                ,
-                    cons: ContinousSlider
-                    value: val
-                    min: minVal
-                    max: maxVal
-                ]
-        @updateDef 'vertical', children: children
-
-        @def('vertical').model.children.forEach (c, key) =>
-            child = @def('vertical').def(key)
-            child.def(1).addEventListener 'value', (e) =>
-                name = child.def(0).model.text
-                x = {}
-                x[name] = e.detail
-                @revision++
-                @set x
-
-        dragHandler = (e) =>
-            if e.button != 0 then return
-            moveNodes = (e) =>
-                @withScene (scene) =>
-                    x = @__view.position.x + e.movementX * scene.camera.zoomFactor
-                    y = @__view.position.y - e.movementY * scene.camera.zoomFactor
-                    @__view.position.xy = [x, y]
-
-            dragFinish = =>
-                @pushEvent
-                    tag: 'NodeMoveEvent'
-                    position: @model.position
-                window.removeEventListener 'mouseup', dragFinish
-                window.removeEventListener 'mousemove', moveNodes
-            window.addEventListener 'mouseup', dragFinish
-            window.addEventListener 'mousemove', moveNodes
-        @view('vertical').addEventListener 'mousedown', dragHandler
-
-        @__view.position.xy = [700, 300]
+                dragFinish = =>
+                    @pushEvent
+                        tag: 'NodeMoveEvent'
+                        position: @model.position
+                    window.removeEventListener 'mouseup', dragFinish
+                    window.removeEventListener 'mousemove', moveNodes
+                window.addEventListener 'mouseup', dragFinish
+                window.addEventListener 'mousemove', moveNodes
+            view.addEventListener 'mousedown', dragHandler
+            view.position.xy = [700, 300]
 
     install: (component) =>
         sp = new StyleProvider @, component
@@ -172,10 +178,9 @@ export class Styles extends ContainerComponent
         console.log str
 
     __switchModel: =>
-        if currentPreset == 0
-            currentPreset = 1
-        else
-            currentPreset = 0
         @revision++
-        console.log 'switching', currentPreset, @revision, presets[currentPreset]
-        @set presets[currentPreset]
+        Object.assign presets[@model.presetNo], @model
+        newPresetNo = if @model.presetNo then 0 else 1
+        newModel = Object.assign {presetNo: newPresetNo}, presets[newPresetNo]
+        console.log newModel.bgColor_h, @model.bgColor_h
+        @set newModel
