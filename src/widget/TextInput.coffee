@@ -18,6 +18,8 @@ export class TextInput extends Widget
             @input = document.createElement 'input'
             @input.className = 'native-key-bindings ' + style.luna ['ctrl--text']
             @def('root').getDomElement().appendChild @input
+        
+        return unless @input?
         if @changed.width
             @input.style.width = @model.width + 'px'
         if @changed.height

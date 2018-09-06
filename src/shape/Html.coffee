@@ -21,22 +21,25 @@ export class HtmlShape extends BasicComponent
         basegl.symbol @html
 
     adjust: =>
+        domElem = @getDomElement()
+        return unless domElem?
+
         if @changed.id
             if @model.id?
-                @getDomElement().id = @model.id
+                domElem.id = @model.id
             else
-                delete @getDomElement().id
+                delete domElem.id
         if @changed.width
-            @getDomElement().style.width = @model.width
+            domElem.style.width = @model.width
         if @changed.height
-            @getDomElement().style.height = @model.height
+            domElem.style.height = @model.height
         if @changed.clickable
-            @getDomElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
+            domElem.style.pointerEvents = if @model.clickable then 'all' else 'none'
         if @changed.cssClassName
-            @getDomElement().className = @model.cssClassName
+            domElem.className = @model.cssClassName
 
         if @changed.top or @changed.scalable or @changed.still
-            obj = @getElement().obj
+            obj = domElem.obj
             if @model.still
                 @root.topDomSceneStill.model.add obj
             else if not @model.scalable
