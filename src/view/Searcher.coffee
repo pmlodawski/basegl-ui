@@ -6,7 +6,7 @@ import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
 
 
-searcherRoot    = 'searcher-root'
+searcherRoot = 'searcher-root'
 
 export class Searcher extends ContainerComponent
 
@@ -52,7 +52,7 @@ export class Searcher extends ContainerComponent
 
     __createContainer: =>
         @dom.container = document.createElement 'div'
-        @dom.container.className = 'native-key-bindings ' + style.luna ['searcher__container']
+        @dom.container.className = style.luna ['input', 'searcher__container']
         @dom.container.appendChild @dom.results
         @dom.container.appendChild @dom.input
         @def('root').getDomElement().appendChild @dom.container
@@ -68,7 +68,7 @@ export class Searcher extends ContainerComponent
         @dom.input = document.createElement 'input'
         @dom.input.type = 'text'
         @dom.input.value = @model.input
-        @dom.input.className = style.luna ['searcher__input']
+        @dom.input.className = @__inputClassName()
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
@@ -80,16 +80,19 @@ export class Searcher extends ContainerComponent
             @dom.resultsList.appendChild @__renderResult entry, false
 
     __updateInput: =>
-        inputClasses = ['searcher__input', 'input']
-        inputClasses.push ['searcher__input-selected'] if @model.selected == 0
-        inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
-        @dom.input.className = style.luna inputClasses
+        @dom.input.className = @__inputClassName()
         @dom.input.value = @model.input
         if @model.inputSelection?.length == 2
             @dom.input.selectionStart = @model.inputSelection[0]
             @dom.input.selectionEnd   = @model.inputSelection[1]
             @model.inputSelection = null
         return @dom.input
+
+    __inputClassName: =>
+        inputClasses = ['searcher__input']
+        inputClasses.push ['searcher__input-selected'] if @model.selected == 0
+        inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
+        style.luna inputClasses
 
     __renderResult: (entry, selected) =>
         resultName = document.createElement 'div'
@@ -142,6 +145,7 @@ export class Searcher extends ContainerComponent
                 editSelectionStart: @dom.input.selectionStart
                 editSelectionEnd:   @dom.input.selectionEnd
                 editValue:          @dom.input.value
+
         @dom.input.addEventListener 'keyup', (e) =>
             if e.key == 'Enter'
                 @pushEvent
@@ -150,7 +154,7 @@ export class Searcher extends ContainerComponent
                     acceptSelectionEnd:   @dom.input.selectionEnd
                     acceptValue:          @dom.input.value
             else if e.key == 'Tab'
-                @pushEvent tag: 'SeacherTabPressedEvent'
+                @pushEvent tag: 'SearcherTabPressedEvent'
 
         @dom.input.addEventListener 'keydown', (e) =>
             if e.key == 'ArrowUp'
