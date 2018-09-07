@@ -5,7 +5,7 @@ import {nodeRadius}     from 'shape/node/Base'
 import * as color       from 'shape/Color'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as layers      from 'view/layers'
-import {width, length, angle, outArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
+import {width, length, offset, angle, outArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
 
 areaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5
@@ -44,4 +44,4 @@ export class OutPortShape extends PortShape
     define: => outPortSymbol @style
     adjust: (element) =>
         super element
-        element.position.xy = [-bboxWidth/2, -distanceFromCenter]
+        element.position.xy = [-bboxWidth/2, -distanceFromCenter - offset]

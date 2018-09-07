@@ -7,12 +7,12 @@ import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as color          from 'shape/Color'
 import {nodeRadius}        from 'shape/node/Base'
 import * as layers         from 'view/layers'
-import {width, length, angle, inArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
+import {width, length, offset, angle, inArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
 
 
-areaAngle = Math.PI / 5
+activeAreaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5
-bboxHeight = 2 *  bboxWidth * Math.tan areaAngle
+bboxHeight = 2 *  bboxWidth * Math.tan activeAreaAngle
 
 inPortExpr = (style) -> basegl.expr ->
     r = inArrowRadius
@@ -25,7 +25,7 @@ inPortExpr = (style) -> basegl.expr ->
     port = port.fill color.varAlphaHover style
     activeCutter = circle nodeRadius
         .move bboxWidth/2, 0
-    activeArea = pie areaAngle
+    activeArea = pie activeAreaAngle
         .rotate Math.PI
         .move bboxWidth/2, 0
         .fill color.activeArea
@@ -47,4 +47,4 @@ export class InPortShape extends PortShape
     define: => inPortSymbol @style
     adjust: (element) =>
         super element
-        element.position.xy = [-bboxWidth/2, -distanceFromCenter]
+        element.position.xy = [-bboxWidth/2, -distanceFromCenter - offset]

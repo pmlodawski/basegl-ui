@@ -7,6 +7,7 @@ export width     = length * Math.tan angle
 export distanceFromCenter = nodeSelectionBorderMaxSize
 export inArrowRadius    = length + distanceFromCenter
 export outArrowRadius    = distanceFromCenter
+export offset = length-2
 
 
 export class PortShape extends BasicComponent
