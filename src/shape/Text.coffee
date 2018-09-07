@@ -68,7 +68,6 @@ export class TextShape extends BasicComponent
         [(textMaxX - textMinX) or 0, (textMaxY - textMinY) or 0]
 
     __createText: (attrs) =>
-        console.log @style
         addToScene: (scene) =>
             attrs.scene = scene
             attrs.str        ?= ''

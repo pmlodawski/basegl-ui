@@ -101,7 +101,6 @@ export class Styles extends ContainerComponent
         @revision = 0
 
     update: =>
-        console.log @changed.presetNo, @changed.bgColor_h, @model.bgColor_h
         if @changed.enabled or @changed.presetNo
             @autoUpdateDef 'dump', TextContainer, if @model.enabled
                 text: 'DUMP'
@@ -113,7 +112,6 @@ export class Styles extends ContainerComponent
                 width: 300
                 children: for own key, val of @model
                     continue if blacklist.has key
-                    console.log key, val
                     minVal =
                         if val < -1
                             -100
@@ -194,5 +192,4 @@ export class Styles extends ContainerComponent
         Object.assign presets[@model.presetNo], @model
         newPresetNo = if @model.presetNo then 0 else 1
         newModel = Object.assign {presetNo: newPresetNo}, presets[newPresetNo]
-        console.log newModel.bgColor_h, @model.bgColor_h
         @set newModel

@@ -14,7 +14,6 @@ export class HorizontalLayout extends Layout
 
     update: =>
         for own k, widget of @model.children
-            console.log k, widget.value
             cons = lookupWidget widget
             if cons?
                 @autoUpdateDef k, cons, widget
