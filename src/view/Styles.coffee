@@ -41,13 +41,14 @@ presets =
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
-        bgColor_h: 40
-        bgColor_s: 0.08
-        bgColor_l: 0.09
+        bgColor_h: 0.0
+        bgColor_s: 0.00001 # fixme
+        bgColor_l: 0.93
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        nodeColor_a: 1
         connection_lineWidth: 2
         node_widgetOffset: 20
         node_widgetHeight: 20
@@ -62,22 +63,23 @@ presets =
         textColor_g: 0.1
         textColor_b: 0.1
     ,
-        baseColor_r: 0.5
-        baseColor_g: 0.5
-        baseColor_b: 0.5
+        baseColor_r: 1
+        baseColor_g: 1
+        baseColor_b: 1
         bgColor_h: 40
         bgColor_s: 0.08
         bgColor_l: 0.09
         node_selection_h: 50
-        node_selection_s: 0.5
+        node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        nodeColor_a: 0.04
         connection_lineWidth: 2
         node_widgetOffset: 20
         node_widgetHeight: 20
         colorActiveGreen_r: 0
-        colorActiveGreen_g: 0
-        colorActiveGreen_b: 1
+        colorActiveGreen_g: 1
+        colorActiveGreen_b: 0
         colorActiveGreen_a: 0.8
         hoverAspect: 0.9
         sliderFront: 0.2
@@ -146,6 +148,10 @@ export class Styles extends ContainerComponent
                     @revision++
                     @set x
 
+        # if @changed.bgColor_h or @changed.bgColor_s or @changed.bgColor_l or @changed.presetNo
+        document.getElementById('basegl-root').style.background="hsl("+@model.bgColor_h+","+@model.bgColor_s*100+"%,"+@model.bgColor_l*100+"%)"
+
+
     adjust: (view) =>
         if (@changed.enabled or @changed.presetNo) and @model.enabled
             @view('dump').position.y = 20
@@ -171,7 +177,7 @@ export class Styles extends ContainerComponent
                 window.addEventListener 'mouseup', dragFinish
                 window.addEventListener 'mousemove', moveNodes
             view.addEventListener 'mousedown', dragHandler
-            view.position.xy = [700, 300]
+            view.position.xy = [700, 500]
 
     install: (component) =>
         sp = new StyleProvider @, component
