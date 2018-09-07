@@ -9,8 +9,10 @@ export bg             = (style) -> basegl.expr ->
 export selectionColor = (style) -> basegl.expr ->
     bg(style).mix (Color.hsl [style.node_selection_h, style.node_selection_s, style.node_selection_l]), style.node_selection_a
 export nodeBg         = (style) -> basegl.expr ->
-    bg(style).mix base(style), 0.04
+    bg(style).mix base(style), style.nodeColor_a
 
+export textColor      = (style) -> basegl.expr ->
+    Color.rgb [style.textColor_r, style.textColor_g, style.textColor_b]
 export valueTogglerColor = white
 export visualizationMenu = valueTogglerColor
 

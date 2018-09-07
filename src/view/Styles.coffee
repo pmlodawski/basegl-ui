@@ -58,6 +58,9 @@ presets =
         hoverAspect: 0.9
         sliderFront: 0.2
         sliderBg: 0.1
+        textColor_r: 0.1
+        textColor_g: 0.1
+        textColor_b: 0.1
     ,
         baseColor_r: 0.5
         baseColor_g: 0.5
@@ -79,6 +82,9 @@ presets =
         hoverAspect: 0.9
         sliderFront: 0.2
         sliderBg: 0.1
+        textColor_r: 1
+        textColor_g: 1
+        textColor_b: 1
     ]
 
 
