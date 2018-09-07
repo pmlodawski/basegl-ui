@@ -8,7 +8,6 @@ import * as shape  from 'shape/node/Base'
 
 searcherRoot    = 'searcher-root'
 
-
 export class Searcher extends ContainerComponent
 
     ################################
@@ -81,7 +80,7 @@ export class Searcher extends ContainerComponent
             @dom.resultsList.appendChild @__renderResult entry, false
 
     __updateInput: =>
-        inputClasses = ['searcher__input']
+        inputClasses = ['searcher__input', 'input']
         inputClasses.push ['searcher__input-selected'] if @model.selected == 0
         inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
         @dom.input.className = style.luna inputClasses
