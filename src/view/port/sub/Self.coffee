@@ -1,6 +1,7 @@
-import {SelfPortShape}            from 'shape/port/Self'
-import {Subport, typeNameXOffset} from 'view/port/sub/Base'
-import {TextContainer}            from 'view/Text'
+import {SelfPortShape} from 'shape/port/Self'
+import {Subport}       from 'view/port/sub/Base'
+import * as subport    from 'view/port/sub/Base'
+import {TextContainer} from 'view/Text'
 
 
 export class Self extends Subport
@@ -22,7 +23,7 @@ export class Self extends Subport
     adjust: (view) =>
         if @view('typeName')?
             @view('typeName').rotation.z = @model.angle - Math.PI/2
-            typeNamePosition = [- typeNameXOffset - @model.radius, 0]
+            typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, 0]
             @view('typeName').position.xy = typeNamePosition
 
     connectSources: =>

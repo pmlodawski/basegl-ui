@@ -52,11 +52,13 @@ presets =
         node_shadowRadius: 24.58
         node_shadowPower: 2
         node_shadowOpacity: 0.03
-        nodeColor_a: 1
+        node_opacity: 1
         connection_lineWidth: 2
         node_widgetOffset_h: 20
         node_widgetOffset_v: 20
         node_widgetHeight: 20
+        port_length: 10
+        port_angle: Math.PI/3
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
         colorActiveGreen_b: 0
@@ -81,7 +83,7 @@ presets =
         node_shadowRadius: 50
         node_shadowPower: 1
         node_shadowOpacity: 0.3
-        nodeColor_a: 0.04
+        node_opacity: 0.04
         connection_lineWidth: 2
         node_widgetOffset_h: 20
         node_widgetOffset_v: 20

@@ -1,5 +1,3 @@
-import * as shape from 'shape/port/Base'
-
 import {ContainerComponent} from 'abstract/ContainerComponent'
 
 
@@ -7,6 +5,6 @@ export class Subport extends ContainerComponent
     registerEvents: (view) =>
         view.addEventListener 'mouseup', (e) => @pushEvent e
 
-export nameXOffset = shape.length * 2
-export typeNameXOffset = nameXOffset
-export typeNameYOffset = nameXOffset
+export nameXOffset = (style) -> style.port_length * 2
+export typeNameXOffset = (style) -> nameXOffset style
+export typeNameYOffset = (style) -> nameXOffset style

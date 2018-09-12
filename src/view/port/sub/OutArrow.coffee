@@ -1,6 +1,7 @@
-import {OutPortShape}         from 'shape/port/Out'
-import {Subport, nameXOffset} from 'view/port/sub/Base'
-import {TextContainer}        from 'view/Text'
+import {OutPortShape}  from 'shape/port/Out'
+import {Subport}       from 'view/port/sub/Base'
+import * as subport    from 'view/port/sub/Base'
+import {TextContainer} from 'view/Text'
 
 
 export class OutArrow extends Subport
@@ -25,7 +26,7 @@ export class OutArrow extends Subport
             @view('port').rotation.z = @model.angle
         if @view('typeName')?
             @view('typeName').rotation.z = @model.angle + Math.PI/2
-            @view('typeName').position.x = nameXOffset + @model.radius
+            @view('typeName').position.x = subport.nameXOffset(@style) + @model.radius
 
     registerEvents: (view) =>
         super view

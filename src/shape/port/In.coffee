@@ -6,34 +6,35 @@ import {circle, pie, rect} from 'basegl/display/Shape'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as color          from 'shape/Color'
 import * as layers         from 'view/layers'
-import {width, length, offset, angle, inArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
+import {PortShape}         from 'shape/port/Base'
+import * as portBase       from 'shape/port/Base'
 
 
 activeAreaAngle = Math.PI / 5
-bboxWidth = distanceFromCenter * 1.5
-bboxHeight = 2 *  bboxWidth * Math.tan activeAreaAngle
+bboxWidth = (style) -> portBase.distanceFromCenter(style) * 1.5
+bboxHeight = (style) -> 2 *  bboxWidth(style) * Math.tan activeAreaAngle
 
 inPortExpr = (style) -> basegl.expr ->
-    r = inArrowRadius
+    r = portBase.inArrowRadius style
     c = circle r
-       .move bboxWidth/2, 0
-    p = pie angle
+       .move bboxWidth(style)/2, 0
+    p = pie style.port_angle
        .rotate Math.PI
-       .move bboxWidth/2, distanceFromCenter
+       .move bboxWidth(style)/2, portBase.distanceFromCenter(style)
     port = c * p
     port = port.fill color.varAlphaHover style
     activeCutter = circle style.nodeRadius
-        .move bboxWidth/2, 0
+        .move bboxWidth(style)/2, 0
     activeArea = pie activeAreaAngle
         .rotate Math.PI
-        .move bboxWidth/2, 0
+        .move bboxWidth(style)/2, 0
         .fill color.activeArea
     activeArea = activeArea - activeCutter
     activeArea + port
 
 inPortSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol inPortExpr style
-    symbol.bbox.xy = [bboxWidth, bboxHeight]
+    symbol.bbox.xy = [bboxWidth(style), bboxHeight(style)]
     symbol.variables.color_r = 1
     symbol.variables.color_g = 0
     symbol.variables.color_b = 0
@@ -46,4 +47,4 @@ export class InPortShape extends PortShape
     define: => inPortSymbol @style
     adjust: (element) =>
         super element
-        element.position.xy = [-bboxWidth/2, -distanceFromCenter - offset]
+        element.position.xy = [-bboxWidth(@style)/2, -portBase.distanceFromCenter(@style) - portBase.offset(@style)]
