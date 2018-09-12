@@ -1,7 +1,6 @@
 import * as basegl      from 'basegl'
 import * as Color       from 'basegl/display/Color'
 import {circle, pie}    from 'basegl/display/Shape'
-import {nodeRadius}     from 'shape/node/Base'
 import * as color       from 'shape/Color'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as layers      from 'view/layers'
@@ -21,7 +20,7 @@ export outPortExpr = (style) -> basegl.expr ->
     port = p - c
     port = port.move 0, - r + length - h2 + distanceFromCenter
         .fill color.varHover style
-    activeCutter = circle nodeRadius
+    activeCutter = circle style.nodeRadius
         .move bboxWidth/2, 0
     activeArea = pie areaAngle
         .rotate Math.PI

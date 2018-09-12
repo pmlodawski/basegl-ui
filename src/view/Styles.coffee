@@ -41,16 +41,21 @@ presets =
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
-        bgColor_h: 0.0
-        bgColor_s: 0.00001 # fixme
+        bgColor_h: 0
+        bgColor_s: 0.00001
         bgColor_l: 0.93
+        nodeRadius: 30
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        node_shadowRadius: 24.58
+        node_shadowPower: 2
+        node_shadowOpacity: 0.03
         nodeColor_a: 1
         connection_lineWidth: 2
-        node_widgetOffset: 20
+        node_widgetOffset_h: 20
+        node_widgetOffset_v: 20
         node_widgetHeight: 20
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
@@ -73,9 +78,13 @@ presets =
         node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        node_shadowRadius: 50
+        node_shadowPower: 1
+        node_shadowOpacity: 0.3
         nodeColor_a: 0.04
         connection_lineWidth: 2
-        node_widgetOffset: 20
+        node_widgetOffset_h: 20
+        node_widgetOffset_v: 20
         node_widgetHeight: 20
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1

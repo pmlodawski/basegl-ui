@@ -28,11 +28,10 @@ selectedNode = null
 
 
 exprOffset = 25
-nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + exprOffset
-nodeValYOffset  = -nodeNameYOffset
+nodeExprYOffset = (style) -> shape.height(style) / 3
+nodeNameYOffset = (style) -> nodeExprYOffset(style) + exprOffset
 
-portDistance = shape.height / 3
+portDistance = (style) -> shape.height(style) / 3
 minimalBodyHeight = 60
 
 testEntries = [
@@ -83,7 +82,7 @@ export class ExpressionNode extends ContainerComponent
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
                     children: inPort.controls
-                    width: @bodyWidth - @style.node_widgetOffset
+                    width: @bodyWidth - @style.node_widgetOffset_h
                     height: @style.node_widgetHeight
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
@@ -125,17 +124,17 @@ export class ExpressionNode extends ContainerComponent
                     @view('widget' + inPortKey).position.xy = startPoint
         @view('visualization').position.xy =
             if @model.expanded
-                [ - shape.width/2
-                , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
+                [ - shape.width(@style)/2
+                , - @bodyHeight - shape.height(@style)/2 - shape.slope - togglerShape.size ]
             else
-                [ - shape.width/2, - shape.height/2 - togglerShape.size]
-        @view('name').position.y = nodeNameYOffset
-        @view('expression').position.y = nodeExprYOffset
+                [ - shape.width(@style)/2, - shape.height(@style)/2 - togglerShape.size]
+        @view('name').position.y = nodeNameYOffset @style
+        @view('expression').position.y = nodeExprYOffset @style
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
         @bodyWidth = 200
-        inportVDistance = @style.node_widgetOffset + @style.node_widgetHeight
+        inportVDistance = @style.node_widgetOffset_v + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts
@@ -152,12 +151,12 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [- shape.height/2
-                                  ,- shape.height/2 - (inPortNumber - 1) * inportVDistance]
+                values.position = [- shape.height(@style)/2
+                                  ,- shape.height(@style)/2 - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else
                 values.position = [0,0]
-                values.radius = portDistance
+                values.radius = portDistance @style
                 values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
             values
@@ -175,7 +174,7 @@ export class ExpressionNode extends ContainerComponent
             values = {}
             unless outPort.angle?
                 values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
-                values.radius = portDistance
+                values.radius = portDistance @style
             @def('outPorts').def(outPortKey).set values
             outPortNumber++
 

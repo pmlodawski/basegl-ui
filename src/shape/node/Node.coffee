@@ -14,37 +14,39 @@ import * as baseNode         from 'shape/node/Base'
 #### shapes with frames and selections ####
 
 compactNodeExpr = (style) -> basegl.expr ->
-    node = baseNode.compactNodeExpr()
-    node   = node.fill nodeBg style
-
+    base = baseNode.compactNodeExpr style
+    node = base.fill nodeBg style
+    shadow = base
+        .blur style.node_shadowRadius, style.node_shadowPower
+        .fill Color.rgb [0, 0, 0, style.node_shadowOpacity]
     eye    = 'scaledEye.z'
-    border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
-
     sc     = selectionColor style
     sc.a   = 'selected'
-    border = border.fill sc
-
-    border + node
+    border = base.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
+        .fill sc
+    shadow + border + node
 
 compactNodeSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol compactNodeExpr style
     symbol.defaultZIndex = layers.compactNode
     symbol.variables.selected = 0
-    symbol.bbox.xy = [baseNode.width, baseNode.height]
+    symbol.bbox.xy = [baseNode.width(style), baseNode.height(style)]
     symbol
 
 expandedNodeExpr = (style) -> basegl.expr ->
-    node   = baseNode.expandedNodeExpr()
-    node   = node.fill nodeBg style
+    base   = baseNode.expandedNodeExpr style
+
+    node   = base.fill nodeBg style
+    shadow = base
+        .blur style.node_shadowRadius, style.node_shadowPower
+        .fill Color.rgb [0, 0, 0, style.node_shadowOpacity]
 
     eye    = 'scaledEye.z'
-    border = node.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
-
     sc     = selectionColor style
     sc.a   = 'selected'
-    border = border.fill sc
-
-    border + node
+    border = base.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
+        .fill sc
+    shadow + border + node
 
 expandedNodeSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol expandedNodeExpr style
@@ -82,11 +84,11 @@ export class NodeShape extends BasicComponent
             compactNodeSymbol @style
     adjust: (element) =>
         if @model.expanded
-            element.position.xy = [-baseNode.width/2, -@model.body[1] - baseNode.height/2 - baseNode.slope]
+            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - baseNode.slope]
             element.variables.bodyWidth  = @model.body[0]
             element.variables.bodyHeight = @model.body[1]
         else
-            element.position.xy = [-baseNode.width/2, -baseNode.height/2]
+            element.position.xy = [-baseNode.width(@style)/2, -baseNode.height(@style)/2]
         element.variables.selected = if @model.selected then 1 else 0
         if @changed.selected
             applySelectAnimation element, not @model.selected
