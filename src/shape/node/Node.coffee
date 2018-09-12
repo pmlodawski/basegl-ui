@@ -84,7 +84,7 @@ export class NodeShape extends BasicComponent
             compactNodeSymbol @style
     adjust: (element) =>
         if @model.expanded
-            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - baseNode.slope]
+            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - @style.node_headerOffset]
             element.variables.bodyWidth  = @model.body[0]
             element.variables.bodyHeight = @model.body[1]
         else

@@ -23,7 +23,7 @@ inPortExpr = (style) -> basegl.expr ->
        .move bboxWidth(style)/2, portBase.distanceFromCenter(style)
     port = c * p
     port = port.fill color.varAlphaHover style
-    activeCutter = circle style.nodeRadius
+    activeCutter = circle style.node_radius
         .move bboxWidth(style)/2, 0
     activeArea = pie activeAreaAngle
         .rotate Math.PI

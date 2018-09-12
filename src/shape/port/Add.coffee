@@ -3,7 +3,6 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {circle, pie, rect}  from 'basegl/display/Shape'
-import {nodeSelectionBorderMaxSize} from 'shape/node/Base'
 import {BasicComponent}  from 'abstract/BasicComponent'
 import * as layers       from 'view/layers'
 

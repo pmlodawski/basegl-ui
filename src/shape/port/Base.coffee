@@ -1,8 +1,7 @@
-import {nodeSelectionBorderMaxSize} from 'shape/node/Base'
 import {BasicComponent}             from 'abstract/BasicComponent'
 
 export width     = (style) -> style.port_length * Math.tan style.port_angle
-export distanceFromCenter = (style) -> nodeSelectionBorderMaxSize
+export distanceFromCenter = (style) -> style.node_selectionBorderMaxSize + style.port_distance
 export inArrowRadius  = (style) -> style.port_length + distanceFromCenter(style)
 export outArrowRadius = (style) -> distanceFromCenter(style)
 export offset = (style) -> style.port_length - 2

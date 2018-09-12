@@ -44,21 +44,25 @@ presets =
         bgColor_h: 0
         bgColor_s: 0.00001
         bgColor_l: 0.93
-        nodeRadius: 30
+        node_radius: 18.75
+        node_headerOffset: 20
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        node_selectionBorderMaxSize: 40
         node_shadowRadius: 24.58
         node_shadowPower: 2
         node_shadowOpacity: 0.03
         node_opacity: 1
-        connection_lineWidth: 2
-        node_widgetOffset_h: 20
-        node_widgetOffset_v: 20
+        node_widgetOffset_h: 16.58
+        node_widgetOffset_v: 6.65
         node_widgetHeight: 20
+        node_widgetSeparation: 3
         port_length: 10
-        port_angle: Math.PI/3
+        port_angle: 1.0471975511965976
+        port_distance: -3.47
+        connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
         colorActiveGreen_b: 0

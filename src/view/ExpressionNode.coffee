@@ -22,6 +22,7 @@ import {SetView}                from 'view/SetView'
 import {TextContainer}          from 'view/Text'
 import {VisualizationContainer} from 'view/visualization/Container'
 import {HorizontalLayout}       from 'widget/HorizontalLayout'
+import * as portBase from 'shape/port/Base'
 
 ### Utils ###
 selectedNode = null
@@ -31,9 +32,9 @@ exprOffset = 25
 nodeExprYOffset = (style) -> shape.height(style) / 3
 nodeNameYOffset = (style) -> nodeExprYOffset(style) + exprOffset
 
-portDistance = (style) -> shape.height(style) / 3
-minimalBodyHeight = 60
-
+minimalBodyHeight = (style) -> 2 * style.node_widgetOffset_v + style.node_widgetHeight
+bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
+    style.node_headerOffset - style.node_widgetOffset_v
 testEntries = [
     { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
     { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
@@ -84,6 +85,7 @@ export class ExpressionNode extends ContainerComponent
                     children: inPort.controls
                     width: @bodyWidth - @style.node_widgetOffset_h
                     height: @style.node_widgetHeight
+                    offset: @style.node_widgetSeparation
             for own k, inPort of @model.inPorts
                 setWidget k, inPort
         if @changed.outPorts
@@ -119,15 +121,14 @@ export class ExpressionNode extends ContainerComponent
             for own inPortKey, inPortModel of @model.inPorts
                 inPort = @def('inPorts').def(inPortKey)
                 if inPortModel.controls?
-                    leftOffset = 50
-                    startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
+                    startPoint = [@style.node_widgetOffset_h/2 - @style.node_radius, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
         @view('visualization').position.xy =
             if @model.expanded
                 [ - shape.width(@style)/2
-                , - @bodyHeight - shape.height(@style)/2 - shape.slope - togglerShape.size ]
+                , bodyTop(@style) - @bodyHeight ]
             else
-                [ - shape.width(@style)/2, - shape.height(@style)/2 - togglerShape.size]
+                [ - shape.width(@style)/2, - shape.height(@style)/2]
         @view('name').position.y = nodeNameYOffset @style
         @view('expression').position.y = nodeExprYOffset @style
         view.position.xy = @model.position.slice()
@@ -151,12 +152,12 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [- shape.height(@style)/2
-                                  ,- shape.height(@style)/2 - (inPortNumber - 1) * inportVDistance]
+                values.position = [-portBase.distanceFromCenter(@style)
+                                  , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else
                 values.position = [0,0]
-                values.radius = portDistance @style
+                values.radius = portBase.distanceFromCenter @style
                 values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
             values
@@ -164,7 +165,7 @@ export class ExpressionNode extends ContainerComponent
         for inPortKey, inPort of @model.inPorts
             @def('inPorts').def(inPortKey).set portProperties inPort
         @def('newPort').set portProperties mode:'phantom'
-        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
+        @bodyHeight = minimalBodyHeight(@style) + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
 
 
     updateOutPorts: =>
@@ -174,7 +175,7 @@ export class ExpressionNode extends ContainerComponent
             values = {}
             unless outPort.angle?
                 values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
-                values.radius = portDistance @style
+                values.radius = portBase.distanceFromCenter @style
             @def('outPorts').def(outPortKey).set values
             outPortNumber++
 

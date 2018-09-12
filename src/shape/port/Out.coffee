@@ -21,7 +21,7 @@ export outPortExpr = (style) -> basegl.expr ->
     port = p - c
     port = port.move 0, - r + style.port_length - h2 + portBase.distanceFromCenter(style)
         .fill color.varHover style
-    activeCutter = circle style.nodeRadius
+    activeCutter = circle style.node_radius
         .move bboxWidth(style)/2, 0
     activeArea = pie areaAngle
         .rotate Math.PI
