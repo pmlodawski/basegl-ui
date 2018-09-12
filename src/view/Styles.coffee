@@ -46,6 +46,7 @@ presets =
         bgColor_l: 0.93
         node_radius: 18.75
         node_headerOffset: 20
+        node_bodyWidth: 200
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6

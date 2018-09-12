@@ -83,7 +83,7 @@ export class ExpressionNode extends ContainerComponent
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
                     children: inPort.controls
-                    width: @bodyWidth - @style.node_widgetOffset_h
+                    width: @style.node_bodyWidth - @style.node_widgetOffset_h
                     height: @style.node_widgetHeight
                     offset: @style.node_widgetSeparation
             for own k, inPort of @model.inPorts
@@ -95,12 +95,12 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'node',
             expanded: @model.expanded
             selected: @model.selected
-            body: [@bodyWidth, @bodyHeight]
+            body: [@style.node_bodyWidth, @bodyHeight]
 
         if @changed.value or @changed.expanded
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
-                body: [@bodyWidth, @bodyHeight]
+                body: [@style.node_bodyWidth, @bodyHeight]
 
         @updateDef 'visualization',
             value: @model.value
@@ -134,7 +134,6 @@ export class ExpressionNode extends ContainerComponent
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
-        @bodyWidth = 200
         inportVDistance = @style.node_widgetOffset_v + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
