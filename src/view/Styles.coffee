@@ -35,9 +35,9 @@ class StyleProvider
         setTimeout component.addDisposableListener styles, prop, =>
             component.forceReset()
 
-blacklist = new Set ['enabled', 'presetNo']
+blacklist = new Set ['enabled', 'presetName']
 presets =
-    [
+    light:
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
@@ -83,7 +83,7 @@ presets =
         text_color_g: 0.1
         text_color_b: 0.1
         text_size: 12
-    ,
+    dark:
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
@@ -129,27 +129,28 @@ presets =
         text_color_g: 1
         text_color_b: 1
         text_size: 12
-    ]
 
 
 export class Styles extends ContainerComponent
     initModel: =>
         model =
             enabled: false
-            presetNo: 0
-        Object.assign model, presets[model.presetNo]
+            presetName: 'light'
+        Object.assign model, presets[model.presetName]
 
     prepare: =>
         @revision = 0
 
     update: =>
-        if @changed.enabled or @changed.presetNo
+        if @changed.enabled or @changed.presetName
             @autoUpdateDef 'dump', TextContainer, if @model.enabled
                 text: 'DUMP'
                 frameColor: [0.3, 0.3, 0.3]
-            @autoUpdateDef 'switch', TextContainer, if @model.enabled
-                text: 'SWITCH'
-                frameColor: [0.3, 0.3, 0.3]
+            @autoUpdateDef 'switcher', HorizontalLayout, if @model.enabled
+                children: for own key of presets
+                    cons: TextContainer
+                    text: key
+                    frameColor: [0.5, 0.5, 0.5]
             @autoUpdateDef 'vertical', VerticalLayout, if @model.enabled
                 width: 300
                 children: for own key, val of @model
@@ -178,27 +179,28 @@ export class Styles extends ContainerComponent
                             min: minVal
                             max: maxVal
                         ]
-        if (@changed.enabled or @changed.presetNo) and @model.enabled
-            @def('vertical').model.children.forEach (c, key) =>
-                child = @def('vertical').def(key)
-                child.def(1).addEventListener 'value', (e) =>
-                    name = child.def(0).model.text
+        if (@changed.enabled or @changed.presetName) and @model.enabled
+            @def('vertical').forEach (def) =>
+                def.def(1).addEventListener 'value', (e) =>
+                    name = def.def(0).model.text
                     x = {}
                     x[name] = e.detail
                     @revision++
                     @set x
+            @def('switcher').forEach (def) =>
+                def.__view.addEventListener 'click', =>
+                    @__selectPreset def.model.text
 
-        # if @changed.bgColor_h or @changed.bgColor_s or @changed.bgColor_l or @changed.presetNo
+        # if @changed.bgColor_h or @changed.bgColor_s or @changed.bgColor_l or @changed.presetName
         document.getElementById('basegl-root').style.background="hsl("+@model.bgColor_h+","+@model.bgColor_s*100+"%,"+@model.bgColor_l*100+"%)"
 
 
     adjust: (view) =>
-        if (@changed.enabled or @changed.presetNo) and @model.enabled
+        if (@changed.enabled or @changed.presetName) and @model.enabled
             @view('dump').position.y = 20
             @view('dump').addEventListener 'click', => @__dumpSettings()
 
-            @view('switch').position.xy = [50, 20]
-            @view('switch').addEventListener 'click', => @__switchModel()
+            @view('switcher').position.xy = [50, 20]
         if @changed.once
             dragHandler = (e) =>
                 if e.button != 0 then return
@@ -229,10 +231,9 @@ export class Styles extends ContainerComponent
              str += k + ': ' + v.toString() + '\n'
         console.log str
 
-    __switchModel: =>
+    __selectPreset: (name) =>
         @revision++
-        Object.assign presets[@model.presetNo], @model
-        newPresetNo = (@model.presetNo + 1) % presets.length
-        console.log "Selected style: #{newPresetNo}"
-        newModel = Object.assign {presetNo: newPresetNo}, presets[newPresetNo]
+        Object.assign presets[@model.presetName], @model
+        console.log "Selected style: #{name}"
+        newModel = Object.assign {presetName: name}, presets[name]
         @set newModel
