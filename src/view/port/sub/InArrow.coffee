@@ -18,9 +18,15 @@ export class InArrow extends Subport
         @autoUpdateDef 'name', TextContainer,
             text: @model.name
             align: 'right'
+            border: @style.port_nameBorder
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
         @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'right'
+            border: @style.port_typeBorder
 
     adjust: (view) =>
         if @changed.radius

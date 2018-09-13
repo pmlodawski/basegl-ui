@@ -22,9 +22,8 @@ import {SetView}                from 'view/SetView'
 import {TextContainer}          from 'view/Text'
 import {VisualizationContainer} from 'view/visualization/Container'
 import {HorizontalLayout}       from 'widget/HorizontalLayout'
-import * as portBase from 'shape/port/Base'
+import * as portBase            from 'shape/port/Base'
 
-### Utils ###
 selectedNode = null
 
 

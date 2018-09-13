@@ -2,18 +2,23 @@ import * as basegl from 'basegl'
 import {BasicComponent}  from 'abstract/BasicComponent'
 import {ContainerComponent}  from 'abstract/ContainerComponent'
 import * as color from 'shape/Color'
+import * as Color     from 'basegl/display/Color'
 
 export class TextShape extends BasicComponent
     initModel: =>
         text: ''
         align: 'center'
+        color: null
+        size: null
 
     redefineRequired: =>
-        @changed.text
+        @changed.text or @changed.color or @changed.size
 
     define: =>
         @__createText
             str: @model.text
+            color: Color.rgb @model.color or [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            size: @model.size
 
     adjust: (element) =>
         size = @size()
@@ -72,6 +77,5 @@ export class TextShape extends BasicComponent
             attrs.scene = scene
             attrs.str        ?= ''
             attrs.fontFamily ?= 'DejaVuSansMono'
-            attrs.size       ?= 12
-            attrs.color      ?= color.textColor @style
+            attrs.size       ?= @style.text_size
             basegl.text attrs

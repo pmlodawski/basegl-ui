@@ -18,7 +18,10 @@ export class OutArrow extends Subport
         @autoUpdateDef 'typeName', TextContainer, if @model.hovered
             text: @model.typeName
             align: 'left'
-
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
     adjust: (view) =>
         if @changed.radius
             @view('port').position.y = @model.radius

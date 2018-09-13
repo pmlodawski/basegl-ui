@@ -65,6 +65,12 @@ presets =
         port_length: 10
         port_angle: 1.0471975511965976
         port_distance: 16.47
+        port_nameBorder: 3
+        port_typeBorder: 3
+        port_borderColor_h: 0
+        port_borderColor_s: 0.00001
+        port_borderColor_l: 0.93
+        port_borderColor_a: 0
         connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
@@ -73,9 +79,10 @@ presets =
         hoverAspect: 0.9
         sliderFront: 0.2
         sliderBg: 0.1
-        textColor_r: 0.1
-        textColor_g: 0.1
-        textColor_b: 0.1
+        text_color_r: 0.1
+        text_color_g: 0.1
+        text_color_b: 0.1
+        text_size: 12
     ,
         baseColor_r: 1
         baseColor_g: 1
@@ -83,18 +90,34 @@ presets =
         bgColor_h: 40
         bgColor_s: 0.08
         bgColor_l: 0.09
+        node_radius: 18.75
+        node_headerOffset: 20
+        node_slope: 20
+        node_bodyWidth: 200
+        node_selection_size: 20
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
         node_selection_a: 0.8
+        node_selectionBorderMaxSize: 40
         node_shadowRadius: 50
         node_shadowPower: 1
         node_shadowOpacity: 0.3
         node_opacity: 0.04
-        connection_lineWidth: 2
         node_widgetOffset_h: 20
         node_widgetOffset_v: 20
         node_widgetHeight: 20
+        node_widgetSeparation: 3
+        port_length: 10
+        port_angle: 1.0471975511965976
+        port_distance: 16.47
+        port_nameBorder: 3
+        port_typeBorder: 3
+        port_borderColor_h: 40
+        port_borderColor_s: 0.08
+        port_borderColor_l: 0.09
+        port_borderColor_a: 0
+        connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
         colorActiveGreen_b: 0
@@ -102,9 +125,10 @@ presets =
         hoverAspect: 0.9
         sliderFront: 0.2
         sliderBg: 0.1
-        textColor_r: 1
-        textColor_g: 1
-        textColor_b: 1
+        text_color_r: 1
+        text_color_g: 1
+        text_color_b: 1
+        text_size: 12
     ]
 
 
@@ -208,6 +232,7 @@ export class Styles extends ContainerComponent
     __switchModel: =>
         @revision++
         Object.assign presets[@model.presetNo], @model
-        newPresetNo = if @model.presetNo then 0 else 1
+        newPresetNo = (@model.presetNo + 1) % presets.length
+        console.log "Selected style: #{newPresetNo}"
         newModel = Object.assign {presetNo: newPresetNo}, presets[newPresetNo]
         @set newModel
