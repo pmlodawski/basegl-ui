@@ -201,7 +201,7 @@ runExample = -> main (nodeEditor) ->
             name: 'node1'
             inPorts:
                 1:
-                    name: 'onlyPort'
+                    name: 'ooo'
                     typeName: 'A'
             outPorts:
                 1: {}

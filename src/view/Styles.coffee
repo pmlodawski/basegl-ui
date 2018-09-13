@@ -45,10 +45,10 @@ presets =
         bgColor_s: 0.00001
         bgColor_l: 0.93
         node_radius: 18.75
-        node_headerOffset: 20
+        node_headerOffset: 10.23
         node_slope: 20
         node_bodyWidth: 200
-        node_selection_size: 20
+        node_selection_size: 12.27
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
@@ -62,7 +62,9 @@ presets =
         node_widgetOffset_v: 6.65
         node_widgetHeight: 20
         node_widgetSeparation: 3
+        node_moveX: 75
         port_length: 10
+        port_selfRadius: 18.75
         port_angle: 1.0471975511965976
         port_distance: 16.47
         port_nameBorder: 3
@@ -70,13 +72,13 @@ presets =
         port_borderColor_h: 0
         port_borderColor_s: 0.00001
         port_borderColor_l: 0.93
-        port_borderColor_a: 0
+        port_borderColor_a: 1
         connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
         colorActiveGreen_b: 0
         colorActiveGreen_a: 0.8
-        hoverAspect: 0.9
+        hoverAspect: 0.5
         sliderFront: 0.2
         sliderBg: 0.1
         text_color_r: 0.1

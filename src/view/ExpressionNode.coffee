@@ -120,11 +120,11 @@ export class ExpressionNode extends ContainerComponent
             for own inPortKey, inPortModel of @model.inPorts
                 inPort = @def('inPorts').def(inPortKey)
                 if inPortModel.controls?
-                    startPoint = [@style.node_widgetOffset_h/2 - @style.node_radius, inPort.model.position[1]]
+                    startPoint = [@style.node_widgetOffset_h/2 - @style.node_radius - @style.node_moveX, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
         @view('visualization').position.xy =
             if @model.expanded
-                [ - shape.width(@style)/2
+                [ - shape.width(@style)/2 - @style.node_moveX
                 , bodyTop(@style) - @bodyHeight ]
             else
                 [ - shape.width(@style)/2, - shape.height(@style)/2]
@@ -150,7 +150,7 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [-portBase.distanceFromCenter(@style)
+                values.position = [-portBase.distanceFromCenter(@style) - @style.node_moveX
                                   , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else

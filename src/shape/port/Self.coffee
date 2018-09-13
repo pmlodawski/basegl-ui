@@ -1,13 +1,13 @@
 import * as basegl         from 'basegl'
 import * as Color          from 'basegl/display/Color'
-import {circle}            from 'basegl/display/Shape'
+import {circle, rect}            from 'basegl/display/Shape'
 import {BasicComponent, memoizedSymbol}    from 'abstract/BasicComponent'
 import * as color          from 'shape/Color'
 import {length, PortShape} from 'shape/port/Base'
 import * as layers         from 'view/layers'
 
 
-radius = (style) -> style.port_length
+radius = (style) -> style.port_selfRadius
 export width = (style) -> 2 * radius(style)
 export height = (style) -> 2 * radius(style)
 
@@ -15,6 +15,13 @@ export selfPortExpr = (style) -> basegl.expr ->
     c = circle radius(style)
        .move radius(style), radius(style)
        .fill color.varHover style
+    stripe2 = rect radius(style)*0.92, radius(style)*0.25, 1
+        .move radius(style), radius(style)
+        .fill Color.rgb [1, 1, 1, 1]
+    stripe1 = stripe2.moveY radius(style)*0.33
+    stripe3 = stripe2.moveY -radius(style)*0.33
+        .fill Color.rgb [172/256, 195/256, 253/256]
+    c + stripe1 + stripe2 + stripe3
 
 selfPortSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol selfPortExpr style

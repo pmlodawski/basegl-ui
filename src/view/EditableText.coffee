@@ -41,7 +41,10 @@ export class EditableText extends ContainerComponent
         @autoUpdateDef 'text', TextContainer, unless @model.edited
             text:  @model.text
             align: 'center'
-
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
     hideSearcher: =>
         @set edited: false
         @root.unregisterSearcher()

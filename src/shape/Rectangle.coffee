@@ -7,7 +7,7 @@ import * as layers      from 'view/layers'
 
 
 export rectangleExpr = (style) -> basegl.expr ->
-    rect 'bbox.x', 'bbox.y'
+    rect ('bbox.x' -1), ('bbox.y'-1)
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.varHSLAlpha style
 
