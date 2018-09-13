@@ -9,7 +9,6 @@ import {Composable, fieldMixin} from "basegl/object/Property"
 import * as _         from 'underscore'
 
 import {BasicComponent}         from 'abstract/BasicComponent'
-import {Component}              from 'abstract/Component'
 import {ContainerComponent}     from 'abstract/ContainerComponent'
 import * as shape               from 'shape/node/Base'
 import {NodeShape}              from 'shape/node/Node'

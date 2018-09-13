@@ -1,5 +1,4 @@
 import * as basegl    from 'basegl'
-import {Component}    from 'abstract/Component'
 import {circle, glslShape, rect} from 'basegl/display/Shape'
 
 #### basic shapes ####

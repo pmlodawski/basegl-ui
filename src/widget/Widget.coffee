@@ -1,7 +1,6 @@
 import * as basegl    from 'basegl'
 
 import {ContainerComponent}  from 'abstract/ContainerComponent'
-import {Component}  from 'abstract/Component'
 
 
 export class Widget extends ContainerComponent
