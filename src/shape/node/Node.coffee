@@ -1,30 +1,29 @@
 import * as basegl    from 'basegl'
 import * as Animation from 'basegl/animation/Animation'
-import * as Easing    from 'basegl/animation/Easing'
-import * as Color     from 'basegl/display/Color'
-import {world}        from 'basegl/display/World'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path
-    , plane, triangle} from 'basegl/display/Shape'
-import {vector}        from 'basegl/math/Vector'
-import {nodeBg, selectionColor} from 'shape/Color'
-import {BasicComponent, memoizedSymbol}  from 'abstract/BasicComponent'
-import * as layers       from 'view/layers'
-import * as baseNode         from 'shape/node/Base'
+import * as Easing                      from 'basegl/animation/Easing'
+import * as Color                       from 'basegl/display/Color'
+import {nodeBg, selectionColor}         from 'shape/Color'
+import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
+import * as layers                      from 'view/layers'
+import * as baseNode                    from 'shape/node/Base'
 
-#### shapes with frames and selections ####
 
-compactNodeExpr = (style) -> basegl.expr ->
-    base = baseNode.compactNodeExpr style
+nodeExpr = (baseExpr, style) -> basegl.expr ->
+    base = baseExpr style
     node = base.fill nodeBg style
     shadow = base
         .blur style.node_shadowRadius, style.node_shadowPower
         .fill Color.rgb [0, 0, 0, style.node_shadowOpacity]
-    eye    = 'scaledEye.z'
-    sc     = selectionColor style
-    sc.a   = 'selected'
-    border = base.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
+    eye  = 'scaledEye.z'
+    sc   = selectionColor style
+    sc.a = 'selected'
+    selection = base.grow(Math.pow(Math.clamp(eye*style.node_selection_size, 0.0, 400.0),0.7)).grow(-1)
         .fill sc
-    shadow + border + node
+    shadow + selection + node
+
+compactNodeExpr = (style) -> nodeExpr baseNode.compactNodeExpr, style
+
+expandedNodeExpr = (style) -> nodeExpr baseNode.expandedNodeExpr, style
 
 compactNodeSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol compactNodeExpr style
@@ -32,21 +31,6 @@ compactNodeSymbol = memoizedSymbol (style) ->
     symbol.variables.selected = 0
     symbol.bbox.xy = [baseNode.width(style), baseNode.height(style)]
     symbol
-
-expandedNodeExpr = (style) -> basegl.expr ->
-    base   = baseNode.expandedNodeExpr style
-
-    node   = base.fill nodeBg style
-    shadow = base
-        .blur style.node_shadowRadius, style.node_shadowPower
-        .fill Color.rgb [0, 0, 0, style.node_shadowOpacity]
-
-    eye    = 'scaledEye.z'
-    sc     = selectionColor style
-    sc.a   = 'selected'
-    border = base.grow(Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.7)).grow(-1)
-        .fill sc
-    shadow + border + node
 
 expandedNodeSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol expandedNodeExpr style

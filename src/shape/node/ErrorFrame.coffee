@@ -62,6 +62,6 @@ export class NodeErrorShape extends BasicComponent
         if @model.expanded
             element.variables.bodyWidth  = @model.body[0]
             element.variables.bodyHeight = @model.body[1]
-            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - baseNode.slope]
+            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - @style.node_headerOffset]
         else
             element.position.xy = [-baseNode.width(@style)/2, -baseNode.height(@style)/2]

@@ -6,7 +6,6 @@ import {circle, glslShape, rect} from 'basegl/display/Shape'
 
 export width = (style) -> style.node_radius * 2 + style.node_selectionBorderMaxSize * 2
 export height = (style) -> style.node_radius * 2 + style.node_selectionBorderMaxSize * 2
-export slope = 20
 
 export compactNodeExpr = (style) -> basegl.expr ->
     r1     = style.node_radius
@@ -17,8 +16,8 @@ export expandedNodeExpr = (style) -> basegl.expr ->
     bodyWidth    = 'bodyWidth'
     bodyHeight   = 'bodyHeight'
     r1    = style.node_radius
-    r2    = style.node_radius + style.node_headerOffset + slope
-    dy    = slope
+    r2    = style.node_radius + style.node_headerOffset + style.node_slope
+    dy    = style.node_slope
     dx    = Math.sqrt ((r1+r2)*(r1+r2) - dy*dy)
     angle = Math.atan(dy/dx)
 

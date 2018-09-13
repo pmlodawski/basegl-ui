@@ -46,7 +46,9 @@ presets =
         bgColor_l: 0.93
         node_radius: 18.75
         node_headerOffset: 20
+        node_slope: 20
         node_bodyWidth: 200
+        node_selection_size: 20
         node_selection_h: 50
         node_selection_s: 1
         node_selection_l: 0.6
@@ -62,7 +64,7 @@ presets =
         node_widgetSeparation: 3
         port_length: 10
         port_angle: 1.0471975511965976
-        port_distance: -3.47
+        port_distance: 16.47
         connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1
