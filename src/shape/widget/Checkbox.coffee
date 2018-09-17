@@ -3,8 +3,7 @@ import {circle, rect}   from 'basegl/display/Shape'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
-import * as Animation from 'basegl/animation/Animation'
-import * as Easing    from 'basegl/animation/Easing'
+import {applyAnimation} from 'shape/Animation'
 
 
 offset = 4
@@ -28,20 +27,6 @@ checkboxSymbol = memoizedSymbol (style) ->
     symbol.variables.checked = 0
     symbol
 
-applyCheckAnimation = (symbol, rev=false) ->
-    if symbol.checkAnimation?
-    then symbol.checkAnimation.reverse()
-    else
-        anim = Animation.create
-            easing      : Easing.quadInOut
-            duration    : 0.1
-            onUpdate    : (v) -> symbol.variables.checked = v
-            onCompleted :     -> delete symbol.checkAnimation
-        if rev then anim.inverse()
-        anim.start()
-        symbol.checkAnimation = anim
-        anim
-
 export class CheckboxShape extends BasicComponent
     initModel: =>
         checked     : false
@@ -52,6 +37,6 @@ export class CheckboxShape extends BasicComponent
 
     adjust: (view, element) =>
         if @changed.checked
-            applyCheckAnimation @getElement(), not @model.checked
+            applyAnimation @style, @getElement(), 'checked', not @model.checked
         if @changed.width or @changed.height
             @getElement().bbox.xy = [@model.width, @model.height]

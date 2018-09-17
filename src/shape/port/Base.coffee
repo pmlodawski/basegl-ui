@@ -1,4 +1,6 @@
-import {BasicComponent}             from 'abstract/BasicComponent'
+import {BasicComponent} from 'abstract/BasicComponent'
+import {applyAnimation} from 'shape/Animation'
+
 
 export width     = (style) -> style.port_length * Math.tan style.port_angle
 export distanceFromCenter = (style) -> style.node_radius + style.port_distance
@@ -16,5 +18,7 @@ export class PortShape extends BasicComponent
             element.variables.color_b = @model.color[2]
 
     registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @getElement().variables.hovered = 1
-        view.addEventListener 'mouseout',  => @getElement().variables.hovered = 0
+        animateHover = (value) =>
+            applyAnimation @style, @getElement(), 'hovered', not value
+        view.addEventListener 'mouseover', => animateHover 1
+        view.addEventListener 'mouseout',  => animateHover 0

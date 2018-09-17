@@ -38,6 +38,7 @@ class StyleProvider
 blacklist = new Set ['enabled', 'presetName']
 presets =
     light:
+        transform_time: 0.2
         baseColor_r: 1
         baseColor_g: 1
         baseColor_b: 1
