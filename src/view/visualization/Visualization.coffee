@@ -3,10 +3,11 @@ import * as path         from 'path'
 import * as style                from 'style'
 import {Widget}                  from 'widget/Widget'
 import {HtmlShape}               from 'shape/Html'
-import {VisualizationIFrame}     from 'view/visualization/IFrame'
-import {VisualizerMenu}          from 'view/visualization/Menu'
+import {ModuleShape}             from 'shape/node/Module'
 import * as menuShape            from 'shape/visualization/Button'
 import {VisualizationCoverShape} from 'shape/visualization/Cover'
+import {VisualizationIFrame}     from 'view/visualization/IFrame'
+import {VisualizerMenu}          from 'view/visualization/Menu'
 
 iframeYOffset = 5
 
@@ -21,6 +22,9 @@ export class Visualization extends Widget
         @addDef 'menu', VisualizerMenu
         @addDef 'cover', VisualizationCoverShape
         @addDef 'iframe', VisualizationIFrame
+        @addDef 'background', ModuleShape,
+            height: @style.visualization_height
+            width: @style.visualization_width
 
     update: =>
         if @changed.currentVisualizer or @changed.iframeId or @changed.mode
@@ -34,8 +38,7 @@ export class Visualization extends Widget
 
     adjust: =>
         if @changed.once
-            @view('iframe').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
-            @view('cover').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
+            @view('menu').position.xy = [ @style.visualization_menuX, @style.visualization_menuY]
 
     connectSources: =>
         updateMenu = => @updateDef 'menu',

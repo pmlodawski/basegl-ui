@@ -5,8 +5,6 @@ import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
 
-valueLeftOffset   = 50
-togglerLeftOffset = 30
 
 export class VisualizationContainer extends ContainerComponent
     initModel: =>
@@ -24,19 +22,16 @@ export class VisualizationContainer extends ContainerComponent
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
         if @changed.visualizations or @changed.visualizers
-            visualizations = []
-            if @model.visualizations?
-                for k, visualization of @model.visualizations
-                    visualization.visualizers = @model.visualizers
+            @autoUpdateDef 'visualizations', VerticalLayout, if @model.visualizations?
+                children: for own k, visualization of @model.visualizations
                     visualization.cons = Visualization
-                    visualizations.push visualization
-            @autoUpdateDef 'visualizations', VerticalLayout, if visualizations.length > 0
-                children: visualizations
+                    visualization.visualizers = @model.visualizers
+                    visualization
 
     adjust: =>
-        @view('value')?.position.x = valueLeftOffset
-        @view('valueToggler').position.x = togglerLeftOffset
-
+        @view('value')?.position.x = @style.node_bodyWidth/2
+        @view('valueToggler').position.xy =
+            [ @style.visualization_togglerX, @style.visualization_togglerY ]
     registerEvents: =>
         @view('valueToggler').addEventListener 'mousedown', (e) =>
             e.stopPropagation()

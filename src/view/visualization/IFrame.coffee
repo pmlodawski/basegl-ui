@@ -4,8 +4,6 @@ import * as style           from 'style'
 import {HtmlShape}          from 'shape/Html'
 import {ContainerComponent} from 'abstract/ContainerComponent'
 
-width = 300
-height = 300
 
 export class VisualizationIFrame extends ContainerComponent
     initModel: =>
@@ -23,10 +21,10 @@ export class VisualizationIFrame extends ContainerComponent
     __isModePreview: => @model.mode == 'Preview'
 
     __width: =>
-        if @__isModePreview() then @root._scene.width else width
+        if @__isModePreview() then @root._scene.width else @style.visualization_width
 
     __height: =>
-        if @__isModePreview() then @root._scene.height else height
+        if @__isModePreview() then @root._scene.height else @style.visualization_height
 
     update: =>
         if @changed.mode

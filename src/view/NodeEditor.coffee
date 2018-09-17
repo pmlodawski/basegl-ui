@@ -39,7 +39,7 @@ export class NodeEditor extends EventEmitter
             @addDisposableListener scene, 'mousedown', @pushEvent
             @addDisposableListener scene, 'mouseup',   @pushEvent
         @styles = new Styles null, @
-        @styles.set enabled: true
+        setTimeout => @styles.set enabled: true
 
     getMousePosition: => @withScene (scene) =>
         campos = scene.camera.position

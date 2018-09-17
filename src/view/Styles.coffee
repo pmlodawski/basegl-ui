@@ -48,6 +48,7 @@ presets =
         node_headerOffset: 10.23
         node_slope: 20
         node_bodyWidth: 200
+        node_moduleOffset: 10
         node_selection_size: 12.27
         node_selection_h: 50
         node_selection_s: 1
@@ -85,6 +86,12 @@ presets =
         text_color_g: 0.1
         text_color_b: 0.1
         text_size: 12
+        visualization_height: 200
+        visualization_width: 200
+        visualization_menuX: -15
+        visualization_menuY: -20
+        visualization_togglerX: -35
+        visualization_togglerY: -20
     dark:
         baseColor_r: 1
         baseColor_g: 1

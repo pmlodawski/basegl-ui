@@ -112,10 +112,11 @@ export class ExpressionNode extends ContainerComponent
             @view('modules').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
         @view('visualization').position.xy =
             if @model.expanded
-                [ - shape.width(@style)/2 - @style.node_moveX
-                , bodyTop(@style) - @bodyHeight ]
+                [ -@style.node_bodyWidth/2
+                , -@style.node_radius - @style.node_headerOffset - @style.node_moduleOffset - @bodyHeight ]
             else
-                [ - shape.width(@style)/2, - shape.height(@style)/2]
+                [ -@style.node_bodyWidth/2
+                , -@style.node_radius - @style.node_headerOffset - @style.node_moduleOffset]
         @view('name').position.y = nodeNameYOffset @style
         @view('expression').position.y = nodeExprYOffset @style
         view.position.xy = @model.position.slice()
