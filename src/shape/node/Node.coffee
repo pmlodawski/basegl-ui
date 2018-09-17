@@ -1,6 +1,6 @@
 import * as basegl                      from 'basegl'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
-import {applyAnimation}                 from 'shape/Animation'
+import {animateVariable}                 from 'shape/Animation'
 import {nodeBg, selectionColor}         from 'shape/Color'
 import * as baseNode                    from 'shape/node/Base'
 import * as layers                      from 'view/layers'
@@ -29,4 +29,4 @@ export class NodeShape extends BasicComponent
     adjust: (element) =>
         element.position.xy = [-baseNode.width(@style)/2, -baseNode.height(@style)/2]
         if @changed.selected
-            applyAnimation @style, element, 'selected', not @model.selected
+            animateVariable @style, element, 'selected', not @model.selected

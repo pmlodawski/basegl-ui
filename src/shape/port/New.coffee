@@ -1,5 +1,5 @@
 import {InPortShape}    from 'shape/port/In'
-import {applyAnimation} from 'shape/Animation'
+import {animateVariable} from 'shape/Animation'
 
 
 export class NewPortShape extends InPortShape
@@ -17,7 +17,7 @@ export class NewPortShape extends InPortShape
 
     registerEvents: (view) =>
         animateHover = (value) =>
-            applyAnimation @style, @getElement(), 'color_a', not value
+            animateVariable @style, @getElement(), 'color_a', not value
 
         view.addEventListener 'mouseover', => animateHover 1
         view.addEventListener 'mouseout',  => animateHover @__alphaOnUnhover()
