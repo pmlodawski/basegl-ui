@@ -1,14 +1,6 @@
-import * as basegl    from 'basegl'
-import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
-import * as Color     from 'basegl/display/Color'
-import {world}        from 'basegl/display/World'
-import {group}        from 'basegl/display/Symbol'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
-import {Composable, fieldMixin} from "basegl/object/Property"
 import * as _         from 'underscore'
 
-import {BasicComponent}         from 'abstract/BasicComponent'
 import {ContainerComponent}     from 'abstract/ContainerComponent'
 import * as shape               from 'shape/node/Base'
 import {NodeShape}              from 'shape/node/Node'
@@ -22,7 +14,9 @@ import {SetView}                from 'view/SetView'
 import {TextContainer}          from 'view/Text'
 import {VisualizationContainer} from 'view/visualization/Container'
 import {HorizontalLayout}       from 'widget/HorizontalLayout'
+import {VerticalLayout}         from 'widget/VerticalLayout'
 import * as portBase            from 'shape/port/Base'
+import {Parameters}            from 'view/Parameters'
 
 selectedNode = null
 
@@ -65,6 +59,8 @@ export class ExpressionNode extends ContainerComponent
                 text:    @model.expression
                 entries: []
                 kind:    EditableText.EXPRESSION
+        @addDef 'modules', VerticalLayout,
+            width: @style.node_bodyWidth
         @addDef 'visualization', VisualizationContainer
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
@@ -75,18 +71,14 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'expression', text: @model.expression
         @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
-            @updateDef 'inPorts', elems: @model.inPorts
             @updateInPorts()
-        if @model.expanded
-            setWidget = (k) =>
-                @autoUpdateDef ('widget' + k), HorizontalLayout,
-                    key: k
-                    children: inPort.controls
-                    width: @style.node_bodyWidth - @style.node_widgetOffset_h
-                    height: @style.node_widgetHeight
-                    offset: @style.node_widgetSeparation
-            for own k, inPort of @model.inPorts
-                setWidget k, inPort
+        if @changed.inPorts or @changed.expanded
+            modules = []
+            if @model.expanded
+                modules.push
+                    cons: Parameters
+                    inPorts: @model.inPorts
+            @updateDef 'modules', children: modules
         if @changed.outPorts
             @updateDef 'outPorts', elems: @model.outPorts
             @updateOutPorts()
@@ -116,12 +108,8 @@ export class ExpressionNode extends ContainerComponent
         @def(searcherModel.targetField)?.setSearcher searcherModel
 
     adjust: (view) =>
-        if @model.expanded
-            for own inPortKey, inPortModel of @model.inPorts
-                inPort = @def('inPorts').def(inPortKey)
-                if inPortModel.controls?
-                    startPoint = [@style.node_widgetOffset_h/2 - @style.node_radius - @style.node_moveX, inPort.model.position[1]]
-                    @view('widget' + inPortKey).position.xy = startPoint
+        if @changed.once
+            @view('modules').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
         @view('visualization').position.xy =
             if @model.expanded
                 [ - shape.width(@style)/2 - @style.node_moveX
@@ -133,6 +121,7 @@ export class ExpressionNode extends ContainerComponent
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
+        @updateDef 'inPorts', elems: @model.inPorts
         inportVDistance = @style.node_widgetOffset_v + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0

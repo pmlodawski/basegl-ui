@@ -14,23 +14,6 @@ stripeWidth = 30.0
 rotation = Math.PI * 3 / 4
 start = errorFrame/3
 
-expandedNodeErrorExpr = (style) -> basegl.expr ->
-    frame = baseNode.expandedNodeExpr(style).grow 20
-           .fill Color.rgb [1,0,0]
-    stripe = rect 1000, stripeWidth
-            .repeat vector(0, 1), stripeWidth
-            .move 0, start
-            .rotate rotation
-    frame * stripe
-
-expandedNodeErrorSymbol = memoizedSymbol (style) ->
-    symbol = basegl.symbol expandedNodeErrorExpr style
-    symbol.defaultZIndex = layers.expandedNodeError
-    symbol.variables.selected = 0
-    symbol.variables.bodyWidth = 200
-    symbol.variables.bodyHeight = 300
-    symbol
-
 compactNodeErrorExpr = (style) -> basegl.expr ->
     frame = baseNode.compactNodeExpr(style).grow errorFrame
            .fill Color.rgb [1,0,0]
@@ -49,14 +32,9 @@ compactNodeErrorSymbol = memoizedSymbol (style) ->
 
 export class NodeErrorShape extends BasicComponent
     initModel: =>
-        expanded: false
         body:     [100, 100]
-    redefineRequired: => @changed.expanded
     define: =>
-        if @model.expanded
-            expandedNodeErrorSymbol @style
-        else
-            compactNodeErrorSymbol @style
+        expandedNodeErrorSymbol @style
 
     adjust: (element) =>
         if @model.expanded

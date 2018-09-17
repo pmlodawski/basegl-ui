@@ -17,10 +17,12 @@ export class VerticalLayout extends Layout
             cons = lookupWidget widget
             if cons?
                 @autoUpdateDef k, cons, widget
+        @__updateChildren()
 
+    __updateChildren: =>
         return unless @model.children.length > 0
         children = []
-        @__minHeight = 0
+        @__minHeight = @model.offset * (@model.children.length - 1)
         @__maxHeight = 0
         @__minWidth = 0
         @__maxWidth = Infinity
@@ -37,7 +39,7 @@ export class VerticalLayout extends Layout
                 left:  ! (i == 0)
                 right: ! (i == @model.children.length - 1)
         if @model.height?
-            free = @model.height - @__minHeight - @model.offset * (@model.children.length - 1)
+            free = @model.height - @__minHeight
             children.sort (a, b) -> a.widget.maxHeight() - b.widget.maxHeight()
             for i in [0..children.length - 1]
                 w = children[i]

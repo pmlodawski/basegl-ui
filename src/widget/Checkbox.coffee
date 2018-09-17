@@ -12,10 +12,10 @@ export class Checkbox extends Widget
     prepare: =>
         @addDef 'checkbox', CheckboxShape, null
 
-    minHeight: => 20
-    minWidth: => 20
-    maxHeight: => 20
-    maxWidth: => 50
+    # minHeight: => 20
+    # minWidth: => 20
+    # maxHeight: => 20
+    # maxWidth: => 50
     update: =>
         @updateDef 'checkbox',
             checked:     @model.value
