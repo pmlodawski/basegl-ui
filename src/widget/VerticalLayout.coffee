@@ -1,24 +1,8 @@
-import {Layout}       from 'abstract/Layout'
+import {FlatLayout}       from 'abstract/Layout'
 import {lookupWidget} from 'widget/WidgetDirectory'
 
 
-export class VerticalLayout extends Layout
-    initModel: =>
-        s = super()
-        s.key = null
-        s.children = []
-        s.height = null
-        s.width = null
-        s.offset = 3
-        s
-
-    update: =>
-        for own k, widget of @model.children
-            cons = lookupWidget widget
-            if cons?
-                @autoUpdateDef k, cons, widget
-        @__updateChildren()
-
+export class VerticalLayout extends FlatLayout
     __updateChildren: =>
         return unless @model.children.length > 0
         children = []

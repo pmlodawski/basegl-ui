@@ -1,23 +1,8 @@
-import {Layout}       from 'abstract/Layout'
-import {lookupWidget} from 'widget/WidgetDirectory'
+import {FlatLayout} from 'abstract/Layout'
 
 
-export class HorizontalLayout extends Layout
-    initModel: =>
-        s = super()
-        s.key = null
-        s.children = []
-        s.width = null
-        s.height = null
-        s.offset = 3
-        s
-
-    update: =>
-        for own k, widget of @model.children
-            cons = lookupWidget widget
-            if cons?
-                @autoUpdateDef k, cons, widget
-
+export class HorizontalLayout extends FlatLayout
+    __updateChildren: =>
         return unless @model.children.length > 0
         children = []
         @__minWidth = 0

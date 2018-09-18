@@ -1,10 +1,12 @@
-import {ContainerComponent} from 'abstract/ContainerComponent'
+import {Layout} from 'abstract/Layout'
 
 
-export class SetView extends ContainerComponent
+export class SetView extends Layout
     initModel: =>
-        elems: {}
-        cons: null
+        model = super()
+        model.elems = {}
+        model.cons = null
+        model
 
     update: =>
         if @changed.cons
