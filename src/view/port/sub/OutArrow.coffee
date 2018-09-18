@@ -15,12 +15,13 @@ export class OutArrow extends Subport
         @addDef 'port', OutPortShape, angle: @model.angle
 
     update: =>
-        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer,
             text: @model.typeName
             align: 'left'
+            color: [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
             frameColor:
                 [ @style.port_borderColor_h, @style.port_borderColor_s
-                , @style.port_borderColor_l, @style.port_borderColor_a
+                , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
                 ]
     adjust: (view) =>
         if @changed.radius

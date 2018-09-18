@@ -20,6 +20,8 @@ export class EditableText extends ContainerComponent
         key: null
         input: null
         text: ''
+        color: null
+        frameColor: null
         inputSelection: null
         selected: 0
         entries: []
@@ -41,10 +43,8 @@ export class EditableText extends ContainerComponent
         @autoUpdateDef 'text', TextContainer, unless @model.edited
             text:  @model.text
             align: 'center'
-            frameColor:
-                [ @style.port_borderColor_h, @style.port_borderColor_s
-                , @style.port_borderColor_l, @style.port_borderColor_a
-                ]
+            color: @model.color
+            frameColor: @model.frameColor
     hideSearcher: =>
         @set edited: false
         @root.unregisterSearcher()

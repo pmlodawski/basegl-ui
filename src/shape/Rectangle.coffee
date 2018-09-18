@@ -35,9 +35,14 @@ export class RectangleShape extends BasicComponent
         if @changed.height
             element.bbox.y = @model.height
         if @changed.color
-            element.variables.color_a = Number @model.color?
             if @model.color?
                 element.variables.color_h = @model.color[0]
                 element.variables.color_s = @model.color[1]
                 element.variables.color_l = @model.color[2]
-                element.variables.color_a = @model.color[3] or 1
+            element.variables.color_a =
+                unless @model.color?
+                    0
+                else if @model.color[3]?
+                    @model.color[3]
+                else
+                    1

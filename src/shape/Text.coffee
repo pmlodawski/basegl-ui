@@ -12,12 +12,12 @@ export class TextShape extends BasicComponent
         size: null
 
     redefineRequired: =>
-        @changed.text or @changed.color or @changed.size
+        @changed.text or @changed.size or @changed.color
 
     define: =>
         @__createText
             str: @model.text
-            color: Color.rgb @model.color or [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            color: Color.rgb @model.color if @model.color?
             size: @model.size
 
     adjust: (element) =>

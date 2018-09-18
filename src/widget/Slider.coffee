@@ -20,6 +20,7 @@ class Slider extends Widget
         @__minHeight = 20
         @addDef 'value', TextShape,
             fontFamily: 'DejaVuSansMono'
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             size: 14
             align: 'center'
             text: '19'

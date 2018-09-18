@@ -183,6 +183,7 @@ export class Styles extends ContainerComponent
                         [
                             cons: TextContainer
                             text: key
+                            color: [@model.text_color_r, @model.text_color_g, @model.text_color_b]
                         ,
                             cons: ContinousSlider
                             value: val

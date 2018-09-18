@@ -5,9 +5,10 @@
 +   usunąć białe bordery naokoło napisów
 +   wszędzie EasyInEasyOut, zaznaczenie EasyInEasyOut
 +   wizualizacja w takim samym boxie jak expanded node, tylko poniżej
-?   jeżeli są trzy boxy to nie ma zaokrąglonych nodów
-?   nazwa nodu pokazuje się na hover
++   jeżeli są trzy boxy to nie ma zaokrąglonych nodów
++   nazwa nodu pokazuje się na hover
 ikonka + nad jakimś innym nodem
 ładowanie ikonek dla nodów
 poprawić baseline https://github.com/nodebox/opentype.js  https://opentype.js.org/
--   animacja expanodwania nodu (wysuwanie i powiększanie go spod portu)
+animacja expanodwania nodu (wysuwanie i powiększanie go spod portu)
+animacja pojawiania się tekstu

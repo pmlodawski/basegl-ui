@@ -24,6 +24,7 @@ export class NodeBody extends ContainerComponent
         if @changed.value
             @autoUpdateDef 'value', TextContainer, if @__shortValue()?
                 text: @__shortValue()
+                color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
         if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.expanded

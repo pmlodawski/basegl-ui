@@ -16,9 +16,10 @@ export class Self extends Subport
         @addDef 'port', SelfPortShape, null
 
     update: =>
-        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer,
             text: @model.typeName
             align: 'left'
+            color: [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
 
     adjust: (view) =>
         if @view('typeName')?

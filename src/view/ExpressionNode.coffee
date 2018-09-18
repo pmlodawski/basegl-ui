@@ -11,7 +11,6 @@ import {InPort}             from 'view/port/In'
 import {NewPort}            from 'view/port/New'
 import {OutPort}            from 'view/port/Out'
 import {SetView}            from 'view/SetView'
-import {TextContainer}      from 'view/Text'
 import {NodeBody}           from 'view/NodeBody'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 import {VerticalLayout}     from 'widget/VerticalLayout'
@@ -51,21 +50,32 @@ export class ExpressionNode extends ContainerComponent
     prepare: =>
         @addDef 'node', NodeShape, expanded: @model.expanded
         @addDef 'name', EditableText,
-                text:     @model.name
-                entries:  []
-                kind:     EditableText.NAME
+            entries:  []
+            kind:     EditableText.NAME
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
         @addDef 'expression', EditableText,
-                text:    @model.expression
-                entries: []
-                kind:    EditableText.EXPRESSION
+            entries: []
+            kind:    EditableText.EXPRESSION
         @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
         @addDef 'newPort', NewPort
 
     update: =>
-        @updateDef 'name', text: @model.name
-        @updateDef 'expression', text: @model.expression
+        @updateDef 'name',
+            text:     @model.name
+        @updateDef 'expression',
+            text:    @model.expression
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
+                ]
+
         @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             @updateInPorts()

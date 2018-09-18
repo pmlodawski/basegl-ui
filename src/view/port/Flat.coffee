@@ -19,6 +19,7 @@ export class FlatPort extends Port
         @addDef 'name', TextContainer,
             align: 'left'
             text: @model.name
+            color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
 
     update: =>
         if @changed.color
