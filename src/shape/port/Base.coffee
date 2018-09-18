@@ -1,5 +1,4 @@
 import {BasicComponent} from 'abstract/BasicComponent'
-import {animateVariable} from 'shape/Animation'
 
 
 export width     = (style) -> style.port_length * Math.tan style.port_angle
@@ -19,6 +18,6 @@ export class PortShape extends BasicComponent
 
     registerEvents: (view) =>
         animateHover = (value) =>
-            animateVariable @style, @getElement(), 'hovered', not value
+            @animateVariable 'hovered', not value
         view.addEventListener 'mouseover', => animateHover 1
         view.addEventListener 'mouseout',  => animateHover 0

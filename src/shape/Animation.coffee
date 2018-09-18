@@ -26,7 +26,7 @@ export animateComponent = (style, component, name, rev=false) ->
     #     anim
 
 export animate = (style, target, name, setter, rev=false) ->
-    animationName = "{name}Animation"
+    animationName = "#{name}Animation"
     if target[animationName]?
     then target[animationName].reverse()
     else

@@ -1,16 +1,20 @@
 import * as basegl from 'basegl'
 import {rect}      from 'basegl/display/Shape'
-import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
+
 import * as layers                      from 'view/layers'
-import * as baseNode                    from 'shape/node/Base'
 import {nodeBg}                         from 'shape/Color'
+import * as baseNode                    from 'shape/node/Base'
+import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
+
 
 backgroundExpr = (style) -> basegl.expr ->
     bodyHeight   = 'bbox.y'
     bodyWidth    = 'bbox.x'
     windowHeight = 'windowHeight'
     windowWidth  = 'windowWidth'
-    base = rect bodyWidth, bodyHeight, style.node_radius
+    radiusTop = style.node_radius * 'roundTop'
+    radiusBottom = style.node_radius * 'roundBottom'
+    base = rect bodyWidth, bodyHeight, radiusTop, radiusTop, radiusBottom, radiusBottom
     windowRadius = (bodyHeight-windowHeight + bodyWidth-windowWidth)/2
     transparentWindow = rect windowWidth, windowHeight, windowRadius
     background = (base - transparentWindow)
@@ -25,8 +29,9 @@ backgroundSymbol = memoizedSymbol (style) ->
     symbol.defaultZIndex = layers.expandedNode
     symbol.variables.windowHeight = 0
     symbol.variables.windowWidth = 0
+    symbol.variables.roundTop = 0
+    symbol.variables.roundBottom = 0
     symbol
-
 
 export class BackgroundShape extends BasicComponent
     initModel: =>
@@ -34,6 +39,8 @@ export class BackgroundShape extends BasicComponent
         height: 100
         offsetH: null
         offsetV: null
+        roundTop: null
+        roundBottom: null
     define: => backgroundSymbol @style
     adjust: (element) =>
         if @changed.width
@@ -47,3 +54,7 @@ export class BackgroundShape extends BasicComponent
         if @changed.offsetH
             windowWidth = @model.width - 2 * @model.offsetH if @model.offsetH?
             element.variables.windowWidth = windowWidth or 0
+        if @changed.roundBottom
+            @animateVariable 'roundBottom', Number not @model.roundBottom
+        if @changed.roundTop
+            @animateVariable 'roundTop', Number not @model.roundTop

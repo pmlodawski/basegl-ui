@@ -36,8 +36,8 @@ export class VerticalLayout extends Layout
             @__minWidth = Math.max @def(i).minWidth(), @__minWidth
             @__maxWidth = Math.min @def(i).maxWidth(), @__maxWidth
             @updateDef i, siblings:
-                left:  ! (i == 0)
-                right: ! (i == @model.children.length - 1)
+                top:  ! (i == 0)
+                bottom: ! (i == @model.children.length - 1)
         if @model.height?
             free = @model.height - @__minHeight
             children.sort (a, b) -> a.widget.maxHeight() - b.widget.maxHeight()

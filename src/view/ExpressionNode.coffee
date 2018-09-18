@@ -1,22 +1,21 @@
 import * as Easing    from 'basegl/animation/Easing'
 import * as _         from 'underscore'
 
-import {ContainerComponent}     from 'abstract/ContainerComponent'
-import * as shape               from 'shape/node/Base'
-import {NodeShape}              from 'shape/node/Node'
-import {NodeErrorShape}         from 'shape/node/ErrorFrame'
-import * as togglerShape        from 'shape/visualization/ValueToggler'
-import {EditableText}           from 'view/EditableText'
-import {InPort}                 from 'view/port/In'
-import {NewPort}                from 'view/port/New'
-import {OutPort}                from 'view/port/Out'
-import {SetView}                from 'view/SetView'
-import {TextContainer}          from 'view/Text'
-import {VisualizationContainer} from 'view/visualization/Container'
-import {HorizontalLayout}       from 'widget/HorizontalLayout'
-import {VerticalLayout}         from 'widget/VerticalLayout'
-import * as portBase            from 'shape/port/Base'
-import {Parameters}            from 'view/Parameters'
+import {ContainerComponent} from 'abstract/ContainerComponent'
+import * as shape           from 'shape/node/Base'
+import {NodeShape}          from 'shape/node/Node'
+import {NodeErrorShape}     from 'shape/node/ErrorFrame'
+import * as togglerShape    from 'shape/visualization/ValueToggler'
+import {EditableText}       from 'view/EditableText'
+import {InPort}             from 'view/port/In'
+import {NewPort}            from 'view/port/New'
+import {OutPort}            from 'view/port/Out'
+import {SetView}            from 'view/SetView'
+import {TextContainer}      from 'view/Text'
+import {NodeBody}           from 'view/NodeBody'
+import {HorizontalLayout}   from 'widget/HorizontalLayout'
+import {VerticalLayout}     from 'widget/VerticalLayout'
+import * as portBase        from 'shape/port/Base'
 
 selectedNode = null
 
@@ -59,9 +58,7 @@ export class ExpressionNode extends ContainerComponent
                 text:    @model.expression
                 entries: []
                 kind:    EditableText.EXPRESSION
-        @addDef 'modules', VerticalLayout,
-            width: @style.node_bodyWidth
-        @addDef 'visualization', VisualizationContainer
+        @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
         @addDef 'newPort', NewPort
@@ -72,13 +69,6 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             @updateInPorts()
-        if @changed.inPorts or @changed.expanded
-            modules = []
-            if @model.expanded
-                modules.push
-                    cons: Parameters
-                    inPorts: @model.inPorts
-            @updateDef 'modules', children: modules
         if @changed.outPorts
             @updateDef 'outPorts', elems: @model.outPorts
             @updateOutPorts()
@@ -93,7 +83,9 @@ export class ExpressionNode extends ContainerComponent
                 expanded: @model.expanded
                 body: [@style.node_bodyWidth, @bodyHeight]
 
-        @updateDef 'visualization',
+        @updateDef 'body',
+            inPorts: @model.inPorts
+            expanded: @model.expanded
             value: @model.value
             visualizers: @model.visualizations?.visualizers
             visualizations: @model.visualizations?.visualizations
@@ -109,16 +101,9 @@ export class ExpressionNode extends ContainerComponent
 
     adjust: (view) =>
         if @changed.once
-            @view('modules').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
-        @view('visualization').position.xy =
-            if @model.expanded
-                [ -@style.node_bodyWidth/2
-                , -@style.node_radius - @style.node_headerOffset - @style.node_moduleOffset - @bodyHeight ]
-            else
-                [ -@style.node_bodyWidth/2
-                , -@style.node_radius - @style.node_headerOffset - @style.node_moduleOffset]
-        @view('name').position.y = nodeNameYOffset @style
-        @view('expression').position.y = nodeExprYOffset @style
+            @view('body').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
+            @view('name').position.y = nodeNameYOffset @style
+            @view('expression').position.y = nodeExprYOffset @style
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>

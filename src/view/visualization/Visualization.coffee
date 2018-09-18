@@ -13,10 +13,12 @@ iframeYOffset = 5
 
 export class Visualization extends Widget
     initModel: =>
-        key: null
-        iframeId: null
-        currentVisualizer: null
-        mode: null
+        model = super()
+        model.key = null
+        model.iframeId = null
+        model.currentVisualizer = null
+        model.mode = null
+        model
 
     prepare: =>
         @addDef 'menu', VisualizerMenu
@@ -27,7 +29,12 @@ export class Visualization extends Widget
             width: @style.visualization_width
             offsetH: @style.node_widgetOffset_h
             offsetV: @style.node_widgetOffset_v
+
     update: =>
+        if @changed.siblings
+            @updateDef 'background',
+                roundTop:    not @model.siblings.top
+                roundBottom: not @model.siblings.bottom
         if @changed.currentVisualizer or @changed.iframeId or @changed.mode
             @updateDef 'iframe',
                 iframeId: @model.iframeId

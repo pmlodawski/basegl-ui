@@ -4,7 +4,6 @@ import * as Color       from 'basegl/display/Color'
 import {rect}           from 'basegl/display/Shape'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
-import {animateVariable} from 'shape/Animation'
 
 
 export width     = 30
@@ -57,6 +56,6 @@ export class ConnectionShape extends BasicComponent
 
     registerEvents: (view) =>
         animateHover = (value) =>
-            animateVariable @style, @getElement(), 'hovered', not value
+            @animateVariable 'hovered', not value
         view.addEventListener 'mouseover', => animateHover 1
         view.addEventListener 'mouseout',  => animateHover 0

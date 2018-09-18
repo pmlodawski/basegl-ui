@@ -8,6 +8,7 @@ export class TextContainer extends Widget
     initModel: =>
         model = super()
         model.text = ''
+        model.color = null
         model.align = 'left'
         model.textAlign = 'left'
         model.frameColor = null
@@ -18,6 +19,7 @@ export class TextContainer extends Widget
     prepare: =>
         @addDef 'text', TextShape,
             text: @model.text
+            color: @model.color
             align: 'left'
         @addDef 'box', RectangleShape,
             color: @model.frameColor
@@ -32,6 +34,9 @@ export class TextContainer extends Widget
             @__minHeight = size[1] + 2 * @model.border
             @updateDef 'box', height: @model.height or @__minHeight
             @updateDef 'box', width:  @model.width  or @__minWidth
+
+        if @changed.color
+            @updateDef 'text', color: @model.color
 
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor

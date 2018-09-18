@@ -3,7 +3,6 @@ import {circle, rect}   from 'basegl/display/Shape'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
-import {animateVariable} from 'shape/Animation'
 
 
 offset = 4
@@ -37,6 +36,6 @@ export class CheckboxShape extends BasicComponent
 
     adjust: (view, element) =>
         if @changed.checked
-            animateVariable @style, @getElement(), 'checked', not @model.checked
+            @animateVariable 'checked', not @model.checked
         if @changed.width or @changed.height
             @getElement().bbox.xy = [@model.width, @model.height]

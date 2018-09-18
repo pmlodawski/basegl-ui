@@ -21,9 +21,13 @@ export class Parameters extends Widget
                     offset: @style.node_widgetSeparation
             @__minHeight = @def('widgets').height() + @style.node_widgetOffset_v
 
-            @autoUpdateDef 'box', BackgroundShape,
+            @autoUpdateDef 'background', BackgroundShape,
                 height: @__minHeight
                 width: @style.node_bodyWidth
+        if @changed.siblings
+            @updateDef 'background',
+                roundBottom: not @model.siblings.bottom
+                roundTop:    not @model.siblings.top
 
     adjust: =>
         if @changed.once
