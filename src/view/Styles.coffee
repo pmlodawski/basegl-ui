@@ -60,7 +60,7 @@ presets =
         node_shadowPower: 2
         node_shadowOpacity: 0.03
         node_opacity: 1
-        node_widgetOffset_h: 16.58
+        node_widgetOffset_h: 8.29
         node_widgetOffset_v: 6.65
         node_widgetHeight: 20
         node_widgetSeparation: 3

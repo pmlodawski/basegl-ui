@@ -1,4 +1,4 @@
-import {ModuleShape}      from 'shape/node/Module'
+import {BackgroundShape}      from 'shape/node/Background'
 import {Widget}           from 'widget/Widget'
 import {VerticalLayout}   from 'widget/VerticalLayout'
 import {HorizontalLayout} from 'widget/HorizontalLayout'
@@ -12,7 +12,7 @@ export class Parameters extends Widget
     update: =>
         if @changed.inPorts
             @autoUpdateDef 'widgets', VerticalLayout,
-                width: @style.node_bodyWidth - @style.node_widgetOffset_h
+                width: @style.node_bodyWidth - 2*@style.node_widgetOffset_h
                 offset: @style.node_widgetOffset_v
                 children: for own key, inPort of @model.inPorts
                     key: key
@@ -21,11 +21,10 @@ export class Parameters extends Widget
                     offset: @style.node_widgetSeparation
             @__minHeight = @def('widgets').height() + @style.node_widgetOffset_v
 
-            @autoUpdateDef 'box', ModuleShape,
+            @autoUpdateDef 'box', BackgroundShape,
                 height: @__minHeight
                 width: @style.node_bodyWidth
 
     adjust: =>
         if @changed.once
-            @view('widgets').position.xy = [@style.node_widgetOffset_h/2, - @style.node_widgetHeight/2]
-        
+            @view('widgets').position.xy = [@style.node_widgetOffset_h, - @style.node_widgetHeight/2]

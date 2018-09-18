@@ -21,10 +21,10 @@ export class VisualizationIFrame extends ContainerComponent
     __isModePreview: => @model.mode == 'Preview'
 
     __width: =>
-        if @__isModePreview() then @root._scene.width else @style.visualization_width
+        if @__isModePreview() then @root._scene.width else @style.visualization_width - 2* @style.node_widgetOffset_h
 
     __height: =>
-        if @__isModePreview() then @root._scene.height else @style.visualization_height
+        if @__isModePreview() then @root._scene.height else @style.visualization_height - 2* @style.node_widgetOffset_v
 
     update: =>
         if @changed.mode

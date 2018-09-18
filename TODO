@@ -4,9 +4,9 @@
 +   globalny parametr - szybkość animacji
 +   usunąć białe bordery naokoło napisów
 +   wszędzie EasyInEasyOut, zaznaczenie EasyInEasyOut
-?   nazwa nodu pokazuje się na hover
-?   wizualizacja w takim samym boxie jak expanded node, tylko poniżej
++   wizualizacja w takim samym boxie jak expanded node, tylko poniżej
 ?   jeżeli są trzy boxy to nie ma zaokrąglonych nodów
+?   nazwa nodu pokazuje się na hover
 ikonka + nad jakimś innym nodem
 ładowanie ikonek dla nodów
 poprawić baseline https://github.com/nodebox/opentype.js  https://opentype.js.org/

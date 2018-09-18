@@ -1,7 +1,9 @@
-import {InPortShape}   from 'shape/port/In'
-import {TextContainer} from 'view/Text'
-import {Subport}       from 'view/port/sub/Base'
-import * as subport    from 'view/port/sub/Base'
+import {animateComponent} from 'shape/Animation'
+import {InPortShape}      from 'shape/port/In'
+import {TextContainer}    from 'view/Text'
+import {Subport}          from 'view/port/sub/Base'
+import * as subport       from 'view/port/sub/Base'
+
 
 export class InArrow extends Subport
     initModel: =>
