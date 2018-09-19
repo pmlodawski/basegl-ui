@@ -10,16 +10,17 @@ export class VerticalLayout extends FlatLayout
         @__maxHeight = 0
         @__minWidth = 0
         @__maxWidth = Infinity
-        for i in [0..@model.children.length - 1]
+        @forEach (def, key, i) =>
             children.push
+                key    : key
                 index  : i
-                widget : @def(i)
-                height : @def(i).minHeight()
-            @__minHeight += @def(i).minHeight() or 0
-            @__maxHeight += @def(i).maxHeight() or 0
-            @__minWidth = Math.max @def(i).minWidth(), @__minWidth
-            @__maxWidth = Math.min @def(i).maxWidth(), @__maxWidth
-            @updateDef i, siblings:
+                widget : def
+                height : def.minHeight()
+            @__minHeight += def.minHeight() or 0
+            @__maxHeight += def.maxHeight() or 0
+            @__minWidth = Math.max def.minWidth(), @__minWidth
+            @__maxWidth = Math.min def.maxWidth(), @__maxWidth
+            @updateDef key, siblings:
                 top:  ! (i == 0)
                 bottom: ! (i == @model.children.length - 1)
         if @model.height?
@@ -38,8 +39,8 @@ export class VerticalLayout extends FlatLayout
 
         startPoint = [0,0]
         children.forEach (w) =>
-            @view(w.index).position.xy = startPoint.slice()
-            @updateDef w.index,
+            @view(w.key).position.xy = startPoint.slice()
+            @updateDef w.key,
                 height: w.height
                 width: @__computeWidth w.widget
             startPoint[1] -= w.height + @model.offset

@@ -1,7 +1,7 @@
-import {Layout} from 'abstract/Layout'
+import {Widget}       from 'widget/Widget'
 
 
-export class SetView extends Layout
+export class SetView extends Widget
     initModel: =>
         model = super()
         model.elems = {}

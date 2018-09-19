@@ -12,3 +12,4 @@ ikonka + nad jakimś innym nodem
 poprawić baseline https://github.com/nodebox/opentype.js  https://opentype.js.org/
 animacja expanodwania nodu (wysuwanie i powiększanie go spod portu)
 animacja pojawiania się tekstu
+poprawić wieklość noda tak, zęby nie obcinać cienia

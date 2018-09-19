@@ -46,6 +46,8 @@ export class ContainerComponent extends HasModel
             delete @__defs[key]
 
     autoUpdateDef: (key, cons, value) =>
+        if @def(key)? and @def(key).constructor != cons
+            @deleteDef key
         if @def(key)?
             if value?
                 @updateDef key, value

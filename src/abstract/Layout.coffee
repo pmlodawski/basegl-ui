@@ -4,8 +4,12 @@ import {lookupWidget} from 'widget/WidgetDirectory'
 
 export class Layout extends Widget
     forEach: (fun) =>
-        for own key, def of @__defs
-            fun def, key
+        i = 0
+        for own k, child of @model.children
+            key = @__childKey child, k
+            fun @def(key), key, i++
+
+    __childKey: (child, key) => child.id or child.key or key
 
 export class FlatLayout extends Layout
     initModel: =>
@@ -18,11 +22,15 @@ export class FlatLayout extends Layout
         s
 
     update: =>
-        if Object.keys(@__defs).length != @model.children.length
-            @deleteDefs()
-
+        newDefs = {}
         for own k, widget of @model.children
+            key = @__childKey widget, k
+            newDefs[key] = widget
+        for own key, def of @__defs
+            unless newDefs[key]?
+                @deleteDef key
+        for own key, widget of newDefs
             cons = lookupWidget widget
             if cons?
-                @autoUpdateDef k, cons, widget
+                @autoUpdateDef key, cons, widget
         @__updateChildren()

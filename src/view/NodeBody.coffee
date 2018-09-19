@@ -31,6 +31,7 @@ export class NodeBody extends ContainerComponent
             modules = []
             if @model.expanded
                 modules.push
+                    id: 'parameters'
                     cons: Parameters
                     inPorts: @model.inPorts
             for own k, visualization of @model.visualizations
