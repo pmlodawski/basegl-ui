@@ -27,8 +27,7 @@ export class Visualization extends Widget
         @addDef 'background', BackgroundShape,
             height: @style.visualization_height
             width: @style.visualization_width
-            offsetH: @style.node_widgetOffset_h
-            offsetV: @style.node_widgetOffset_v
+            invisible: true
 
     update: =>
         if @changed.siblings

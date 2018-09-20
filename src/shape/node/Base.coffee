@@ -12,5 +12,6 @@ export compactNodeExpr = (style) -> basegl.expr ->
     node   = node.move width(style)/2, height(style)/2
 
 export shadowExpr = (base, style) -> basegl.expr ->
-    base.blur style.node_shadowRadius, style.node_shadowPower
+    shadow = base.blur style.node_shadowRadius, style.node_shadowPower
         .fill Color.rgb [0, 0, 0, style.node_shadowOpacity]
+    shadow - base

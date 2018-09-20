@@ -10,15 +10,11 @@ import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 backgroundExpr = (style) -> basegl.expr ->
     bodyHeight   = 'bbox.y' - 2 * style.node_shadowRadius
     bodyWidth    = 'bbox.x' - 2 * style.node_shadowRadius
-    windowHeight = 'windowHeight'
-    windowWidth  = 'windowWidth'
     radiusTop = style.node_radius * 'roundTop'
     radiusBottom = style.node_radius * 'roundBottom'
     base = rect bodyWidth, bodyHeight, radiusTop, radiusTop, radiusBottom, radiusBottom
-    windowRadius = (bodyHeight-windowHeight + bodyWidth-windowWidth)/2
-    transparentWindow = rect windowWidth, windowHeight, windowRadius
-    background = (base - transparentWindow)
-        .fill nodeBg style
+    background = base.fill nodeBg style
+        .moveX 'invisible' * 'bbox.x'
     shadow = baseNode.shadowExpr base, style
     (shadow + background)
         .move('bbox.x'/2, 'bbox.y'/2)
@@ -27,8 +23,7 @@ backgroundExpr = (style) -> basegl.expr ->
 backgroundSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol backgroundExpr style
     symbol.defaultZIndex = layers.expandedNode
-    symbol.variables.windowHeight = 0
-    symbol.variables.windowWidth = 0
+    symbol.variables.invisible = 0
     symbol.variables.roundTop = 0
     symbol.variables.roundBottom = 0
     symbol
@@ -37,8 +32,7 @@ export class BackgroundShape extends BasicComponent
     initModel: =>
         width: 100
         height: 100
-        offsetH: null
-        offsetV: null
+        invisible: false
         roundTop: null
         roundBottom: null
     define: => backgroundSymbol @style
@@ -49,12 +43,8 @@ export class BackgroundShape extends BasicComponent
         if @changed.height
             element.position.y = - @model.height - @style.node_shadowRadius
             element.bbox.y = @model.height + 2 * @style.node_shadowRadius
-        if @changed.offsetV
-            windowHeight = @model.height - 2 * @model.offsetV if @model.offsetV?
-            element.variables.windowHeight = windowHeight or 0
-        if @changed.offsetH
-            windowWidth = @model.width - 2 * @model.offsetH if @model.offsetH?
-            element.variables.windowWidth = windowWidth or 0
+        if @changed.invisible
+            element.variables.invisible = Number @model.invisible
         if @changed.roundBottom
             @animateVariable 'roundBottom', Number @model.roundBottom
         if @changed.roundTop

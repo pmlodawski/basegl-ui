@@ -7,8 +7,8 @@
 +   wizualizacja w takim samym boxie jak expanded node, tylko poniżej
 +   jeżeli są trzy boxy to nie ma zaokrąglonych nodów
 +   nazwa nodu pokazuje się na hover
-+   poprawić wieklość noda tak, zęby nie obcinać cienia
-usunąć ramkę wizualizacji
++   poprawić wieklość noda tak, żeby nie obcinać cienia
++   usunąć ramkę wizualizacji
 animacja expanodwania nodu (wysuwanie i powiększanie go spod portu)
 animacja pojawiania się tekstu
 nazwy niepodłączonych portów ukryte - pokazywać na hover
