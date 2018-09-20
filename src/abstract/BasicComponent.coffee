@@ -1,6 +1,6 @@
-import {HasModel}        from "abstract/HasModel"
-import * as basegl       from 'basegl/display/Symbol'
-import {animateVariable} from 'shape/Animation'
+import {HasModel}     from "abstract/HasModel"
+import * as basegl    from 'basegl/display/Symbol'
+import * as animation from 'shape/Animation'
 
 
 export class BasicComponent extends HasModel
@@ -37,7 +37,11 @@ export class BasicComponent extends HasModel
     getDomElement: => @getElement()?.domElement
 
     animateVariable: (name, value) =>
-        animateVariable @style, @__element, name, value
+        animation.animateVariable @style, @__element, name, value
+
+    animatePosition: (target, name, value) =>
+        animation.animatePosition @style, target, name, value
+
 
     # # implement following methods when deriving: #
     # ##############################################

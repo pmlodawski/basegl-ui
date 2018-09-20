@@ -56,6 +56,6 @@ export class ConnectionShape extends BasicComponent
 
     registerEvents: (view) =>
         animateHover = (value) =>
-            @animateVariable 'hovered', not value
+            @animateVariable 'hovered', value
         view.addEventListener 'mouseover', => animateHover 1
         view.addEventListener 'mouseout',  => animateHover 0

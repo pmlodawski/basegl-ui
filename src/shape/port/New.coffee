@@ -16,7 +16,7 @@ export class NewPortShape extends InPortShape
 
     registerEvents: (view) =>
         animateHover = (value) =>
-            @animateVariable 'color_a', not value
+            @animateVariable 'color_a', value
 
         view.addEventListener 'mouseover', => animateHover 1
         view.addEventListener 'mouseout',  => animateHover @__alphaOnUnhover()

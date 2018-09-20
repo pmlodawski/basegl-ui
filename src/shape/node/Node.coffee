@@ -28,4 +28,4 @@ export class NodeShape extends BasicComponent
     adjust: (element) =>
         element.position.xy = [-baseNode.width(@style)/2, -baseNode.height(@style)/2]
         if @changed.selected
-            @animateVariable 'selected', not @model.selected
+            @animateVariable 'selected', @model.selected

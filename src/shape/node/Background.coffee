@@ -56,6 +56,6 @@ export class BackgroundShape extends BasicComponent
             windowWidth = @model.width - 2 * @model.offsetH if @model.offsetH?
             element.variables.windowWidth = windowWidth or 0
         if @changed.roundBottom
-            @animateVariable 'roundBottom', Number not @model.roundBottom
+            @animateVariable 'roundBottom', Number @model.roundBottom
         if @changed.roundTop
-            @animateVariable 'roundTop', Number not @model.roundTop
+            @animateVariable 'roundTop', Number @model.roundTop

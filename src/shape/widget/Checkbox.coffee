@@ -28,14 +28,14 @@ checkboxSymbol = memoizedSymbol (style) ->
 
 export class CheckboxShape extends BasicComponent
     initModel: =>
-        checked     : false
-        width       : null
-        height      : null
+        checked: false
+        width:   null
+        height:  null
 
     define: => checkboxSymbol @style
 
     adjust: (view, element) =>
         if @changed.checked
-            @animateVariable 'checked', not @model.checked
+            @animateVariable 'checked', @model.checked
         if @changed.width or @changed.height
             @getElement().bbox.xy = [@model.width, @model.height]
