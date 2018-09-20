@@ -8,8 +8,8 @@ import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 
 
 backgroundExpr = (style) -> basegl.expr ->
-    bodyHeight   = 'bbox.y'
-    bodyWidth    = 'bbox.x'
+    bodyHeight   = 'bbox.y' - 2 * style.node_shadowRadius
+    bodyWidth    = 'bbox.x' - 2 * style.node_shadowRadius
     windowHeight = 'windowHeight'
     windowWidth  = 'windowWidth'
     radiusTop = style.node_radius * 'roundTop'
@@ -21,7 +21,7 @@ backgroundExpr = (style) -> basegl.expr ->
         .fill nodeBg style
     shadow = baseNode.shadowExpr base, style
     (shadow + background)
-        .move(bodyWidth/2, bodyHeight/2)
+        .move('bbox.x'/2, 'bbox.y'/2)
 
 
 backgroundSymbol = memoizedSymbol (style) ->
@@ -44,10 +44,11 @@ export class BackgroundShape extends BasicComponent
     define: => backgroundSymbol @style
     adjust: (element) =>
         if @changed.width
-            element.bbox.x = @model.width
+            element.position.x = - @style.node_shadowRadius
+            element.bbox.x = @model.width + 2 * @style.node_shadowRadius
         if @changed.height
-            element.position.y = - @model.height
-            element.bbox.y = @model.height
+            element.position.y = - @model.height - @style.node_shadowRadius
+            element.bbox.y = @model.height + 2 * @style.node_shadowRadius
         if @changed.offsetV
             windowHeight = @model.height - 2 * @model.offsetV if @model.offsetV?
             element.variables.windowHeight = windowHeight or 0
