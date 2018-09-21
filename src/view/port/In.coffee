@@ -46,7 +46,7 @@ export class InPort extends Port
                 typeName: @model.typeName
 
     adjust: (view) =>
-        view.position.xy = @model.position
+        @animatePosition view, @model.position
 
     connectionPosition: =>
         [ @model.position[0] + @parent.parent.model.position[0]

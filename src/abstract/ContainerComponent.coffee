@@ -62,16 +62,20 @@ export class ContainerComponent extends HasModel
             @deleteDef k
 
     animatePosition: (target, value) =>
+        if target?
             @animatePositionX target, value[0]
             @animatePositionY target, value[1]
 
     animatePositionX: (target, value) =>
+        if target?
             animation.animate @style, target, 'position', 'x', value
 
     animatePositionY: (target, value) =>
+        if target?
             animation.animate @style, target, 'position', 'y', value
 
     animateRotation: (target, value) =>
+        if target?
             animation.animate @style, target, 'rotation', 'z', value
 
     # # implement following methods when deriving: #
