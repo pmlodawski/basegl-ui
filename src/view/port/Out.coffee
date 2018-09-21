@@ -5,11 +5,12 @@ import {OutArrow}           from 'view/port/sub/OutArrow'
 
 export class OutPort extends Port
     initModel: =>
+        angle:    0
+        color:    defaultColor
+        hovered:  false
         key:      null
         typeName: ''
-        angle:    0
         radius:   0
-        color:    defaultColor
         subports: {}
 
     portConstructor: => OutArrow
@@ -20,16 +21,26 @@ export class OutPort extends Port
                 @deleteDef 'subport'
             for own k, subport of @model.subports
                 @def('subports').autoUpdateDef k, OutArrow,
-                    radius: @model.radius
+                    angle:    subport
+                    color:    @model.color
+                    hovered:  @model.hovered
+                    key:      k
+                    radius:   @model.radius
                     typeName: @model.typeName
-                    color: @model.color
-                    angle: subport
         else
             @updateDef 'subports', elems: []
             @autoUpdateDef 'subport', OutArrow,
-                angle: @model.angle
-                color: @model.color
-                radius: @model.radius
+                angle:    @model.angle
+                color:    @model.color
+                hovered:  @model.hovered
+                radius:   @model.radius
                 typeName: @model.typeName
 
     connectionPosition: => @parent.parent.model.position
+
+    connectSources: =>
+        @__onHoverChange()
+        @addDisposableListener @parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
+
+    __onHoverChange: (e) =>
+        @set hovered: @parent.parent.model.hovered
