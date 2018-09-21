@@ -7,6 +7,7 @@ import {TextContainer} from 'view/Text'
 export class OutArrow extends Subport
     initModel: =>
         angle: 0
+        color: [1, 0, 0]
         hovered: false
         typeName: ''
         radius: 0
@@ -23,6 +24,9 @@ export class OutArrow extends Subport
                 [ @style.port_borderColor_h, @style.port_borderColor_s
                 , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
                 ]
+        if @changed.color
+            @updateDef 'port', color: @model.color
+
     adjust: (view) =>
         if @changed.radius
             @view('port').position.y = @model.radius
@@ -37,22 +41,3 @@ export class OutArrow extends Subport
         view.addEventListener 'mousedown', (e) =>
             e.stopPropagation()
             @pushEvent e
-
-    connectSources: =>
-        @__onTypeNameChange()
-        @__onRadiusChange()
-        @__onColorChange()
-        @__onHoverChange()
-        @addDisposableListener @parent, 'typeName', => @__onTypeNameChange()
-        @addDisposableListener @parent, 'radius', => @__onRadiusChange()
-        @addDisposableListener @parent, 'color', => @__onColorChange()
-        @addDisposableListener @parent.parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
-
-    __onTypeNameChange: =>
-        @set typeName: @parent.model.typeName
-    __onRadiusChange: =>
-        @set radius: @parent.model.radius
-    __onColorChange: =>
-        @updateDef 'port', color: @parent.model.color
-    __onHoverChange: =>
-        @set hovered: @parent.parent.parent.model.hovered

@@ -9,9 +9,9 @@
 +   nazwa nodu pokazuje się na hover
 +   poprawić wieklość noda tak, żeby nie obcinać cienia
 +   usunąć ramkę wizualizacji
++   nazwy niepodłączonych portów ukryte - pokazywać na hover
 animacja expanodwania nodu (wysuwanie i powiększanie go spod portu)
 animacja pojawiania się tekstu
-nazwy niepodłączonych portów ukryte - pokazywać na hover
 border tekstu (grow tekstu)
 ikonka + nad jakimś innym nodem
 ładowanie ikonek dla nodów

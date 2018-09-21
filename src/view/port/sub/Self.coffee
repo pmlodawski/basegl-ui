@@ -7,10 +7,11 @@ import {TextContainer} from 'view/Text'
 export class Self extends Subport
     initModel: =>
         angle:    0
+        connected: false
         hovered:  false
         typeName: ''
         radius:   0
-        color:    [0, 1, 0]
+        color:    [1, 0, 0]
 
     prepare: =>
         @addDef 'port', SelfPortShape, null
@@ -20,28 +21,11 @@ export class Self extends Subport
             text: @model.typeName
             align: 'left'
             color: [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
+        if @changed.color
+            @updateDef 'port', color: @model.color
 
     adjust: (view) =>
         if @view('typeName')?
             @view('typeName').rotation.z = @model.angle - Math.PI/2
             typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, 0]
             @view('typeName').position.xy = typeNamePosition
-
-    connectSources: =>
-        @__onTypeNameChange()
-        @__onRadiusChange()
-        @__onColorChange()
-        @__onHoverChange()
-        @addDisposableListener @parent, 'typeName', => @__onTypeNameChange()
-        @addDisposableListener @parent, 'radius', => @__onRadiusChange()
-        @addDisposableListener @parent, 'color', => @__onColorChange()
-        @addDisposableListener @parent.parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
-
-    __onTypeNameChange: =>
-        @set typeName: @parent.model.typeName
-    __onRadiusChange: =>
-        @set radius: @parent.model.radius
-    __onColorChange: =>
-        @updateDef 'port', color: @parent.model.color
-    __onHoverChange: =>
-        @set hovered: @parent.parent.parent.model.hovered

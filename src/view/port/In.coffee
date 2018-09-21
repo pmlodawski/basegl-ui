@@ -23,10 +23,23 @@ export class InPort extends Port
         if not @model.locked and (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
-            for own k, subport of @model.subports
-                @autoUpdateDef ('sub' + k), @portConstructor(), angle: subport
+            @updateDef 'subports',
+                elems: for own k, subport of @model.subports
+                    angle: subport
+                    color: @model.color
+                    connected: true
+                    name: @model.name
+                    radius: @model.radius
+                    typeName: @model.typeName
         else
-            @autoUpdateDef 'subport', @portConstructor(), angle: @model.angle
+            @updateDef 'subports', elems: []
+            @autoUpdateDef 'subport', @portConstructor(),
+                angle: @model.angle
+                color: @model.color
+                connected: (Object.keys @model.subports).length > 0
+                name: @model.name
+                radius: @model.radius
+                typeName: @model.typeName
 
     adjust: (view) =>
         view.position.xy = @model.position

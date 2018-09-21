@@ -12,13 +12,24 @@ export class OutPort extends Port
         color:    defaultColor
         subports: {}
 
+    portConstructor: => OutArrow
+
     update: =>
         if (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
             for own k, subport of @model.subports
-                @autoUpdateDef ('sub' + k), OutArrow, angle: subport
+                @def('subports').autoUpdateDef k, OutArrow,
+                    radius: @model.radius
+                    typeName: @model.typeName
+                    color: @model.color
+                    angle: subport
         else
-            @autoUpdateDef 'subport', OutArrow, angle: @model.angle
+            @updateDef 'subports', elems: []
+            @autoUpdateDef 'subport', OutArrow,
+                angle: @model.angle
+                color: @model.color
+                radius: @model.radius
+                typeName: @model.typeName
 
     connectionPosition: => @parent.parent.model.position
