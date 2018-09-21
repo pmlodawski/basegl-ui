@@ -1,8 +1,9 @@
-import {EventEmitter} from "abstract/EventEmitter"
-import {HasModel}     from "abstract/HasModel"
-
 import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
+
+import {EventEmitter} from "abstract/EventEmitter"
+import {HasModel}     from "abstract/HasModel"
+import * as animation from 'shape/Animation'
 
 
 export class ContainerComponent extends HasModel
@@ -59,6 +60,19 @@ export class ContainerComponent extends HasModel
     deleteDefs: =>
         for own k of @__defs
             @deleteDef k
+
+    animatePosition: (target, value) =>
+            @animatePositionX target, value[0]
+            @animatePositionY target, value[1]
+
+    animatePositionX: (target, value) =>
+            animation.animate @style, target, 'position', 'x', value
+
+    animatePositionY: (target, value) =>
+            animation.animate @style, target, 'position', 'y', value
+
+    animateRotation: (target, value) =>
+            animation.animate @style, target, 'rotation', 'z', value
 
     # # implement following methods when deriving: #
     # ##############################################

@@ -38,7 +38,7 @@ export class HorizontalLayout extends FlatLayout
 
         startPoint = [0,0]
         children.forEach (w) =>
-            @view(w.key).position.xy = startPoint.slice()
+            @animatePosition @view(w.key), startPoint
             @updateDef w.key,
                 width: w.width
                 height: @__computeHeight w.widget

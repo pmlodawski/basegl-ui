@@ -2,11 +2,7 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 
 
-export animateVariable = (style, symbol, name, value) ->
-    animate style, symbol, 'variables', name, value
 
-export animatePosition = (style, target, name, value) ->
-    animate style, target, 'position', name, value
 
 export animate = (style, target, name1, name2, rev) ->
     animationName = "#{name1}#{name2}Animation"

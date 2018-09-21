@@ -37,11 +37,7 @@ export class BasicComponent extends HasModel
     getDomElement: => @getElement()?.domElement
 
     animateVariable: (name, value) =>
-        animation.animateVariable @style, @__element, name, value
-
-    animatePosition: (target, name, value) =>
-        animation.animatePosition @style, target, name, value
-
+        animation.animate @style, @__element, 'variables', name, value
 
     # # implement following methods when deriving: #
     # ##############################################
