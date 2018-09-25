@@ -34,7 +34,7 @@ export class NodeErrorShape extends BasicComponent
     initModel: =>
         body:     [100, 100]
     define: =>
-        expandedNodeErrorSymbol @style
+        compactNodeErrorSymbol @style
 
     adjust: (element) =>
         if @model.expanded

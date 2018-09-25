@@ -19,8 +19,8 @@ export class OutPort extends Port
         if (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
-            for own k, subport of @model.subports
-                @def('subports').autoUpdateDef k, OutArrow,
+            @updateDef 'subports',
+                elems: for own k, subport of @model.subports
                     angle:    subport
                     color:    @model.color
                     hovered:  @model.hovered

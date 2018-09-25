@@ -24,6 +24,7 @@ export class NodeBody extends ContainerComponent
         if @changed.value
             @autoUpdateDef 'value', TextContainer, if @__shortValue()?
                 text: @__shortValue()
+                align: 'center'
                 color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
@@ -41,7 +42,8 @@ export class NodeBody extends ContainerComponent
             @updateDef 'modules', children: modules
 
     adjust: =>
-        @view('value')?.position.x = @style.node_bodyWidth/2
+        @view('value')?.position.xy =
+            [@style.node_bodyWidth/2, -@style.node_valueOffset]
         @view('valueToggler').position.xy =
             [ @style.visualization_togglerX, @style.visualization_togglerY ]
     
