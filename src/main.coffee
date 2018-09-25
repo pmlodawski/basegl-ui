@@ -33,7 +33,7 @@ export install = (name, fontRootPath = '', callback) ->
 
 export onEvent = subscribeEvents
 
-main = (callback) -> install 'basegl-root', 'rsc/', callback
+main = (callback) -> install 'node-editor-mount', 'rsc/', callback
 
 window.run = main
 

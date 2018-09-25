@@ -204,7 +204,7 @@ export class Styles extends ContainerComponent
                     @__selectPreset def.model.text
 
         # if @changed.bgColor_h or @changed.bgColor_s or @changed.bgColor_l or @changed.presetName
-        document.getElementById('basegl-root').style.background="hsl("+@model.bgColor_h+","+@model.bgColor_s*100+"%,"+@model.bgColor_l*100+"%)"
+        document.getElementById('node-editor-mount').style.background="hsl("+@model.bgColor_h+","+@model.bgColor_s*100+"%,"+@model.bgColor_l*100+"%)"
 
 
     adjust: (view) =>

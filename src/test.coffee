@@ -33,6 +33,6 @@ node.bbox.xy = [width, height]
 
 
 export main = ->
-    scene = basegl.scene {domElement: 'basegl-root'}
+    scene = basegl.scene {domElement: 'node-editor-mount'}
     view = scene.add node
     view.addEventListener 'click', (e) => console.log e

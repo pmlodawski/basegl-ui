@@ -19,7 +19,7 @@ export install = (name, fontRootPath = "", f) ->
 
 export onEvent = subscribeEvents
 
-main = (f) -> install 'basegl-root', 'rsc/', f
+main = (f) -> install 'node-editor-mount', 'rsc/', f
 
 window.run = main
 
