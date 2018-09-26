@@ -1,10 +1,10 @@
 {
-  "name": "node_editor_basegl",
+  "name": "luna-basegl-ui",
   "license": "AGPL-3.0",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "description": "Luna node editor using basegl.",
   "homepage": "https://github.com/luna/basegl-ui",
-  "author": "New Byte Order <contact@luna-lang.org>",
+  "author": "The Luna Team <contact@luna-lang.org>",
   "main": "./dist/js/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
