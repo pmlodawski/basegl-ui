@@ -43,6 +43,7 @@ export class HasModel extends EventEmitter
     __setValues: (values, once = false) =>
         values ?= {}
         @__anythingChanged = once
+        valuesToEmit = {}
         for own key of @model
             @changed[key] = once
             value = unArray @model[key], values[key]
@@ -50,7 +51,9 @@ export class HasModel extends EventEmitter
                 @changed[key] = true
                 @__anythingChanged = true
                 @model[key] = value
-                @performEmit key, value
+                valuesToEmit[key] = value
+        for own key, value of valuesToEmit
+            @performEmit key, value
 
     __addToGroup: (view) =>
         @__view.addChild view

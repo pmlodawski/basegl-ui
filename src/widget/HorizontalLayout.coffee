@@ -1,8 +1,8 @@
-import {Widget}       from 'widget/Widget'
+import {Layout}       from 'abstract/Layout'
 import {lookupWidget} from 'widget/WidgetDirectory'
 
 
-export class HorizontalLayout extends Widget
+export class HorizontalLayout extends Layout
     initModel: =>
         s = super()
         s.key = null
