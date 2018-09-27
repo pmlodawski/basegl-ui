@@ -32,8 +32,7 @@ class StyleProvider
         styles.model[prop]
 
     __addHandler: (component, styles, prop) =>
-        setTimeout component.addDisposableListener styles, prop, =>
-            component.forceReset()
+        setTimeout => component.addDisposableListener styles, prop, component.forceReset
 
 blacklist = new Set ['enabled', 'presetName']
 presets =
