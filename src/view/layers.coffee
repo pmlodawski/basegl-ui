@@ -11,9 +11,10 @@ export flatPort = port
 export inPort  = port
 export outPort  = port
 export selfPort = port
+export icon     = port + 1
 export valueToggler = port
 
-export connection = port - 1
+export connection = node - 1
 
 export widget = 300
 export slider = widget

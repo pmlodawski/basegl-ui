@@ -67,6 +67,7 @@ runExample = -> main (nodeEditor) ->
                     typeName: 'A'
                 2:
                     typeName: 'B'
+            icon: 'rect'
             position: [200, 300]
             expanded: false
             selected: false
@@ -101,6 +102,7 @@ runExample = -> main (nodeEditor) ->
             outPorts:
                 1:
                     typeName: 'A'
+            icon: 'rect'
             position: [200, 600]
             expanded: false
             selected: false
@@ -193,6 +195,7 @@ runExample = -> main (nodeEditor) ->
                         ]
             outPorts:
                 1: {}
+            icon: 'stripes'
             position: [500, 300]
             expanded: true
             # error: true
@@ -210,6 +213,7 @@ runExample = -> main (nodeEditor) ->
                     typeName: 'A'
             outPorts:
                 1: {}
+            icon: 'stripes'
             position: [500, 600]
             expanded: false
             selected: false

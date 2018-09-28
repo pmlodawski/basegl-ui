@@ -12,6 +12,7 @@ import {NewPort}            from 'view/port/New'
 import {OutPort}            from 'view/port/Out'
 import {SetView}            from 'view/SetView'
 import {NodeBody}           from 'view/NodeBody'
+import {IconLoader}         from 'view/IconLoader'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 import {VerticalLayout}     from 'widget/VerticalLayout'
 import * as portBase        from 'shape/port/Base'
@@ -38,6 +39,7 @@ export class ExpressionNode extends ContainerComponent
         name:       ''
         expression: ''
         value:      null
+        icon:       null
         inPorts:    {}
         outPorts:   {}
         newPortKey: null
@@ -64,8 +66,10 @@ export class ExpressionNode extends ContainerComponent
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
         @addDef 'newPort', NewPort
+        @addDef 'icon', IconLoader
 
     update: =>
+        @updateDef 'icon', icon: @model.icon
         @updateDef 'name',
             text:     @model.name
         @updateDef 'expression',
