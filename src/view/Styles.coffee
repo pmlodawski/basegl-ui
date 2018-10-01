@@ -32,9 +32,18 @@ class StyleProvider
         styles.model[prop]
 
     __addHandler: (component, styles, prop) =>
-        setTimeout => component.addDisposableListener styles, prop, component.forceReset
+        setTimeout =>
+            component.addDisposableListener styles, prop, component.forceReset
+            component.__view?.addEventListener 'click', (e) =>
+                e.stopPropagation()
+                filter = dependencyCache[component.constructor.name].props.values()
+                x = new Set [...filter]
+                console.log x
+                @styles.set filter: new Set [...filter]
+                # @styles.set enabled: false
+                # @styles.set enabled: true
 
-blacklist = new Set ['enabled', 'presetName']
+blacklist = new Set ['enabled', 'presetName', 'filter']
 presets =
     light:
         transform_time: 0.2
@@ -146,13 +155,15 @@ export class Styles extends ContainerComponent
         model =
             enabled: false
             presetName: 'light'
+            filter: new Set
         Object.assign model, presets[model.presetName]
 
     prepare: =>
         @revision = 0
 
     update: =>
-        if @changed.enabled or @changed.presetName
+        console.log 'FILTER', @model.filter
+        if @changed.enabled or @changed.presetName or @changed.filter
             @autoUpdateDef 'dump', TextContainer, if @model.enabled
                 text: 'DUMP'
                 frameColor: [0.3, 0.3, 0.3]
@@ -164,7 +175,7 @@ export class Styles extends ContainerComponent
             @autoUpdateDef 'vertical', VerticalLayout, if @model.enabled
                 width: 300
                 children: for own key, val of @model
-                    continue if blacklist.has key
+                    continue if blacklist.has key or @model.filter.has key
                     minVal =
                         if val < -1
                             -100
@@ -190,7 +201,7 @@ export class Styles extends ContainerComponent
                             min: minVal
                             max: maxVal
                         ]
-        if (@changed.enabled or @changed.presetName) and @model.enabled
+        if (@changed.enabled or @changed.presetName or @changed.filter) and @model.enabled
             @def('vertical').forEach (def) =>
                 def.def(1).addEventListener 'value', (e) =>
                     name = def.def(0).model.text
