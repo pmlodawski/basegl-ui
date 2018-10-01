@@ -7,13 +7,27 @@ import * as layers      from 'view/layers'
 
 
 export rectangleExpr = (style) -> basegl.expr ->
-    rect ('bbox.x' -1), ('bbox.y'-1)
+    corners = 'corners'
+    topLeft = corners % 2
+    corners = (corners - topLeft) / 2
+    topRight = corners % 2
+    corners = (corners - topRight) / 2
+    bottomLeft = corners % 2
+    corners = (corners - bottomLeft) / 2
+    bottomRight = corners % 2
+    corners = (corners - bottomRight) / 2
+    topLeft = topLeft * corners
+    topRight = topRight * corners
+    bottomLeft = bottomLeft * corners
+    bottomRight = bottomRight * corners
+    rect ('bbox.x' -1), ('bbox.y'-1), topLeft, topRight, bottomLeft, bottomRight
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.varHSLAlpha style
 
 rectangleSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol rectangleExpr style
     symbol.defaultZIndex = layers.textFrame
+    symbol.variables.corners = 0
     symbol.variables.color_h = 0
     symbol.variables.color_s = 0
     symbol.variables.color_l = 0
@@ -25,6 +39,12 @@ export class RectangleShape extends BasicComponent
         width: 0
         height: 0
         color: null
+        corners:
+            topLeft: false
+            topRight: false
+            bottomLeft: false
+            bottomRight: false
+            round: 0
 
     define: =>
         rectangleSymbol @style
@@ -46,3 +66,14 @@ export class RectangleShape extends BasicComponent
                     @model.color[3]
                 else
                     1
+        if @changed.corners
+            corners = @model.corners.round
+            corners *= 2
+            corners += @model.corners.topLeft
+            corners *= 2
+            corners += @model.corners.topRight
+            corners *= 2
+            corners += @model.corners.bottomLeft
+            corners *= 2
+            corners += @model.corners.bottomRight
+            element.variables.corners = corners
