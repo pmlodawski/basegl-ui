@@ -47,8 +47,8 @@ export class HasModel extends EventEmitter
         @__updateModel @model
 
     __updateModel: (values) =>
-            @onModelUpdate values
-            @performEmit 'modelUpdated', values
+        @onModelUpdate values
+        @performEmit 'modelUpdated', values
 
     __setValues: (values, once = false) =>
         values ?= {}
