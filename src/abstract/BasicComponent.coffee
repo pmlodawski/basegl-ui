@@ -23,9 +23,16 @@ export class BasicComponent extends HasModel
                 @__draw def
                 @__def = def
         if @__element?
+            if @changed.once
+                @adjustSrc? @__element, @__view
             @adjust? @__element, @__view
 
     dispose: =>
+        if @__element?
+            if @adjustDst?
+                @adjustDst? @__element, @__view
+            else
+                @adjustSrc? @__element, @__view
         @__undraw @__def
         if @__view
             @__view.dispose()

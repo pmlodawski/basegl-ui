@@ -14,12 +14,22 @@ export class ContainerComponent extends HasModel
         @__defs = {}
 
     dispose: =>
-        for own k, def of @__defs
-            def.dispose()
-        super()
+        performDispose = =>
+            for own k, def of @__defs
+                def.dispose()
+            super()
+
+        if @adjustDst?
+            @adjustDst @__view
+            setTimeout performDispose, 1000 * @style.transform_time
+        else
+            @adjustSrc? @__view
+            performDispose()
 
     onModelUpdate: =>
         @update?()
+        if @changed.once
+            @adjustSrc? @__view
         @adjust? @__view
 
     view: (key) => @def(key)?.__view
@@ -62,9 +72,8 @@ export class ContainerComponent extends HasModel
             @deleteDef k
 
     animatePosition: (target, value) =>
-        if target?
-            @animatePositionX target, value[0]
-            @animatePositionY target, value[1]
+        @animatePositionX target, value[0]
+        @animatePositionY target, value[1]
 
     animatePositionX: (target, value) =>
         if target?
@@ -77,6 +86,18 @@ export class ContainerComponent extends HasModel
     animateRotation: (target, value) =>
         if target?
             animation.animate @style, target, 'rotation', 'z', value
+
+    animateScale: (target, value) =>
+        @animateScaleX target, value[0]
+        @animateScaleY target, value[1]
+
+    animateScaleX: (target, value) =>
+        if target?
+            animation.animate @style, target, 'scale', 'x', value
+
+    animateScaleY: (target, value) =>
+        if target?
+            animation.animate @style, target, 'scale', 'y', value
 
     # # implement following methods when deriving: #
     # ##############################################
