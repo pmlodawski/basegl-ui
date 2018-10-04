@@ -71,33 +71,48 @@ export class ContainerComponent extends HasModel
         for own k of @__defs
             @deleteDef k
 
-    animatePosition: (target, value) =>
-        @animatePositionX target, value[0]
-        @animatePositionY target, value[1]
+    setPosition: (target, value, animate = true) =>
+        @setPositionX target, value[0], animate
+        @setPositionY target, value[1], animate
 
-    animatePositionX: (target, value) =>
+    setPositionX: (target, value, animate = true) =>
         if target?
-            animation.animate @style, target, 'position', 'x', value
+            if animate
+                animation.animate @style, target, 'position', 'x', value
+            else
+                target.position.x = value
 
-    animatePositionY: (target, value) =>
+    setPositionY: (target, value, animate = true) =>
         if target?
-            animation.animate @style, target, 'position', 'y', value
+            if animate
+                animation.animate @style, target, 'position', 'y', value
+            else
+                target.position.y = value
 
-    animateRotation: (target, value) =>
+    setRotation: (target, value, animate = true) =>
         if target?
-            animation.animate @style, target, 'rotation', 'z', value
+            if animate
+                animation.animate @style, target, 'rotation', 'z', value
+            else
+                target.rotation.z = value
 
-    animateScale: (target, value) =>
-        @animateScaleX target, value[0]
-        @animateScaleY target, value[1]
+    setScale: (target, value, animate = true) =>
+        @setScaleX target, value[0], animate
+        @setScaleY target, value[1], animate
 
-    animateScaleX: (target, value) =>
+    setScaleX: (target, value, animate = true) =>
         if target?
-            animation.animate @style, target, 'scale', 'x', value
+            if animate
+                animation.animate @style, target, 'scale', 'x', value
+            else
+                target.scale.x = value
 
-    animateScaleY: (target, value) =>
+    setScaleY: (target, value, animate = true) =>
         if target?
-            animation.animate @style, target, 'scale', 'y', value
+            if animate
+                animation.animate @style, target, 'scale', 'y', value
+            else
+                target.scale.y = value
 
     # # implement following methods when deriving: #
     # ##############################################

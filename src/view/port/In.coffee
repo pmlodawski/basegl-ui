@@ -9,7 +9,7 @@ export class InPort extends Port
         color:    defaultColor
         hovered:  false
         key:      null
-        locked:   false
+        expanded:   false
         mode:     'in'
         name:     ''
         position: [0,0]
@@ -21,7 +21,7 @@ export class InPort extends Port
     portConstructor: => if @model.mode == 'self' then Self else InArrow
 
     update: =>
-        if not @model.locked and (Object.keys @model.subports).length
+        if not @model.expanded and (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
             @updateDef 'subports',
@@ -46,7 +46,7 @@ export class InPort extends Port
                 typeName: @model.typeName
 
     adjust: (view) =>
-        @animatePosition view, @model.position
+        @setPosition view, @model.position
 
     connectionPosition: =>
         [ @model.position[0] + @parent.parent.model.position[0]

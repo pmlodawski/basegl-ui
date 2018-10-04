@@ -131,7 +131,7 @@ export class ExpressionNode extends ContainerComponent
 
         portProperties = (port) =>
             values = {}
-            values.locked = @model.expanded
+            values.expanded = @model.expanded
             if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2

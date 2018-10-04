@@ -13,7 +13,7 @@ export class NewPort extends Subport
         radius:      0
         angle:       0
         angleFollow: null
-        locked:      false
+        expanded:    false
         position:    [0,0]
 
     follow: (key, angle) =>
@@ -32,8 +32,8 @@ export class NewPort extends Subport
             @updateDef 'port', color: @model.color
 
     adjust: (view) =>
-        if @changed.angle or @changed.angleFollow or @changed.locked
-            angle = if @model.locked then @model.angle else @model.angleFollow or @model.angle
+        if @changed.angle or @changed.angleFollow or @changed.expanded
+            angle = if @model.expanded then @model.angle else @model.angleFollow or @model.angle
             @view('port').rotation.z = angle
         if @changed.radius
             @view('port').position.y = @model.radius

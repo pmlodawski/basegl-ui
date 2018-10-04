@@ -39,15 +39,18 @@ export class InArrow extends Subport
 
     adjust: (view) =>
         if @changed.radius
-            @animatePositionY @view('port'), @model.radius
+            @setPositionY @view('port'), @model.radius
             namePosition = [- subport.nameXOffset(@style) - @model.radius, 0]
-            @animatePosition @view('name'), namePosition
+            @setPosition @view('name'), namePosition
+            if @view('typeName')?
+                typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, - subport.typeNameYOffset(@style)]
+                @setPosition @view('typeName'), typeNamePosition
         if @changed.angle
-            @animateRotation @view('port'), @model.angle
-            @animateRotation @view('name'), @model.angle - Math.PI/2
-        @animateRotation @view('typeName'), @model.angle - Math.PI/2
+            @setRotation @view('port'), @model.angle, @changed.radius
+            @setRotation @view('name'), @model.angle - Math.PI/2, @changed.radius
+        @setRotation @view('typeName'), @model.angle - Math.PI/2
         typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, - subport.typeNameYOffset(@style)]
-        @animatePosition @view('typeName'), typeNamePosition
+        @setRotation @view('typeName'), typeNamePosition
 
     registerEvents: (view) =>
         super view

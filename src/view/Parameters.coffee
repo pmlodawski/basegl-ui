@@ -32,16 +32,16 @@ export class Parameters extends Widget
         view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
         @view('widgets').scale.xy = [0,0]
         @view('background').scale.xy = [0,0]
-        # @animatePosition view, [@style.node_widgetOffset_h, 0]
-        # @animatePosition view, [0, 100]
+        # @setPosition view, [@style.node_widgetOffset_h, 0]
+        # @setPosition view, [0, 100]
     adjustDst: (view) =>
-        @animatePosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
-        @animateScale @view('widgets'), [0,0]
-        @animateScale @view('background'), [0, 0]
+        @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
+        @setScale @view('widgets'), [0,0]
+        @setScale @view('background'), [0, 0]
 
     adjust: (view) =>
         if @changed.once
-            @animatePosition view, [0, 0]
-            @animateScale @view('widgets'), [1, 1]
-            @animateScale @view('background'), [1, 1]
+            @setPosition view, [0, 0]
+            @setScale @view('widgets'), [1, 1]
+            @setScale @view('background'), [1, 1]
             @view('widgets').position.xy = [@style.node_widgetOffset_h, - @style.node_widgetHeight/2]
