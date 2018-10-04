@@ -4,9 +4,9 @@ import {HtmlShape} from 'shape/Html'
 import * as basegl from 'basegl'
 import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
+import * as focus  from 'view/Focus'
 
-
-searcherRoot = 'searcher-root'
+searcherId = 'searcher-input'
 
 export class Searcher extends ContainerComponent
 
@@ -20,14 +20,11 @@ export class Searcher extends ContainerComponent
         inputSelection: null
         selected: 0
         entries: []
-        position: [0, 0]
-        parent: null
 
     prepare: =>
         @dom = {}
         @addDef 'root', HtmlShape,
             element: 'div'
-            id: 'searcher-root'
             scalable: false
             cssClassName: style.luna ['searcher__root']
 
@@ -35,14 +32,17 @@ export class Searcher extends ContainerComponent
     ### Create/update the DOM ###
     #############################
 
-    __anyChanged: =>
-        @changed.entries or @changed.input or @changed.inputSelection or @changed.selected
-
     update: =>
         @__createDom() unless @dom.container?
-        if @__anyChanged()
-            @__updateResults()
-            @__updateInput()
+        @__updateResults()
+        @__updateInput()
+        setTimeout => @__focusInput()
+
+    dispose: =>
+        focus.focusNodeEditor()
+        super()
+
+    __focusInput: =>
         @dom.input.focus()
 
     __createDom: =>
@@ -86,7 +86,6 @@ export class Searcher extends ContainerComponent
             @dom.input.selectionStart = @model.inputSelection[0]
             @dom.input.selectionEnd   = @model.inputSelection[1]
             @model.inputSelection = null
-        return @dom.input
 
     __inputClassName: =>
         inputClasses = ['searcher__input']
