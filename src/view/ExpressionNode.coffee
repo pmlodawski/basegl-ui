@@ -72,12 +72,17 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'icon', icon: @model.icon
         @updateDef 'name',
             text:     @model.name
-        @updateDef 'expression',
-            text:    @model.expression
             color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
             frameColor:
                 [ @style.port_borderColor_h, @style.port_borderColor_s
                 , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
+                ]
+        @updateDef 'expression',
+            text:    @model.expression
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
                 ]
 
         @updateDef 'newPort', key: @model.newPortKey

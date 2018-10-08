@@ -77,7 +77,6 @@ runExample = -> main (nodeEditor) ->
             #     contents:
             #         tag: 'ShortValue'
             #         contents: 'Another error description'
-            hovered: true
         ,
             key: 2
             name: 'bar'
