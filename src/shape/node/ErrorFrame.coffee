@@ -32,14 +32,8 @@ compactNodeErrorSymbol = memoizedSymbol (style) ->
 
 export class NodeErrorShape extends BasicComponent
     initModel: =>
-        body:     [100, 100]
     define: =>
         compactNodeErrorSymbol @style
 
     adjust: (element) =>
-        if @model.expanded
-            element.variables.bodyWidth  = @model.body[0]
-            element.variables.bodyHeight = @model.body[1]
-            element.position.xy = [-baseNode.width(@style)/2, -@model.body[1] - baseNode.height(@style)/2 - @style.node_headerOffset]
-        else
             element.position.xy = [-baseNode.width(@style)/2, -baseNode.height(@style)/2]
