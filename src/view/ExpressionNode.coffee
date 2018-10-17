@@ -50,7 +50,7 @@ export class ExpressionNode extends ContainerComponent
         visualizations: null
 
     prepare: =>
-        @addDef 'node', NodeShape, expanded: @model.expanded
+        @addDef 'node', NodeShape
         @addDef 'name', EditableText,
             entries:  []
             kind:     EditableText.NAME
@@ -92,15 +92,10 @@ export class ExpressionNode extends ContainerComponent
             @updateDef 'outPorts', elems: @model.outPorts
             @updateOutPorts()
 
-        @updateDef 'node',
-            expanded: @model.expanded
-            selected: @model.selected
-            body: [@style.node_bodyWidth, @bodyHeight]
+        @updateDef 'node', selected: @model.selected
 
-        if @changed.value or @changed.expanded
-            @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
-                expanded: @model.expanded
-                body: [@style.node_bodyWidth, @bodyHeight]
+        if @changed.value
+            @autoUpdateDef 'errorFrame', NodeErrorShape, if @error() then {}
 
         @updateDef 'body',
             inPorts: @model.inPorts
@@ -136,7 +131,7 @@ export class ExpressionNode extends ContainerComponent
 
         portProperties = (port) =>
             values = {}
-            values.locked = @model.expanded
+            values.expanded = @model.expanded
             if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
