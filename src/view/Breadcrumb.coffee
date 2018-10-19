@@ -75,4 +75,4 @@ export class Breadcrumb extends ContainerComponent
     connectSources: =>
         @withScene (scene) =>
             @__align scene
-            # @addDisposableListener scene.camera, 'move', => @__align scene
+            @addDisposableListener scene.camera, 'move', => @__align scene
