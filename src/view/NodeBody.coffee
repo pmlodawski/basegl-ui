@@ -17,7 +17,7 @@ export class NodeBody extends ContainerComponent
 
     prepare: =>
         @addDef 'valueToggler', ValueTogglerShape
-        @addDef 'modules', VerticalLayout,
+        @addDef 'body', VerticalLayout,
             width: @style.node_bodyWidth
 
     update: =>
@@ -25,6 +25,7 @@ export class NodeBody extends ContainerComponent
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
         if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.expanded or @changed.value
+            body = []
             modules = []
             if @model.expanded
                 modules.push
@@ -35,8 +36,12 @@ export class NodeBody extends ContainerComponent
                 visualization.cons = Visualization
                 visualization.visualizers = @model.visualizers
                 modules.push visualization
+            body.push
+                id: 'modules'
+                cons: VerticalLayout
+                children: modules
             if @__shortValue()?
-                modules.push
+                body.push
                     id: 'value'
                     cons: TextContainer
                     textAlign: 'center'
@@ -44,7 +49,7 @@ export class NodeBody extends ContainerComponent
                     color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
                     text: @__shortValue()
 
-            @updateDef 'modules', children: modules
+            @updateDef 'body', children: body
 
     adjust: =>
         @view('value')?.position.xy =
