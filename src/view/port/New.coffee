@@ -44,9 +44,3 @@ export class NewPort extends Subport
         [ @model.position[0] + @parent.model.position[0]
         , @model.position[1] + @parent.model.position[1]
         ]
-
-    registerEvents: (view) =>
-        super view
-        view.addEventListener 'mousedown', (e) =>
-            e.stopPropagation()
-            @pushEvent e

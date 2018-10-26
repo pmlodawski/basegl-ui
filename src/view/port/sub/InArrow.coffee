@@ -49,9 +49,3 @@ export class InArrow extends Subport
         @view('typeName')?.rotation.z = @model.angle - Math.PI/2
         typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, - subport.typeNameYOffset(@style)]
         @view('typeName')?.position.xy = typeNamePosition
-
-    registerEvents: (view) =>
-        super view
-        view.addEventListener 'mousedown', (e) =>
-            e.stopPropagation()
-            @pushEvent e
