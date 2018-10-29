@@ -1,11 +1,13 @@
-import {OutPortShape}         from 'shape/port/Out'
-import {Subport, nameXOffset} from 'view/port/sub/Base'
-import {TextContainer}        from 'view/Text'
+import {OutPortShape}  from 'shape/port/Out'
+import {Subport}       from 'view/port/sub/Base'
+import * as subport    from 'view/port/sub/Base'
+import {TextContainer} from 'view/Text'
 
 
 export class OutArrow extends Subport
     initModel: =>
         angle: 0
+        color: [1, 0, 0]
         hovered: false
         typeName: ''
         radius: 0
@@ -14,9 +16,16 @@ export class OutArrow extends Subport
         @addDef 'port', OutPortShape, angle: @model.angle
 
     update: =>
-        @autoUpdateDef 'typeName', TextContainer, if @model.hovered
+        @autoUpdateDef 'typeName', TextContainer, if @model.typeName
             text: @model.typeName
             align: 'left'
+            color: [@model.color[0], @model.color[1], @model.color[2], @model.hovered]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
+                ]
+        if @changed.color
+            @updateDef 'port', color: @model.color
 
     adjust: (view) =>
         if @changed.radius
@@ -25,29 +34,10 @@ export class OutArrow extends Subport
             @view('port').rotation.z = @model.angle
         if @view('typeName')?
             @view('typeName').rotation.z = @model.angle + Math.PI/2
-            @view('typeName').position.x = nameXOffset + @model.radius
+            @view('typeName').position.x = subport.nameXOffset(@style) + @model.radius
 
     registerEvents: (view) =>
         super view
         view.addEventListener 'mousedown', (e) =>
             e.stopPropagation()
             @pushEvent e
-
-    connectSources: =>
-        @__onTypeNameChange()
-        @__onRadiusChange()
-        @__onColorChange()
-        @__onHoverChange()
-        @addDisposableListener @parent, 'typeName', => @__onTypeNameChange()
-        @addDisposableListener @parent, 'radius', => @__onRadiusChange()
-        @addDisposableListener @parent, 'color', => @__onColorChange()
-        @addDisposableListener @parent.parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
-
-    __onTypeNameChange: =>
-        @set typeName: @parent.model.typeName
-    __onRadiusChange: =>
-        @set radius: @parent.model.radius
-    __onColorChange: =>
-        @updateDef 'port', color: @parent.model.color
-    __onHoverChange: =>
-        @set hovered: @parent.parent.parent.model.hovered

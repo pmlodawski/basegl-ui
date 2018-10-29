@@ -20,6 +20,8 @@ export class EditableText extends ContainerComponent
         key: null
         input: null
         text: ''
+        color: null
+        frameColor: null
         inputSelection: null
         selected: 0
         entries: []
@@ -32,9 +34,6 @@ export class EditableText extends ContainerComponent
     #############################
 
     update: =>
-        anyChanged = Object.values(@changed).some((v) -> v)
-        return unless anyChanged
-
         @autoUpdateDef 'searcher', Searcher, if @model.edited
             key:            @model.key
             input:          @model.input || ""
@@ -44,7 +43,8 @@ export class EditableText extends ContainerComponent
         @autoUpdateDef 'text', TextContainer, unless @model.edited
             text:  @model.text
             align: 'center'
-
+            color: @model.color
+            frameColor: @model.frameColor
     hideSearcher: =>
         @set edited: false
         @root.unregisterSearcher()

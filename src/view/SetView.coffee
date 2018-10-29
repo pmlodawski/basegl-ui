@@ -1,10 +1,12 @@
-import {ContainerComponent} from 'abstract/ContainerComponent'
+import {Widget}       from 'widget/Widget'
 
 
-export class SetView extends ContainerComponent
+export class SetView extends Widget
     initModel: =>
-        elems: {}
-        cons: null
+        model = super()
+        model.elems = {}
+        model.cons = null
+        model
 
     update: =>
         if @changed.cons

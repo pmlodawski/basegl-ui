@@ -26,6 +26,7 @@ export class VisualizerMenu extends ContainerComponent
             if @model.visualizers?
                 children = @model.visualizers.map (visualizer) =>
                     cons: TextContainer
+                    color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
                     text: visualizer.visualizerName
                     align: 'right'
                     border: menuItemBorder

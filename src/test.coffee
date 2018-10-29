@@ -6,13 +6,13 @@ import {circle}       from 'basegl/display/Shape'
 import {vector}       from 'basegl/math/Vector'
 
 
-nodeRadius     = 30
-width = nodeRadius * 2 + 50
-height = nodeRadius * 2 + 50
+node_radius     = 30
+width = node_radius * 2 + 50
+height = node_radius * 2 + 50
 
 basicNodeShape = basegl.expr ->
     border = 0
-    r1     = nodeRadius + border
+    r1     = node_radius + border
     node   = circle r1
     node   = node.move width/2, height/2
 
@@ -33,6 +33,6 @@ node.bbox.xy = [width, height]
 
 
 export main = ->
-    scene = basegl.scene {domElement: 'basegl-root'}
+    scene = basegl.scene {domElement: 'node-editor-mount'}
     view = scene.add node
     view.addEventListener 'click', (e) => console.log e

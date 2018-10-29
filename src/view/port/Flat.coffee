@@ -19,6 +19,7 @@ export class FlatPort extends Port
         @addDef 'name', TextContainer,
             align: 'left'
             text: @model.name
+            color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
 
     update: =>
         if @changed.color
@@ -33,9 +34,9 @@ export class FlatPort extends Port
         if @changed.output or @changed.position
             view.position.xy = @model.position.slice()
         if @changed.output
-            @view('name').position.x = if @model.output then -shape.length else  2* shape.length
+            @view('name').position.x = if @model.output then -@style.port_length else  2* @style.port_length
 
     connectionPosition: =>
-        [ @model.position[0] + @parent.parent.model.position[0] + (if @model.output then -shape.length else shape.length)
+        [ @model.position[0] + @parent.parent.model.position[0] + (if @model.output then -shape.offset(@style) else shape.offset(@style))
         , @model.position[1] + @parent.parent.model.position[1]
         ]

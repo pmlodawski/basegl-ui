@@ -1,44 +1,32 @@
-import * as basegl    from 'basegl'
-import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
-import * as Color     from 'basegl/display/Color'
-import {world}        from 'basegl/display/World'
-import {group}        from 'basegl/display/Symbol'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
-import {Composable, fieldMixin} from "basegl/object/Property"
 import * as _         from 'underscore'
 
-import {BasicComponent}         from 'abstract/BasicComponent'
-import {Component}              from 'abstract/Component'
-import {ContainerComponent}     from 'abstract/ContainerComponent'
-import * as shape               from 'shape/node/Base'
-import {NodeShape}              from 'shape/node/Node'
-import {NodeErrorShape}         from 'shape/node/ErrorFrame'
-import * as togglerShape        from 'shape/visualization/ValueToggler'
-import {EditableText}           from 'view/EditableText'
-import {InPort}                 from 'view/port/In'
-import {NewPort}                from 'view/port/New'
-import {OutPort}                from 'view/port/Out'
-import {SetView}                from 'view/SetView'
-import {TextContainer}          from 'view/Text'
-import {VisualizationContainer} from 'view/visualization/Container'
-import {HorizontalLayout}       from 'widget/HorizontalLayout'
+import {ContainerComponent} from 'abstract/ContainerComponent'
+import * as shape           from 'shape/node/Base'
+import {NodeShape}          from 'shape/node/Node'
+import {NodeErrorShape}     from 'shape/node/ErrorFrame'
+import * as togglerShape    from 'shape/visualization/ValueToggler'
+import {EditableText}       from 'view/EditableText'
+import {InPort}             from 'view/port/In'
+import {NewPort}            from 'view/port/New'
+import {OutPort}            from 'view/port/Out'
+import {SetView}            from 'view/SetView'
+import {NodeBody}           from 'view/NodeBody'
+import {IconLoader}         from 'view/IconLoader'
+import {HorizontalLayout}   from 'widget/HorizontalLayout'
+import {VerticalLayout}     from 'widget/VerticalLayout'
+import * as portBase        from 'shape/port/Base'
 
-### Utils ###
 selectedNode = null
 
 
 exprOffset = 25
-nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + exprOffset
-nodeValYOffset  = -nodeNameYOffset
+nodeExprYOffset = (style) -> shape.height(style) / 3
+nodeNameYOffset = (style) -> nodeExprYOffset(style) + exprOffset
 
-portDistance = shape.height / 3
-widgetOffset = 20
-widgetHeight = 20
-inportVDistance = widgetOffset + widgetHeight
-minimalBodyHeight = 60
-
+minimalBodyHeight = (style) -> 2 * style.node_widgetOffset_v + style.node_widgetHeight
+bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
+    style.node_headerOffset - style.node_widgetOffset_v
 testEntries = [
     { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
     { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
@@ -51,6 +39,7 @@ export class ExpressionNode extends ContainerComponent
         name:       ''
         expression: ''
         value:      null
+        icon:       null
         inPorts:    {}
         outPorts:   {}
         newPortKey: null
@@ -61,51 +50,56 @@ export class ExpressionNode extends ContainerComponent
         visualizations: null
 
     prepare: =>
-        @addDef 'node', NodeShape, expanded: @model.expanded
+        @addDef 'node', NodeShape
         @addDef 'name', EditableText,
-                text:     @model.name
-                entries:  []
-                kind:     EditableText.NAME
+            entries:  []
+            kind:     EditableText.NAME
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
         @addDef 'expression', EditableText,
-                text:    @model.expression
-                entries: []
-                kind:    EditableText.EXPRESSION
-        @addDef 'visualization', VisualizationContainer
+            entries: []
+            kind:    EditableText.EXPRESSION
+        @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
         @addDef 'newPort', NewPort
+        @addDef 'icon', IconLoader
 
     update: =>
-        @updateDef 'name', text: @model.name
-        @updateDef 'expression', text: @model.expression
+        @updateDef 'icon', icon: @model.icon
+        @updateDef 'name',
+            text:     @model.name
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
+                ]
+        @updateDef 'expression',
+            text:    @model.expression
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            frameColor:
+                [ @style.port_borderColor_h, @style.port_borderColor_s
+                , @style.port_borderColor_l, @style.port_borderColor_a
+                ]
+
         @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
-            @updateDef 'inPorts', elems: @model.inPorts
             @updateInPorts()
-        if @model.expanded
-            setWidget = (k) =>
-                @autoUpdateDef ('widget' + k), HorizontalLayout,
-                    key: k
-                    children: inPort.controls
-                    width: @bodyWidth - widgetOffset
-                    height: widgetHeight
-            for own k, inPort of @model.inPorts
-                setWidget k, inPort
         if @changed.outPorts
             @updateDef 'outPorts', elems: @model.outPorts
             @updateOutPorts()
 
-        @updateDef 'node',
+        @updateDef 'node', selected: @model.selected
+
+        if @changed.value
+            @autoUpdateDef 'errorFrame', NodeErrorShape, if @error() then {}
+
+        @updateDef 'body',
+            inPorts: @model.inPorts
             expanded: @model.expanded
-            selected: @model.selected
-            body: [@bodyWidth, @bodyHeight]
-
-        if @changed.value or @changed.expanded
-            @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
-                expanded: @model.expanded
-                body: [@bodyWidth, @bodyHeight]
-
-        @updateDef 'visualization',
             value: @model.value
             visualizers: @model.visualizations?.visualizers
             visualizations: @model.visualizations?.visualizations
@@ -120,25 +114,15 @@ export class ExpressionNode extends ContainerComponent
         @def(searcherModel.targetField)?.setSearcher searcherModel
 
     adjust: (view) =>
-        if @model.expanded
-            for own inPortKey, inPortModel of @model.inPorts
-                inPort = @def('inPorts').def(inPortKey)
-                if inPortModel.controls?
-                    leftOffset = 50
-                    startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
-                    @view('widget' + inPortKey).position.xy = startPoint
-        @view('visualization').position.xy =
-            if @model.expanded
-                [ - shape.width/2
-                , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
-            else
-                [ - shape.width/2, - shape.height/2 - togglerShape.size]
-        @view('name').position.y = nodeNameYOffset
-        @view('expression').position.y = nodeExprYOffset
+        if @changed.once
+            @view('body').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
+            @view('name').position.y = nodeNameYOffset @style
+            @view('expression').position.y = nodeExprYOffset @style
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>
-        @bodyWidth = 200
+        @updateDef 'inPorts', elems: @model.inPorts
+        inportVDistance = @style.node_widgetOffset_v + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts
@@ -147,7 +131,7 @@ export class ExpressionNode extends ContainerComponent
 
         portProperties = (port) =>
             values = {}
-            values.locked = @model.expanded
+            values.expanded = @model.expanded
             if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
@@ -155,12 +139,12 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [- shape.height/2
-                                  ,- shape.height/2 - (inPortNumber - 1) * inportVDistance]
+                values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) + @style.node_radius
+                                  , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else
                 values.position = [0,0]
-                values.radius = portDistance
+                values.radius = portBase.distanceFromCenter @style
                 values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
             values
@@ -168,7 +152,7 @@ export class ExpressionNode extends ContainerComponent
         for inPortKey, inPort of @model.inPorts
             @def('inPorts').def(inPortKey).set portProperties inPort
         @def('newPort').set portProperties mode:'phantom'
-        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
+        @bodyHeight = minimalBodyHeight(@style) + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
 
 
     updateOutPorts: =>
@@ -178,7 +162,7 @@ export class ExpressionNode extends ContainerComponent
             values = {}
             unless outPort.angle?
                 values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
-                values.radius = portDistance
+                values.radius = portBase.distanceFromCenter @style
             @def('outPorts').def(outPortKey).set values
             outPortNumber++
 

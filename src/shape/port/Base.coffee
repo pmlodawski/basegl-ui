@@ -1,12 +1,11 @@
-import {nodeSelectionBorderMaxSize} from 'shape/node/Base'
-import {BasicComponent}             from 'abstract/BasicComponent'
+import {BasicComponent} from 'abstract/BasicComponent'
 
-export angle = Math.PI/3
-export length    = 10
-export width     = length * Math.tan angle
-export distanceFromCenter = nodeSelectionBorderMaxSize
-export inArrowRadius    = length + distanceFromCenter
-export outArrowRadius    = distanceFromCenter
+
+export width     = (style) -> style.port_length * Math.tan style.port_angle
+export distanceFromCenter = (style) -> style.node_radius + style.port_distance
+export inArrowRadius  = (style) -> style.port_length + distanceFromCenter(style)
+export outArrowRadius = (style) -> distanceFromCenter(style)
+export offset = (style) -> style.port_length - 2
 
 
 export class PortShape extends BasicComponent
@@ -18,5 +17,7 @@ export class PortShape extends BasicComponent
             element.variables.color_b = @model.color[2]
 
     registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @getElement().variables.hovered = 1
-        view.addEventListener 'mouseout',  => @getElement().variables.hovered = 0
+        animateHover = (value) =>
+            @animateVariable 'hovered', value
+        view.addEventListener 'mouseover', => animateHover 1
+        view.addEventListener 'mouseout',  => animateHover 0

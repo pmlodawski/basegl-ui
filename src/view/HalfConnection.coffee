@@ -7,7 +7,7 @@ export class HalfConnection extends ContainerComponent
         key: 'halfconnection'
         srcNode: null
         srcPort: null
-        dstPos: [0,0]
+        dstPos: undefined
         reversed: false
 
     prepare: =>
@@ -53,9 +53,9 @@ export class HalfConnection extends ContainerComponent
     __onPositionChange: =>
         srcPos = @srcPort.connectionPosition()
         leftOffset = @srcPort.model.radius
-
-        x = @model.dstPos[0] - srcPos[0]
-        y = @model.dstPos[1] - srcPos[1]
+        dstPos = @model.dstPos or srcPos
+        x = dstPos[0] - srcPos[0]
+        y = dstPos[1] - srcPos[1]
         length = Math.sqrt(x*x + y*y) - leftOffset
         rotation = Math.atan2 y, x
 

@@ -1,44 +1,30 @@
-import {Widget}       from 'widget/Widget'
+import {FlatLayout}   from 'abstract/Layout'
 import {lookupWidget} from 'widget/WidgetDirectory'
 
 
-export class VerticalLayout extends Widget
-    initModel: =>
-        s = super()
-        s.key = null
-        s.children = []
-        s.height = null
-        s.width = null
-        s.offset = 3
-        s
-
-    update: =>
-        if @changed.children
-            for own k, widget of @model.children
-                cons = lookupWidget widget
-                if cons?
-                    @autoUpdateDef k, cons, widget
-
+export class VerticalLayout extends FlatLayout
+    __updateChildren: =>
         return unless @model.children.length > 0
         children = []
-        @__minHeight = 0
+        @__minHeight = @model.offset * (@model.children.length - 1)
         @__maxHeight = 0
         @__minWidth = 0
         @__maxWidth = Infinity
-        for i in [0..@model.children.length - 1]
+        @forEach (def, key, i) =>
             children.push
+                key    : key
                 index  : i
-                widget : @def(i)
-                height : @def(i).minHeight()
-            @__minHeight += @def(i).minHeight() or 0
-            @__maxHeight += @def(i).maxHeight() or 0
-            @__minWidth = Math.max @def(i).minWidth(), @__minWidth
-            @__maxWidth = Math.min @def(i).maxWidth(), @__maxWidth
-            @updateDef i, siblings:
-                left:  ! (i == 0)
-                right: ! (i == @model.children.length - 1)
+                widget : def
+                height : def.minHeight()
+            @__minHeight += def.minHeight() or 0
+            @__maxHeight += def.maxHeight() or 0
+            @__minWidth = Math.max def.minWidth(), @__minWidth
+            @__maxWidth = Math.min def.maxWidth(), @__maxWidth
+            @updateDef key, siblings:
+                top:  ! (i == 0)
+                bottom: ! (i == @model.children.length - 1)
         if @model.height?
-            free = @model.height - @__minHeight - @model.offset * (@model.children.length - 1)
+            free = @model.height - @__minHeight
             children.sort (a, b) -> a.widget.maxHeight() - b.widget.maxHeight()
             for i in [0..children.length - 1]
                 w = children[i]
@@ -53,8 +39,8 @@ export class VerticalLayout extends Widget
 
         startPoint = [0,0]
         children.forEach (w) =>
-            @view(w.index).position.xy = startPoint.slice()
-            @updateDef w.index,
+            @setPosition @view(w.key), startPoint
+            @updateDef w.key,
                 height: w.height
                 width: @__computeWidth w.widget
             startPoint[1] -= w.height + @model.offset

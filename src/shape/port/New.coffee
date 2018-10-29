@@ -1,4 +1,4 @@
-import {InPortShape} from 'shape/port/In'
+import {InPortShape}    from 'shape/port/In'
 
 
 export class NewPortShape extends InPortShape
@@ -15,5 +15,8 @@ export class NewPortShape extends InPortShape
     __alphaOnUnhover: => Number @model.lockHover
 
     registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @getElement().variables.color_a = 1
-        view.addEventListener 'mouseout',  => @getElement().variables.color_a = @__alphaOnUnhover()
+        animateHover = (value) =>
+            @animateVariable 'color_a', value
+
+        view.addEventListener 'mouseover', => animateHover 1
+        view.addEventListener 'mouseout',  => animateHover @__alphaOnUnhover()

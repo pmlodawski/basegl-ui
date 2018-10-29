@@ -43,9 +43,9 @@ export class Connection extends ContainerComponent
 
     __rebind: =>
         srcNode = @parent.node @model.srcNode
-        srcPort = srcNode.outPort @model.srcPort
+        srcPort = srcNode?.outPort @model.srcPort
         dstNode = @parent.node @model.dstNode
-        dstPort = dstNode.inPort @model.dstPort
+        dstPort = dstNode?.inPort @model.dstPort
         if @srcNode != srcNode or @dstNode != dstNode or @srcPort != srcPort or @dstPort != dstPort
             @fireDisposables()
             @srcNode = srcNode

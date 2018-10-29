@@ -1,5 +1,5 @@
-import {Navigator}          from 'basegl/navigation/Navigator'
-import {ZoomlessCamera}     from 'basegl/navigation/Camera'
+import {KeyboardMouseReactor} from 'basegl/navigation/EventReactor'
+import {ZoomlessCamera}       from 'basegl/navigation/Camera'
 
 import {Disposable}         from 'abstract/Disposable'
 import {EventEmitter}       from 'abstract/EventEmitter'
@@ -10,6 +10,7 @@ import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
+import {Styles}             from 'view/Styles'
 
 import * as _ from 'underscore'
 
@@ -36,11 +37,13 @@ export class NodeEditor extends EventEmitter
 
     initialize: =>
         @withScene (scene) =>
-            @controls = new Navigator scene
+            @controls = new KeyboardMouseReactor scene
             @addDisposableListener scene, 'click',     @pushEvent
             @addDisposableListener scene, 'dblclick',  @pushEvent
             @addDisposableListener scene, 'mousedown', @pushEvent
             @addDisposableListener scene, 'mouseup',   @pushEvent
+        @styles = new Styles null, @
+        # setTimeout => @styles.set enabled: true
 
     getMousePosition: => @withScene (scene) =>
         campos = scene.camera.position

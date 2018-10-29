@@ -4,8 +4,6 @@ import * as style           from 'style'
 import {HtmlShapeWithScene} from 'shape/Html'
 import {ContainerComponent} from 'abstract/ContainerComponent'
 
-width = 300
-height = 300
 
 export class VisualizationIFrame extends ContainerComponent
     @ctr = 0
@@ -33,10 +31,10 @@ export class VisualizationIFrame extends ContainerComponent
     __isModePreview: => @model.mode == 'Preview'
 
     __width: =>
-        if @__isModePreview() then @root._scene.width else width
+        if @__isModePreview() then @root._scene.width else @style.visualization_width - 2* @style.node_widgetOffset_h
 
     __height: =>
-        if @__isModePreview() then @root._scene.height else height
+        if @__isModePreview() then @root._scene.height else @style.visualization_height - 2* @style.node_widgetOffset_v
 
     update: =>
         if @changed.mode

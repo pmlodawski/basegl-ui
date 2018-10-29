@@ -8,16 +8,20 @@ export class TextContainer extends Widget
     initModel: =>
         model = super()
         model.text = ''
+        model.color = null
         model.align = 'left'
+        model.valign = 'center'
         model.textAlign = 'left'
         model.frameColor = null
         model.border = 3
         model.onclick = =>
+        model.roundFrame = 0
         model
 
     prepare: =>
         @addDef 'text', TextShape,
             text: @model.text
+            color: @model.color
             align: 'left'
         @addDef 'box', RectangleShape,
             color: @model.frameColor
@@ -33,8 +37,20 @@ export class TextContainer extends Widget
             @updateDef 'box', height: @model.height or @__minHeight
             @updateDef 'box', width:  @model.width  or @__minWidth
 
+        if @changed.color
+            @updateDef 'text', color: @model.color
+
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor
+
+        if @changed.roundFrame or @changed.siblings
+            @updateDef 'box',
+                corners:
+                    topLeft    : not (@model.siblings.top    or @model.siblings.left)
+                    topRight   : not (@model.siblings.top    or @model.siblings.right)
+                    bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
+                    bottomRight: not (@model.siblings.bottom or @model.siblings.right)
+                    round: @model.roundFrame
 
     adjust: =>
         if @changed.text or @changed.align or @changed.width or @changed.height
@@ -52,9 +68,15 @@ export class TextContainer extends Widget
                     x + (width - @__minWidth)/2
                 else
                     x
-
-            @view('text').position.x = textX + @model.border
-            @view('box').position.xy = [x, -height/2]
+            textY =
+                if @model.valign == 'top'
+                    -height/2
+                else if @model.valign == 'center'
+                    0
+                else
+                    height/2
+            @view('text').position.xy = [textX + @model.border, textY]
+            @view('box').position.xy = [x, textY - height/2]
 
     registerEvents: (view) =>
         view.addEventListener 'click', (e) =>

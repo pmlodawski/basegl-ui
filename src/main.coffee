@@ -16,15 +16,20 @@ import * as layers          from 'view/layers'
 import * as test            from './test'
 
 removeChildren = (name) =>
-    element = document.getElementById(name).innerHTML = ''
+    element = document.getElementById(name)
+    unless element?
+        console.error "The DOM element \"#{name}\" does not exist."
+        return
+
+    element.innerHTML = ''
     while element.firstChild
         element.removeChild element.firstChild
 
 export install = (name, fontRootPath = '', callback) ->
     removeChildren name
     scene = basegl.scene {domElement: name}
-    basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
-    basegl.fontManager.load('DejaVuSansMono').then (atlas) =>
+    basegl.fontManager.register 'SourceCodePro', fontRootPath + 'SourceCodeVariable-Roman.ttf'
+    basegl.fontManager.load('SourceCodePro').then (atlas) =>
         atlas._letterDef.defaultZIndex = layers.text
         nodeEditor = new NodeEditor scene
         window.n = nodeEditor
@@ -33,7 +38,7 @@ export install = (name, fontRootPath = '', callback) ->
 
 export onEvent = subscribeEvents
 
-main = (callback) -> install 'basegl-root', 'rsc/', callback
+main = (callback) -> install 'node-editor-mount', 'rsc/', callback
 
 window.run = main
 
@@ -62,19 +67,19 @@ runExample = -> main (nodeEditor) ->
                     typeName: 'A'
                 2:
                     typeName: 'B'
-            position: [200, 300]
+            icon: 'rect'
+            position: [200, 600]
             expanded: false
             selected: false
-            error: true
-            value:
-                tag: 'Error'
-                contents:
-                    tag: 'ShortValue'
-                    contents: 'Another error description'
-            hovered: true
+            # error: true
+            # value:
+            #     tag: 'Error'
+            #     contents:
+            #         tag: 'ShortValue'
+            #         contents: 'Another error description'
         ,
             key: 2
-            name: 'bar'
+            name: 'bar2'
             expression: '54'
             inPorts:
                 0:
@@ -96,7 +101,8 @@ runExample = -> main (nodeEditor) ->
             outPorts:
                 1:
                     typeName: 'A'
-            position: [200, 600]
+            icon: 'rect'
+            position: [300, 300]
             expanded: false
             selected: false
             value:
@@ -105,7 +111,7 @@ runExample = -> main (nodeEditor) ->
                     tag: 'Visualization'
         ,
             key: 3
-            name: 'baz'
+            name: 'baz3'
             expression: 'foo bar baz'
             inPorts:
                 0:
@@ -188,24 +194,26 @@ runExample = -> main (nodeEditor) ->
                         ]
             outPorts:
                 1: {}
-            position: [500, 300]
+            icon: 'stripes'
+            position: [600, 500]
             expanded: true
-            error: true
-            value:
-                tag: 'Error'
-                contents:
-                    tag: 'Visualization'
+            # error: true
+            # value:
+            #     tag: 'Error'
+            #     contents:
+            #         tag: 'Visualization'
             selected: false
         ,
             key: 4
-            name: 'node1'
+            name: 'node4'
             inPorts:
                 1:
-                    name: 'onlyPort'
+                    name: 'ooo'
                     typeName: 'A'
             outPorts:
                 1: {}
-            position: [500, 600]
+            icon: 'stripes'
+            position: [800, 500]
             expanded: false
             selected: false
         ]

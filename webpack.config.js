@@ -19,7 +19,7 @@ module.exports =
     { path: path.resolve(__dirname, 'dist', 'js')
     , publicPath: '/js/'
     , filename: 'bundle.js'
-    , library: 'node_editor_basegl'
+    , library: 'luna-basegl-ui'
     , libraryTarget: 'umd'
     , strictModuleExceptionHandling: true
     }

@@ -1,5 +1,3 @@
-import * as shape       from 'shape/port/Base'
-
 import {FlatPortShape}      from 'shape/port/Flat'
 import {Port, defaultColor} from 'view/port/Base'
 import {OutArrow}           from 'view/port/sub/OutArrow'
@@ -7,20 +5,42 @@ import {OutArrow}           from 'view/port/sub/OutArrow'
 
 export class OutPort extends Port
     initModel: =>
+        angle:    0
+        color:    defaultColor
+        hovered:  false
         key:      null
         typeName: ''
-        angle:    0
         radius:   0
-        color:    defaultColor
         subports: {}
+
+    portConstructor: => OutArrow
 
     update: =>
         if (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
-            for own k, subport of @model.subports
-                @autoUpdateDef ('sub' + k), OutArrow, angle: subport
+            @updateDef 'subports',
+                elems: for own k, subport of @model.subports
+                    angle:    subport
+                    color:    @model.color
+                    hovered:  @model.hovered
+                    key:      k
+                    radius:   @model.radius
+                    typeName: @model.typeName
         else
-            @autoUpdateDef 'subport', OutArrow, angle: @model.angle
+            @updateDef 'subports', elems: []
+            @autoUpdateDef 'subport', OutArrow,
+                angle:    @model.angle
+                color:    @model.color
+                hovered:  @model.hovered
+                radius:   @model.radius
+                typeName: @model.typeName
 
     connectionPosition: => @parent.parent.model.position
+
+    connectSources: =>
+        @__onHoverChange()
+        @addDisposableListener @parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
+
+    __onHoverChange: (e) =>
+        @set hovered: @parent.parent.model.hovered

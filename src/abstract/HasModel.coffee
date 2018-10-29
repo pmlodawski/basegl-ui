@@ -17,6 +17,7 @@ export class HasModel extends EventEmitter
     cons: (values, @parent) =>
         super()
         @root =  @parent?.root or @parent or @
+        @style = @root?.styles?.install @
 
     init: (values) =>
         super()
@@ -37,12 +38,22 @@ export class HasModel extends EventEmitter
         return if @disposed
         @__setValues values
         if @__anythingChanged
-            @onModelUpdate values
-            @performEmit 'modelUpdated', values
+            @__updateModel values
+
+    forceReset: =>
+        for own key of @model
+            @changed[key] = true
+        @changed.once = true
+        @__updateModel @model
+
+    __updateModel: (values) =>
+        @onModelUpdate values
+        @performEmit 'modelUpdated', values
 
     __setValues: (values, once = false) =>
         values ?= {}
         @__anythingChanged = once
+        valuesToEmit = {}
         for own key of @model
             @changed[key] = once
             value = unArray @model[key], values[key]
@@ -50,7 +61,9 @@ export class HasModel extends EventEmitter
                 @changed[key] = true
                 @__anythingChanged = true
                 @model[key] = value
-                @performEmit key, value
+                valuesToEmit[key] = value
+        for own key, value of valuesToEmit
+            @performEmit key, value
 
     __addToGroup: (view) =>
         @__view.addChild view
@@ -59,7 +72,7 @@ export class HasModel extends EventEmitter
     __removeFromGroup: (view) =>
         @__view.removeChild view
         @__view.updateChildrenOrigin()
-        view.setOrigin mat4.create()
+        # view.setOrigin mat4.create()
 
     log:  (msg) =>
         if window.DEBUG

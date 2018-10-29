@@ -1,5 +1,6 @@
-import {HasModel}  from "abstract/HasModel"
-import * as basegl from 'basegl/display/Symbol'
+import {HasModel}     from "abstract/HasModel"
+import * as basegl    from 'basegl/display/Symbol'
+import * as animation from 'shape/Animation'
 
 
 export class BasicComponent extends HasModel
@@ -15,16 +16,23 @@ export class BasicComponent extends HasModel
             @__element = null
 
     onModelUpdate: =>
-        if (@redefineRequired? and @redefineRequired(@changed)) or (not @__def?)
+        if (@redefineRequired? and @redefineRequired(@changed)) or @changed.once
             def = @define()
             if def?
                 @__undraw()
                 @__draw def
                 @__def = def
         if @__element?
+            if @changed.once
+                @adjustSrc? @__element, @__view
             @adjust? @__element, @__view
 
     dispose: =>
+        if @__element?
+            if @adjustDst?
+                @adjustDst? @__element, @__view
+            else
+                @adjustSrc? @__element, @__view
         @__undraw @__def
         if @__view
             @__view.dispose()
@@ -34,6 +42,12 @@ export class BasicComponent extends HasModel
     getElement: => @__element
 
     getDomElement: => @getElement()?.domElement
+
+    animateVariable: (name, value, animate = true) =>
+        if animate
+            animation.animate @style, @__element, 'variables', name, value
+        else
+            @__element.variables[name] = value
 
     # # implement following methods when deriving: #
     # ##############################################
@@ -60,3 +74,12 @@ export class BasicComponent extends HasModel
     #     ...
     #     element.rotation = @values.angle
     #     ...
+
+export memoizedSymbol = (symbolFun) =>
+    lastRevision = null
+    cachedSymbol = null
+    return (style) =>
+        unless lastRevision == style.revision
+            lastRevision = style.revision
+            cachedSymbol = symbolFun style
+        return cachedSymbol

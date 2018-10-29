@@ -19,7 +19,8 @@ class Slider extends Widget
         @__minWidth = 40
         @__minHeight = 20
         @addDef 'value', TextShape,
-            fontFamily: 'DejaVuSansMono'
+            fontFamily: 'SourceCodePro'
+            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             size: 14
             align: 'center'
             text: '19'
@@ -44,6 +45,7 @@ class Slider extends Widget
         @withScene (scene) =>
             canvas = scene.symbolModel._renderer.domElement
             view.addEventListener 'mousedown', (e) =>
+                return unless e.button == 0
                 e.stopPropagation()
                 canvas.requestPointerLock()
                 onMouseMove = (e) =>
@@ -60,10 +62,21 @@ class Slider extends Widget
                 @addDisposableListener document, 'mouseup', onMouseUp
                 @addDisposableListener document, 'mousemove', onMouseMove
 
+contPrec = 100
+mousePrec = 5
+
 export class DiscreteSlider extends Slider
-    nextValue: (delta) => Math.round(@model.value + delta/2)
+    nextValue: (delta) =>
+        if Math.round(@__internalValue / mousePrec) != @model.value
+            @__internalValue = @model.value * mousePrec
+        @__internalValue += delta
+        Math.round(@__internalValue / mousePrec)
     cls: 'Int'
 
 export class ContinousSlider extends Slider
-    nextValue: (delta) => Math.round(@model.value * 10 + delta/2)/10
+    nextValue: (delta) =>
+        if Math.round(@__internalValue / mousePrec) / contPrec != @model.value
+            @__internalValue = @model.value * mousePrec * contPrec
+        @__internalValue += delta
+        Math.round(@__internalValue / mousePrec) / contPrec
     cls: 'Real'
