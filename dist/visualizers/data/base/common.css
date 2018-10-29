@@ -1,7 +1,10 @@
+:root {
+    --visualisation-color: #777;
+}
 
 body {
     font-family: 'hasklig-regular', 'hasklig', monospace !important;
-    color: #777;
+    color: var(--visualisation-color);
     padding:  6px 10px;
     margin: 0;
     overflow: scroll;

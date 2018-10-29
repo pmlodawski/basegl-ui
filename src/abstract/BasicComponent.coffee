@@ -11,7 +11,7 @@ export class BasicComponent extends HasModel
 
     __undraw: =>
         if @__element?
-            @__addToGroup @__element
+            @__removeFromGroup @__element
             @__element.dispose()
             @__element = null
 

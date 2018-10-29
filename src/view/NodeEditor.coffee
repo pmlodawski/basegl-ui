@@ -16,7 +16,7 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    constructor: (@_scene) ->
+    constructor: (@scene) ->
         super()
         @nodes               ?= {}
         @connections         ?= {}
@@ -24,16 +24,12 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDomModel('dom-top')
-        console.log @_scene
-        # @_scene._dom.
-        # @topDomScene._renderer.domElement.style.zIndex = 10
-        @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
-        console.log "topDomSceneStill: ", @topDomSceneStill
+        @topDomScene          = @scene.addDomModel('dom-top')
+        @topDomSceneStill     = @scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
-            @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
+            @scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @scene._camera)
 
-    withScene: (fun) => fun @_scene if @_scene?
+    withScene: (fun) => fun @scene if @scene?
 
     initialize: =>
         @withScene (scene) =>
@@ -50,6 +46,8 @@ export class NodeEditor extends EventEmitter
         x = (scene.screenMouse.x - scene.width/2) * campos.z + campos.x + scene.width/2
         y = (scene.height/2 - scene.screenMouse.y) * campos.z + campos.y + scene.height/2
         [x, y]
+
+    getCamera: () => @scene._camera
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]

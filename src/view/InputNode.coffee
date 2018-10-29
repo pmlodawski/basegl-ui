@@ -44,7 +44,6 @@ export class InputNode extends ContainerComponent
             view.position.xy = @model.position.slice()
 
     _align: (scene) =>
-        return
         campos = scene.camera.position
         x = scene.width/2 + campos.x - scene.width/2*campos.z
         y = scene.height/2 + campos.y - height/2

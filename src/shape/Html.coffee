@@ -44,7 +44,7 @@ export class HtmlShape extends BasicComponent
             else if @model.top
                 @root.topDomScene.model.add obj
             else
-                @root._scene.domModel.model.add obj
+                @root.scene.domModel.model.add obj
             @__forceUpdatePosition()
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
@@ -58,13 +58,10 @@ export class HtmlShape extends BasicComponent
 export class HtmlShapeWithScene extends HtmlShape
     define: =>
         @dom    = document.createElement @model.element
-        @camera = @root._scene._camera
+        @camera = @root.getCamera()
         @stillCamera = @root.topDomSceneStill.camera
         @sceneId = @model.id
-        @scene  = @root._scene.addDomModelWithNewCamera(@sceneId, @camera) 
-        # @stillCamera.position.xy = [@root._scene.width/2, @root._scene.height/2]
-        window.stillCamera = @stillCamera
-        window.rootScene   = @root._scene
+        @withScene (scene) => scene.addDomModelWithNewCamera(@sceneId, @camera) 
         basegl.symbol @dom
 
     adjust: =>

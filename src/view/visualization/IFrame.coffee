@@ -6,7 +6,9 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 
 
 export class VisualizationIFrame extends ContainerComponent
-    @ctr = 0
+    @iframeIdx = 0
+    @rootViewName = 'root'
+    @rootDefName  = 'root'
 
     initModel: =>
         key: null
@@ -15,14 +17,14 @@ export class VisualizationIFrame extends ContainerComponent
         mode: 'Default' # Default|Focused|Preview
 
     prepare: =>
-        id = 'iframe-containter-' + VisualizationIFrame.ctr
-        VisualizationIFrame.ctr += 1
-        @addDef 'root', HtmlShapeWithScene,
+        id = 'iframe-containter-' + VisualizationIFrame.iframeIdx
+        VisualizationIFrame.iframeIdx += 1
+        @addDef VisualizationIFrame.rootDefName, HtmlShapeWithScene,
             id: id
             element: 'div'
             clickable: false
 
-        @html = @def('root')
+        @html = @def(VisualizationIFrame.rootDefName)
         @sceneId = "basegl-root-layer-" + @html.sceneId
         @scene   = document.getElementById(@sceneId)
 
@@ -31,10 +33,10 @@ export class VisualizationIFrame extends ContainerComponent
     __isModePreview: => @model.mode == 'Preview'
 
     __width: =>
-        if @__isModePreview() then @root._scene.width else @style.visualization_width - 2* @style.node_widgetOffset_h
+        if @__isModePreview() then @root.scene.width else @style.visualization_width - 2* @style.node_widgetOffset_h
 
     __height: =>
-        if @__isModePreview() then @root._scene.height else @style.visualization_height - 2* @style.node_widgetOffset_v
+        if @__isModePreview() then @root.scene.height else @style.visualization_height - 2* @style.node_widgetOffset_v
 
     update: =>
         if @changed.mode
@@ -43,7 +45,7 @@ export class VisualizationIFrame extends ContainerComponent
             else
                 @html.makeMovable()
         if @changed.iframeId
-            @updateDef 'root',
+            @updateDef VisualizationIFrame.rootDefName,
                 id: @model.iframeId
 
 
@@ -70,7 +72,8 @@ export class VisualizationIFrame extends ContainerComponent
                 @html.__addToGroup @html.__element
                 @html.__element.position.xy = [0,0]
 
-            @view('root').position.xy = [@__width()/2,-@__height()/2]
+            @view(VisualizationIFrame.rootViewName).position.xy =
+                [@__width() / 2, -@__height() / 2]
 
     __mkIframe: =>
         if @model.currentVisualizer?
