@@ -63,7 +63,7 @@ export class VisualizationIFrame extends ContainerComponent
 
     adjust: (view) =>
         if @changed.mode
-            @scene.style.zIndex = if @__isModeDefault() then 0 else 10
+            @scene?.style.zIndex = if @__isModeDefault() then 0 else 10
 
             if @__isModePreview()
                 @html.__removeFromGroup @html.__element
