@@ -58,6 +58,7 @@ runExample = -> main (nodeEditor) ->
             key: 1
             name: 'number1'
             expression: '12'
+            newPortKey: 'new'
             inPorts:
                 1:
                     name: 'onlyPort'
@@ -113,6 +114,7 @@ runExample = -> main (nodeEditor) ->
             key: 3
             name: 'baz3'
             expression: 'foo bar baz'
+            newPortKey: 'new'
             inPorts:
                 0:
                     name: 'self'
@@ -121,6 +123,33 @@ runExample = -> main (nodeEditor) ->
                 1:
                     name: 'port1'
                     typeName: 'B'
+                2:
+                    name: 'port2'
+                    typeName: 'C'
+                3:
+                    name: 'port3'
+                    typeName: 'D'
+                4:
+                    name: 'port4'
+                    typeName: 'E'
+                5:
+                    name: 'port5'
+                    typeName: 'F'
+                6:
+                    name: 'port6'
+                    typeName: 'G'
+            outPorts:
+                1: {}
+            controls:
+                'a':
+                    controls:
+                        [
+                            cls: 'Int'
+                            min: 0
+                            max: 100
+                            value: 49
+                        ]
+                1:
                     controls:
                         [
                             cls: 'Int'
@@ -135,8 +164,6 @@ runExample = -> main (nodeEditor) ->
                             value: false
                         ]
                 2:
-                    name: 'port2'
-                    typeName: 'C'
                     controls:
                         [
                             cls: 'Real'
@@ -145,8 +172,6 @@ runExample = -> main (nodeEditor) ->
                             value: 5
                         ]
                 3:
-                    name: 'port3'
-                    typeName: 'D'
                     controls:
                         [
                             cls: 'Text'
@@ -163,8 +188,6 @@ runExample = -> main (nodeEditor) ->
                             value: 5
                         ]
                 4:
-                    name: 'port2'
-                    typeName: 'C'
                     controls:
                         [
                             cls: 'Real'
@@ -173,8 +196,6 @@ runExample = -> main (nodeEditor) ->
                             value: 5
                         ]
                 5:
-                    name: 'port2'
-                    typeName: 'C'
                     controls:
                         [
                             cls: 'Real'
@@ -183,8 +204,6 @@ runExample = -> main (nodeEditor) ->
                             value: 5
                         ]
                 6:
-                    name: 'port2'
-                    typeName: 'C'
                     controls:
                         [
                             cls: 'Real'
@@ -192,16 +211,10 @@ runExample = -> main (nodeEditor) ->
                             max: 10
                             value: 5
                         ]
-            outPorts:
-                1: {}
+
             icon: 'stripes'
             position: [600, 500]
             expanded: true
-            # error: true
-            # value:
-            #     tag: 'Error'
-            #     contents:
-            #         tag: 'Visualization'
             selected: false
         ,
             key: 4

@@ -24,7 +24,6 @@ exprOffset = 25
 nodeExprYOffset = (style) -> shape.height(style) / 3
 nodeNameYOffset = (style) -> nodeExprYOffset(style) + exprOffset
 
-minimalBodyHeight = (style) -> 2 * style.node_widgetOffset_v + style.node_widgetHeight
 bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
     style.node_headerOffset - style.node_widgetOffset_v
 testEntries = [
@@ -42,6 +41,7 @@ export class ExpressionNode extends ContainerComponent
         icon:       null
         inPorts:    {}
         outPorts:   {}
+        controls:   {}
         newPortKey: null
         position:   [0, 0]
         selected:   false
@@ -65,7 +65,6 @@ export class ExpressionNode extends ContainerComponent
         @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
-        @addDef 'newPort', NewPort
         @addDef 'icon', IconLoader
 
     update: =>
@@ -85,7 +84,16 @@ export class ExpressionNode extends ContainerComponent
                 , @style.port_borderColor_l, @style.port_borderColor_a
                 ]
 
-        @updateDef 'newPort', key: @model.newPortKey
+        @updateDef 'body',
+            inPorts: @model.inPorts
+            controls: @model.controls
+            newPortKey: @model.newPortKey
+            expanded: @model.expanded
+            value: @model.value
+            visualizers: @model.visualizations?.visualizers
+            visualizations: @model.visualizations?.visualizations
+
+        @autoUpdateDef 'newPort', NewPort, if @model.newPortKey? then key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             @updateInPorts()
         if @changed.outPorts
@@ -97,12 +105,6 @@ export class ExpressionNode extends ContainerComponent
         if @changed.value
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error() then {}
 
-        @updateDef 'body',
-            inPorts: @model.inPorts
-            expanded: @model.expanded
-            value: @model.value
-            visualizers: @model.visualizations?.visualizers
-            visualizations: @model.visualizations?.visualizations
 
     outPort: (key) => @def('outPorts').def(key)
     inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
@@ -122,14 +124,13 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @updateDef 'inPorts', elems: @model.inPorts
-        inportVDistance = @style.node_widgetOffset_v + @style.node_widgetHeight
         inPortNumber = 1
         inPortsCount = 0
         for k, inPort of @model.inPorts
             unless inPort.mode == 'self'
                 inPortsCount++
 
-        portProperties = (port) =>
+        portProperties = (key, port) =>
             values = {}
             values.expanded = @model.expanded
             if port.mode == 'self'
@@ -139,8 +140,12 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) + @style.node_radius
-                                  , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
+                values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style)
+                                    + @style.node_radius
+                                  , @def('body').portPosition(key) - @style.node_radius
+                                    - @style.node_headerOffset - @style.node_widgetHeight/2
+                                    - @style.node_widgetOffset_v
+                                  ]
                 inPortNumber++
             else
                 values.position = [0,0]
@@ -150,9 +155,8 @@ export class ExpressionNode extends ContainerComponent
             values
 
         for inPortKey, inPort of @model.inPorts
-            @def('inPorts').def(inPortKey).set portProperties inPort
-        @def('newPort').set portProperties mode:'phantom'
-        @bodyHeight = minimalBodyHeight(@style) + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
+            @def('inPorts').def(inPortKey).set portProperties inPortKey, inPort
+        @def('newPort')?.set portProperties @model.newPortKey, mode:'phantom'
 
 
     updateOutPorts: =>
