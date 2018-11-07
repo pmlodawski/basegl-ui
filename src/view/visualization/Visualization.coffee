@@ -17,6 +17,7 @@ export class Visualization extends Widget
         model.key = null
         model.iframeId = null
         model.currentVisualizer = null
+        model.visualizers = null
         model.mode = null
         model
 
@@ -41,9 +42,10 @@ export class Visualization extends Widget
                 iframeId: @model.iframeId
                 currentVisualizer: @model.currentVisualizer
                 mode: @model.mode
-        if @changed.currentVisualizer
+        if @changed.currentVisualizer or @changed.visualizers
             @updateDef 'menu',
                 selected: @model.currentVisualizer.visualizerId
+                visualizers: @model.visualizers
 
     adjust: =>
         if @changed.once
