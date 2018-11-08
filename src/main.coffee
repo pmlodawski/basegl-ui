@@ -31,7 +31,7 @@ export install = (name, fontRootPath = '', callback) ->
     basegl.fontManager.register 'SourceCodePro', fontRootPath + 'SourceCodeVariable-Roman.ttf'
     basegl.fontManager.load('SourceCodePro').then (atlas) =>
         atlas._letterDef.defaultZIndex = layers.text
-        nodeEditor = new NodeEditor scene
+        nodeEditor = new NodeEditor scene, name
         window.n = nodeEditor
         nodeEditor.initialize()
         callback nodeEditor

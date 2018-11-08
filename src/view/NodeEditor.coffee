@@ -16,7 +16,7 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    constructor: (@_scene) ->
+    constructor: (@_scene, @mountPointName) ->
         super()
         @nodes               ?= {}
         @connections         ?= {}
@@ -28,7 +28,7 @@ export class NodeEditor extends EventEmitter
         @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
             @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
-
+        @mountPoint = document.getElementById(@mountPointName)
     withScene: (fun) => fun @_scene if @_scene?
 
     initialize: =>
