@@ -21,8 +21,6 @@ export onEvent = subscribeEvents
 
 main = (f) -> install 'node-editor-mount', 'rsc/', f
 
-window.run = main
-
 rand = (to, from = 1) => Math.floor((Math.random() * (to + 1 - from)) + from)
 
 generateInPorts = (count) =>
