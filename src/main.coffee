@@ -40,8 +40,6 @@ export onEvent = subscribeEvents
 
 main = (callback) -> install 'node-editor-mount', 'rsc/', callback
 
-window.run = main
-
 runExample = -> main (nodeEditor) ->
     nodeEditor.setBreadcrumb
         moduleName: 'Foo'
