@@ -37,7 +37,7 @@ class Slider extends Widget
             width:       @model.width
             height:      @model.height
 
-    adjust: (view) =>
+    adjust: (view) => # TODO: merge this function with update? Remove adjust?
         if @changed.width  then @view('value').position.x = @model.width/2
         if @changed.height then @view('slider').position.y = -@model.height/2
 

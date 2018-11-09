@@ -28,10 +28,12 @@ export class HasModel extends EventEmitter
         @changed.once = true
         @prepare?()
         @onModelUpdate values
-        @connectSources?()
-        @registerEvents? @__view
+        @connectSources?() #TODO check with styles reload
+        @registerEvents @__view #TODO check with styles reload
         @changed.once = false
 
+
+    registerEvents: () -> # to be defined in subclass
     withScene: (fun) => @parent?.withScene fun
 
     set: (values) =>
@@ -67,11 +69,11 @@ export class HasModel extends EventEmitter
 
     __addToGroup: (view) =>
         @__view.addChild view
-        @__view.updateChildrenOrigin()
+        @__view.updateChildrenOrigin() # TODO: remove (basegl bug)
 
     __removeFromGroup: (view) =>
         @__view.removeChild view
-        @__view.updateChildrenOrigin()
+        @__view.updateChildrenOrigin() # TODO: remove (basegl bug)
         # view.setOrigin mat4.create()
 
     log:  (msg) => console.log  "[#{@constructor.name}]", msg

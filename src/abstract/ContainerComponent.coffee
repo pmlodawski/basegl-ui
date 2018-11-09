@@ -123,10 +123,7 @@ export class ContainerComponent extends HasModel
     # prepare: =>
     #     # called once, add initial defs here (optional)
     #
-    # redefineRequred (values) =>
-    #     # test values if it is required to redefine shape (optional, default: false)
-    #
-    # update: (values) =>
+    # update: (values) => #TODO think about renaming to onNewModel
     #     # update defs using @def, @addDef, @deleteDef (optional)
     #
     # registerEvents: (element) =>

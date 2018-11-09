@@ -4,7 +4,7 @@ import * as animation from 'shape/Animation'
 
 
 export class BasicComponent extends HasModel
-    __draw: (def) =>
+    __draw: (def) => unless @__element?
         @withScene (scene) =>
             @__element = scene.add def
             @__addToGroup @__element
@@ -56,7 +56,7 @@ export class BasicComponent extends HasModel
     #     # return model structure (optional, default: {})
     #
     # prepare: =>
-    #     # initialize component (optional)
+    #     # predefine shapes (optional)
     #
     # redefineRequired (values) =>
     #     # test values if it is required to redefine shape (optional, default: false)
@@ -69,7 +69,10 @@ export class BasicComponent extends HasModel
     # registerEvents: (element) =>
     #     # register events on element being group of all defs (optional)
     #
-    # adjust (element, view) =>
+    # connectSources =>
+    #     connect sources of data for component
+    #
+    # adjust (element, view) => #TODO think about renaming to onNewModel
     #     # use @values to adjust element and view
     #     ...
     #     element.rotation = @values.angle
