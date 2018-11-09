@@ -1,7 +1,7 @@
 {
   "name": "luna-basegl-ui",
   "license": "AGPL-3.0",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Luna node editor using basegl.",
   "homepage": "https://github.com/luna/basegl-ui",
   "author": "The Luna Team <contact@luna-lang.org>",
@@ -28,11 +28,12 @@
     "coffee-loader": "^0.9.0",
     "coffeescript": "next",
     "gl-matrix": "^2.4.0",
+    "luna-logger": "^0.1.5",
     "webpack": "^3.9.1",
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
-    "basegl": "0.2.33",
+    "basegl": "0.2.35",
     "bluebird": "^3.5.1",
     "glslify-loader": "^1.0.2",
     "raw-loader": "^0.5.1",
