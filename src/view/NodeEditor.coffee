@@ -1,6 +1,7 @@
 import {KeyboardMouseReactor} from 'basegl/navigation/EventReactor'
 import {ZoomlessCamera}       from 'basegl/navigation/Camera'
 
+import {CodeEditor}         from 'view/CodeEditor'
 import {Disposable}         from 'abstract/Disposable'
 import {EventEmitter}       from 'abstract/EventEmitter'
 import {Breadcrumb}         from 'view/Breadcrumb'
@@ -170,6 +171,9 @@ export class NodeEditor extends EventEmitter
             return
 
         node.setSearcher searcherModel
+
+    openCodeEditor: =>
+        @codeEditor = new CodeEditor code: 'sample code'
 
     unregisterSearcher: =>
         if @openSearcher?

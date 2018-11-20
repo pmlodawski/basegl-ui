@@ -35,6 +35,7 @@ export install = (name, fontRootPath = '', callback) ->
         window.n = nodeEditor
         nodeEditor.initialize()
         callback nodeEditor
+        nodeEditor.openCodeEditor()
 
 export onEvent = subscribeEvents
 
