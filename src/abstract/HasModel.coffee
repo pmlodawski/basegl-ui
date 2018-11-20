@@ -34,7 +34,6 @@ export class HasModel extends EventEmitter
 
 
     registerEvents: () -> # to be defined in subclass
-    withScene: (fun) => @parent?.withScene fun
 
     set: (values) =>
         return if @disposed

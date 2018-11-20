@@ -62,7 +62,8 @@ export class Breadcrumb extends ContainerComponent
         if @changed.scale
             view.scale.xy = [@model.scale, @model.scale]
 
-    __align: (scene) =>
+    __align: =>
+        scene = @root.scene
         campos = scene.camera.position
         x = (campos.x + scene.width  / 2) / campos.z - scene.width/2 + @style.breadcrumb_offset
         y = (campos.y + scene.height / 2) / campos.z + scene.height/2 - @style.breadcrumb_offset
@@ -71,6 +72,5 @@ export class Breadcrumb extends ContainerComponent
             scale: campos.z
 
     connectSources: =>
-        @withScene (scene) =>
-            @__align scene
-            @addDisposableListener scene.camera, 'move', => @__align scene
+        @__align()
+        @addDisposableListener @root.scene.camera, 'move', => @__align()

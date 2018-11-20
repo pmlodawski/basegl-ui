@@ -4,9 +4,9 @@ import * as animation from 'shape/Animation'
 
 
 export class BasicComponent extends HasModel
-    __draw: (def) => unless @__element?
-        @withScene (scene) =>
-            @__element = scene.add def
+    __draw: (def) =>
+        unless @__element?
+            @__element = @root.scene.add def
             @__addToGroup @__element
 
     __undraw: =>
@@ -40,8 +40,6 @@ export class BasicComponent extends HasModel
         super()
 
     getElement: => @__element
-
-    getDomElement: => @getElement()?.domElement
 
     animateVariable: (name, value, animate = true) =>
         if animate

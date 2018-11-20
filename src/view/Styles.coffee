@@ -229,10 +229,10 @@ export class Styles extends ContainerComponent
             dragHandler = (e) =>
                 if e.button != 0 then return
                 moveNodes = (e) =>
-                    @withScene (scene) =>
-                        x = @__view.position.x + e.movementX * scene.camera.zoomFactor
-                        y = @__view.position.y - e.movementY * scene.camera.zoomFactor
-                        @__view.position.xy = [x, y]
+                    scene = @root.scene
+                    x = @__view.position.x + e.movementX * scene.camera.zoomFactor
+                    y = @__view.position.y - e.movementY * scene.camera.zoomFactor
+                    @__view.position.xy = [x, y]
 
                 dragFinish = =>
                     @pushEvent

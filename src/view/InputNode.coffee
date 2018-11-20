@@ -43,16 +43,16 @@ export class InputNode extends ContainerComponent
         if @changed.position
             view.position.xy = @model.position.slice()
 
-    _align: (scene) =>
+    _align: =>
+        scene = @root.scene
         campos = scene.camera.position
         x = scene.width/2 + campos.x - scene.width/2*campos.z
         y = scene.height/2 + campos.y - height/2
         @set position: [x, y]
 
     connectSources: =>
-        @withScene (scene) =>
-            @_align scene
-            @addDisposableListener scene.camera, 'move', => @_align scene
+        @_align()
+        @addDisposableListener @root.scene.camera, 'move', => @_align()
 
     outPort: (key) => @def('outPorts').def(key)
 

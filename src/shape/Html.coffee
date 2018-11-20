@@ -17,8 +17,8 @@ export class HtmlShape extends BasicComponent
     redefineRequired: => @changed.element
 
     define: =>
-        @html = document.createElement @model.element
-        basegl.symbol @html
+        html = document.createElement @model.element
+        basegl.symbol html
 
     adjust: =>
         if @changed.id
@@ -44,7 +44,7 @@ export class HtmlShape extends BasicComponent
             else if @model.top
                 @root.topDomScene.model.add obj
             else
-                @root._scene.domModel.model.add obj
+                @root.scene.domModel.model.add obj
             @__forceUpdatePosition()
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
@@ -53,3 +53,5 @@ export class HtmlShape extends BasicComponent
         elem = @getElement()
         if elem?
             elem.position.y = if elem.position.y == 0 then 1 else 0
+
+    getDomElement: => @getElement()?.domElement

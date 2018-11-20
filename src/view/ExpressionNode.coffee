@@ -165,36 +165,36 @@ export class ExpressionNode extends ContainerComponent
         view.addEventListener 'mouseleave', => @set hovered: false
 
     makeSelectable: (view) =>
-        @withScene (scene) =>
-            performSelect = (select) =>
-                target = selectedNode or @
-                target.pushEvent
-                    tag: 'NodeSelectEvent'
-                    select: select
-                target.set selected: select
-                selectedNode = if select then @ else null
+        scene = @root.scene
+        performSelect = (select) =>
+            target = selectedNode or @
+            target.pushEvent
+                tag: 'NodeSelectEvent'
+                select: select
+            target.set selected: select
+            selectedNode = if select then @ else null
 
-            unselect = (e) =>
-                scene.removeEventListener 'mousedown', unselect
+        unselect = (e) =>
+            scene.removeEventListener 'mousedown', unselect
+            performSelect false
+
+        view.addEventListener 'mousedown', (e) =>
+            if e.button != 0 then return
+            if selectedNode == @
+                return
+            else if selectedNode?
                 performSelect false
-
-            view.addEventListener 'mousedown', (e) =>
-                if e.button != 0 then return
-                if selectedNode == @
-                    return
-                else if selectedNode?
-                    performSelect false
-                performSelect true
-                scene.addEventListener 'mousedown', unselect
+            performSelect true
+            scene.addEventListener 'mousedown', unselect
 
     makeDraggable: (view) =>
         dragHandler = (e) =>
             if e.button != 0 then return
             moveNodes = (e) =>
-                @withScene (scene) =>
-                    x = @model.position[0] + e.movementX * scene.camera.zoomFactor
-                    y = @model.position[1] - e.movementY * scene.camera.zoomFactor
-                    @set position: [x, y]
+                scene = @root.scene
+                x = @model.position[0] + e.movementX * scene.camera.zoomFactor
+                y = @model.position[1] - e.movementY * scene.camera.zoomFactor
+                @set position: [x, y]
 
             dragFinish = =>
                 @pushEvent

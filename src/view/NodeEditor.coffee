@@ -16,7 +16,7 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    constructor: (@_scene, @mountPointName) ->
+    constructor: (@scene, @mountPointName) ->
         super()
         @nodes               ?= {}
         @connections         ?= {}
@@ -24,27 +24,25 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDomModel('dom-top')
-        @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
+        @topDomScene          = @scene.addDomModel('dom-top')
+        @topDomSceneStill     = @scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
-            @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
+            @scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @scene._camera)
         @mountPoint = document.getElementById(@mountPointName)
-    withScene: (fun) => fun @_scene if @_scene?
 
     initialize: =>
-        @withScene (scene) =>
-            @controls = new KeyboardMouseReactor scene
-            @addDisposableListener scene, 'click',     @pushEvent
-            @addDisposableListener scene, 'dblclick',  @pushEvent
-            @addDisposableListener scene, 'mousedown', @pushEvent
-            @addDisposableListener scene, 'mouseup',   @pushEvent
+        @controls = new KeyboardMouseReactor @scene
+        @addDisposableListener @scene, 'click',     @pushEvent
+        @addDisposableListener @scene, 'dblclick',  @pushEvent
+        @addDisposableListener @scene, 'mousedown', @pushEvent
+        @addDisposableListener @scene, 'mouseup',   @pushEvent
         @styles = new Styles null, @
         # setTimeout => @styles.set enabled: true
 
-    getMousePosition: => @withScene (scene) =>
-        campos = scene.camera.position
-        x = (scene.screenMouse.x - scene.width/2) * campos.z + campos.x + scene.width/2
-        y = (scene.height/2 - scene.screenMouse.y) * campos.z + campos.y + scene.height/2
+    getMousePosition: =>
+        campos = @scene.camera.position
+        x = (@scene.screenMouse.x - @scene.width/2) * campos.z + campos.x + @scene.width/2
+        y = (@scene.height/2 - @scene.screenMouse.y) * campos.z + campos.y + @scene.height/2
         [x, y]
 
     node: (nodeKey) =>
@@ -120,12 +118,10 @@ export class NodeEditor extends EventEmitter
 
     setDebugLayer: (layerNumber) =>
         if layerNumber? and layerNumber >= 0 and layerNumber <= 9
-            @withScene (scene) =>
-                scene._symbolRegistry.materials.uniforms.displayMode = layerNumber
+            @scene._symbolRegistry.materials.uniforms.displayMode = layerNumber
 
     unsetDebugLayer: =>
-        @withScene (scene) =>
-            scene._symbolRegistry.materials.uniforms.displayMode = 0
+        @scene._symbolRegistry.materials.uniforms.displayMode = 0
 
     genericSetComponent: (name, constructor, value) =>
         if value?

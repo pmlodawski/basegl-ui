@@ -42,25 +42,24 @@ class Slider extends Widget
         if @changed.height then @view('slider').position.y = -@model.height/2
 
     registerEvents: (view) =>
-        @withScene (scene) =>
-            canvas = scene.symbolModel._renderer.domElement
-            view.addEventListener 'mousedown', (e) =>
-                return unless e.button == 0
-                e.stopPropagation()
-                canvas.requestPointerLock()
-                onMouseMove = (e) =>
-                    @set value: @nextValue e.movementX
-                    @pushEvent
-                        tag: 'PortControlEvent'
-                        content:
-                            cls: @cls
-                            value: @model.value
-                onMouseUp = =>
-                    document.exitPointerLock()
-                    document.removeEventListener 'mousemove', onMouseMove
-                    document.removeEventListener 'mouseup', onMouseUp
-                @addDisposableListener document, 'mouseup', onMouseUp
-                @addDisposableListener document, 'mousemove', onMouseMove
+        canvas = @root.scene.symbolModel._renderer.domElement
+        view.addEventListener 'mousedown', (e) =>
+            return unless e.button == 0
+            e.stopPropagation()
+            canvas.requestPointerLock()
+            onMouseMove = (e) =>
+                @set value: @nextValue e.movementX
+                @pushEvent
+                    tag: 'PortControlEvent'
+                    content:
+                        cls: @cls
+                        value: @model.value
+            onMouseUp = =>
+                document.exitPointerLock()
+                document.removeEventListener 'mousemove', onMouseMove
+                document.removeEventListener 'mouseup', onMouseUp
+            @addDisposableListener document, 'mouseup', onMouseUp
+            @addDisposableListener document, 'mousemove', onMouseMove
 
 contPrec = 100
 mousePrec = 5

@@ -29,12 +29,12 @@ export class HalfConnection extends ContainerComponent
         @addDisposableListener @srcNode.def(ports),  'modelUpdated', => @__rebind()
 
         @onDispose => @srcPort.unfollow @model.key
-        @withScene (scene) =>
-            @addDisposableListener window, 'mousemove', (e) =>
-                campos = scene.camera.position
-                y = scene.height/2 + campos.y + (-scene.screenMouse.y + scene.height/2) * campos.z
-                x = scene.width/2  + campos.x + (scene.screenMouse.x - scene.width/2) * campos.z
-                @set dstPos: [x, y]
+        @addDisposableListener window, 'mousemove', (e) =>
+            scene = @root.scene
+            campos = scene.camera.position
+            y = scene.height/2 + campos.y + (-scene.screenMouse.y + scene.height/2) * campos.z
+            x = scene.width/2  + campos.x + (scene.screenMouse.x - scene.width/2) * campos.z
+            @set dstPos: [x, y]
 
     __rebind: =>
         srcNode = @parent.node @model.srcNode
