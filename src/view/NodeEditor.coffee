@@ -16,26 +16,25 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    constructor: (@scene, @mountPointName) ->
+    cons: (@scene, @mountPointName) ->
         super()
-        @nodes               ?= {}
-        @connections         ?= {}
-        @visualizations      ?= {}
-        @visualizerLibraries ?= {}
-        @inTransaction        = false
-        @pending              = []
+
+    init: (args...) =>
+        super args...
+        @nodes                = {}
+        @connections          = {}
+        @visualizations       = {}
+        @visualizerLibraries  = {}
         @topDomScene          = @scene.addDomModel('dom-top')
         @topDomSceneStill     = @scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
             @scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @scene._camera)
         @mountPoint = document.getElementById(@mountPointName)
-
-    initialize: =>
         @controls = new KeyboardMouseReactor @scene
-        @addDisposableListener @scene, 'click',     @pushEvent
-        @addDisposableListener @scene, 'dblclick',  @pushEvent
-        @addDisposableListener @scene, 'mousedown', @pushEvent
-        @addDisposableListener @scene, 'mouseup',   @pushEvent
+        @addDisposableListener @scene, 'click',     (e) => @pushEvent e
+        @addDisposableListener @scene, 'dblclick',  (e) => @pushEvent e
+        @addDisposableListener @scene, 'mousedown', (e) => @pushEvent e
+        @addDisposableListener @scene, 'mouseup',   (e) => @pushEvent e
         @styles = new Styles null, @
         # setTimeout => @styles.set enabled: true
 

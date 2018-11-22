@@ -33,7 +33,6 @@ export install = (name, fontRootPath = '', callback) ->
         atlas._letterDef.defaultZIndex = layers.text
         nodeEditor = new NodeEditor scene, name
         window.n = nodeEditor
-        nodeEditor.initialize()
         callback nodeEditor
 
 export onEvent = subscribeEvents
