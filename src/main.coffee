@@ -330,6 +330,15 @@ runExample = -> main (nodeEditor) ->
         ]
     nodeEditor.setSearcher
         key: 3
+        entries: [
+            name: 'foo'
+        ,
+            name: 'bar'
+        ,
+            name: 'baz'
+        ,
+            name: 'a very long hint'
+        ]
 
 
     # nodeEditor.setHalfConnections [

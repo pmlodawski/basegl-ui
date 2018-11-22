@@ -1,10 +1,7 @@
 import {ContainerComponent}  from 'abstract/ContainerComponent'
-import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
-import {Expression}          from 'view/node/Expression'
-import {Parameters}          from 'view/node/Parameters'
-import {TextContainer}       from 'view/Text'
 import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
+import {Hints}               from 'view/node/Hints'
 
 
 export class Searcher extends ContainerComponent
@@ -17,8 +14,14 @@ export class Searcher extends ContainerComponent
         targetField: 'expression'
 
     prepare: =>
-        @addDef 'body', VerticalLayout, children:
-            [
+        @addDef 'body', VerticalLayout,
+            width: @style.node_bodyWidth
+
+    update: =>
+        if @changed.entries
+            @updateDef 'body', children: [
                 id: 'hints'
-                cons: VerticalLayout
+                cons: Hints
+                entries: @model.entries
+                selected: @model.selected
             ]

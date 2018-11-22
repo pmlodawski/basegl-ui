@@ -63,6 +63,7 @@ export class NodeBody extends ContainerComponent
 
 
     adjust: =>
+        @view('searcher')?.position.x = @style.node_bodyWidth + 3
         @view('valueToggler').position.xy =
             [ @style.visualization_togglerX, @style.visualization_togglerY ]
     

@@ -77,7 +77,7 @@ export class ExpressionNode extends ContainerComponent
             visualizers: @model.visualizations?.visualizers
             visualizations: @model.visualizations?.visualizations
         @autoUpdateDef 'newPort', NewPort, if @model.newPortKey? then key: @model.newPortKey
-        if @changed.inPorts or @changed.expanded
+        if @changed.inPorts or @changed.expanded or @changed.searcher
             @updateInPorts()
         if @changed.outPorts
             @updateDef 'outPorts', elems: @model.outPorts
@@ -110,12 +110,12 @@ export class ExpressionNode extends ContainerComponent
 
         portProperties = (key, port) =>
             values = {}
-            values.expanded = @model.expanded
+            values.expanded = @model.expanded or @model.searcher?
             if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [0, 0]
-            else if @model.expanded
+            else if values.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) \

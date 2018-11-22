@@ -22,6 +22,13 @@ export class Parameters extends Widget
         model.newPortKey = null
         model
 
+    prepare: =>
+        @addDef 'background', Background,
+            width: @style.node_bodyWidth
+        @addDef 'widgets', VerticalLayout,
+            width: @style.node_bodyWidth - 2*@style.node_widgetOffset_h
+            offset: @style.node_widgetOffset_v
+
     update: =>
         if @changed.inPorts or @changed.controls or @changed.newPortKey
             children = for own key, inPort of @model.inPorts
@@ -42,25 +49,21 @@ export class Parameters extends Widget
                     key: @model.newPortKey
                     cons: Placeholder
                     constHeight: 0
-            @autoUpdateDef 'widgets', VerticalLayout,
-                width: @style.node_bodyWidth - 2*@style.node_widgetOffset_h
-                offset: @style.node_widgetOffset_v
-                children: children
+            @updateDef 'widgets', children: children
             @__minHeight = @def('widgets').height() + 2*@style.node_widgetOffset_v
-
-            @autoUpdateDef 'background', Background,
-                height: @__minHeight
-                width: @style.node_bodyWidth
+            @updateDef 'background', height: @__minHeight
         if @changed.siblings
             @updateDef 'background',
                 roundBottom: not @model.siblings.bottom
                 roundTop:    not @model.siblings.top
+
     adjustSrc: (view) =>
         view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
         @view('widgets').scale.xy = [0,0]
         @view('background').scale.xy = [0,0]
         @setPosition view, [@style.node_widgetOffset_h, 0]
         @setPosition view, [0, 100]
+
     adjustDst: (view) =>
         @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
         @setScale @view('widgets'), [0,0]
