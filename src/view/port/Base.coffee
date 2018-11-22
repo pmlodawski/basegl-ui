@@ -1,5 +1,5 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import {SetView}            from 'view/SetView'
+import {SetView}            from 'widget/SetView'
 
 
 export class Port extends ContainerComponent

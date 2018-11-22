@@ -3,7 +3,7 @@ import * as basegl          from 'basegl'
 import {AddPortShape}       from 'shape/port/Add'
 import * as portShape       from 'shape/port/Base'
 import {FlatPort}           from 'view/port/Flat'
-import {SetView}            from 'view/SetView'
+import {SetView}            from 'widget/SetView'
 
 
 height = 100

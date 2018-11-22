@@ -2,7 +2,7 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import * as shape           from 'shape/port/Base'
 import * as basegl          from 'basegl'
 import {FlatPort}           from 'view/port/Flat'
-import {SetView}            from 'view/SetView'
+import {SetView}            from 'widget/SetView'
 
 
 height = 100
