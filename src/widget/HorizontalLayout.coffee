@@ -3,12 +3,12 @@ import {FlatLayout} from 'abstract/Layout'
 
 export class HorizontalLayout extends FlatLayout
     __updateChildren: =>
-        return unless @model.children.length > 0
-        children = []
         @__minWidth = 0
         @__maxWidth = 0
         @__minHeight = 0
         @__maxHeight = Infinity
+        return unless @model.children.length > 0
+        children = []
         @forEach (def, key, i) =>
             children.push
                 key    : key

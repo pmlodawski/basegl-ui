@@ -4,12 +4,12 @@ import {lookupWidget} from 'widget/WidgetDirectory'
 
 export class VerticalLayout extends FlatLayout
     __updateChildren: =>
-        return unless @model.children.length > 0
-        children = []
         @__minHeight = 0
         @__maxHeight = 0
         @__minWidth = 0
         @__maxWidth = Infinity
+        return unless @model.children.length > 0
+        children = []
         @forEach (def, key, i) =>
             children.push
                 key    : key
