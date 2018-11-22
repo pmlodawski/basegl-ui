@@ -1,6 +1,6 @@
 import {animateComponent} from 'shape/Animation'
 import {InPortShape}      from 'shape/port/In'
-import {TextContainer}    from 'view/Text'
+import {FramedText}       from 'view/Text'
 import {Subport}          from 'view/port/sub/Base'
 import * as subport       from 'view/port/sub/Base'
 
@@ -20,7 +20,7 @@ export class InArrow extends Subport
         @addDef 'port', InPortShape, angle: @model.angle
 
     update: =>
-        @autoUpdateDef 'name', TextContainer, if @model.name
+        @autoUpdateDef 'name', FramedText, if @model.name
             text: @model.name
             align: 'right'
             border: @style.port_nameBorder
@@ -29,7 +29,7 @@ export class InArrow extends Subport
                 , @style.port_borderColor_l, @style.port_borderColor_a * (@model.hovered or @model.connected)] # or not(@model.connected))
             color: [ @model.color[0], @model.color[1]
                    , @model.color[2], (@model.hovered or @model.connected) ]
-        @autoUpdateDef 'typeName', TextContainer, if @model.typeName
+        @autoUpdateDef 'typeName', FramedText, if @model.typeName
             text: @model.typeName
             align: 'right'
             border: @style.port_typeBorder

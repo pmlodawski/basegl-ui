@@ -1,7 +1,7 @@
 import {SelfPortShape} from 'shape/port/Self'
 import {Subport}       from 'view/port/sub/Base'
 import * as subport    from 'view/port/sub/Base'
-import {TextContainer} from 'view/Text'
+import {FramedText}    from 'view/Text'
 
 
 export class Self extends Subport
@@ -17,7 +17,7 @@ export class Self extends Subport
         @addDef 'port', SelfPortShape, null
 
     update: =>
-        @autoUpdateDef 'typeName', TextContainer,
+        @autoUpdateDef 'typeName', FramedText,
             text: @model.typeName
             align: 'left'
             color: [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]

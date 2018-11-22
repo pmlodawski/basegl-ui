@@ -1,7 +1,7 @@
 import * as shape       from 'shape/port/Base'
 
 import {FlatPortShape}      from 'shape/port/Flat'
-import {TextContainer}      from 'view/Text'
+import {FramedText}         from 'view/Text'
 import {Port, defaultColor} from 'view/port/Base'
 
 
@@ -16,7 +16,7 @@ export class FlatPort extends Port
 
     prepare: =>
         @addDef 'port', FlatPortShape, output: @model.output
-        @addDef 'name', TextContainer,
+        @addDef 'name', FramedText,
             align: 'left'
             text: @model.name
             color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]

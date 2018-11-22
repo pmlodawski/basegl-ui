@@ -1,7 +1,7 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 import {VerticalLayout}     from 'widget/VerticalLayout'
-import {TextContainer}      from 'view/Text'
+import {FramedText}         from 'view/Text'
 import {ContinousSlider}    from 'widget/Slider'
 
 
@@ -166,12 +166,12 @@ export class Styles extends ContainerComponent
 
     update: =>
         if @changed.enabled or @changed.presetName
-            @autoUpdateDef 'dump', TextContainer, if @model.enabled
+            @autoUpdateDef 'dump', FramedText, if @model.enabled
                 text: 'DUMP'
                 frameColor: [0.3, 0.3, 0.3]
             @autoUpdateDef 'switcher', HorizontalLayout, if @model.enabled
                 children: for own key of presets
-                    cons: TextContainer
+                    cons: FramedText
                     text: key
                     frameColor: [0.5, 0.5, 0.5]
             @autoUpdateDef 'vertical', VerticalLayout, if @model.enabled
@@ -194,7 +194,7 @@ export class Styles extends ContainerComponent
                     height: 10
                     children:
                         [
-                            cons: TextContainer
+                            cons: FramedText
                             text: key
                             color: [@model.text_color_r, @model.text_color_g, @model.text_color_b]
                         ,

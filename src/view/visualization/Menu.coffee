@@ -2,7 +2,7 @@ import * as _ from 'underscore'
 
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {VisualizerButton}   from 'shape/visualization/Button'
-import {TextContainer}      from 'view/Text'
+import {FramedText}         from 'view/Text'
 import {VerticalLayout}     from 'widget/VerticalLayout'
 
 
@@ -25,7 +25,7 @@ export class VisualizerMenu extends ContainerComponent
         if @changed.expanded or @changed.visualizers or @changed.selected
             if @model.visualizers?
                 children = @model.visualizers.map (visualizer) =>
-                    cons: TextContainer
+                    cons: FramedText
                     color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
                     text: visualizer.visualizerName
                     align: 'right'

@@ -2,7 +2,7 @@ import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {Expression}          from 'view/node/Expression'
 import {Parameters}          from 'view/node/Parameters'
-import {TextContainer}       from 'view/Text'
+import {FramedText}          from 'view/Text'
 import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
@@ -52,7 +52,7 @@ export class NodeBody extends ContainerComponent
             if @__shortValue()?
                 body.push
                     id: 'value'
-                    cons: TextContainer
+                    cons: FramedText
                     textAlign: 'center'
                     valign: 'top'
                     color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
@@ -61,8 +61,6 @@ export class NodeBody extends ContainerComponent
             @updateDef 'body', children: body
 
     adjust: =>
-        @view('value')?.position.xy =
-            [@style.node_bodyWidth/2, -@style.node_valueOffset]
         @view('valueToggler').position.xy =
             [ @style.visualization_togglerX, @style.visualization_togglerY ]
     

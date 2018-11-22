@@ -1,7 +1,7 @@
 import {OutPortShape}  from 'shape/port/Out'
 import {Subport}       from 'view/port/sub/Base'
 import * as subport    from 'view/port/sub/Base'
-import {TextContainer} from 'view/Text'
+import {FramedText}    from 'view/Text'
 
 
 export class OutArrow extends Subport
@@ -17,7 +17,7 @@ export class OutArrow extends Subport
         @addDef 'port', OutPortShape, angle: @model.angle
 
     update: =>
-        @autoUpdateDef 'typeName', TextContainer, if @model.typeName
+        @autoUpdateDef 'typeName', FramedText, if @model.typeName
             text: @model.typeName
             align: 'left'
             color: [@model.color[0], @model.color[1], @model.color[2], @model.hovered]

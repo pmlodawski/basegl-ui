@@ -2,7 +2,7 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import {HtmlShape}          from 'shape/Html'
 import * as style           from 'style'
 import {BreadcrumbArrow}    from 'view/BreadcrumbArrow'
-import {TextContainer}      from 'view/Text'
+import {FramedText}         from 'view/Text'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 
@@ -32,7 +32,7 @@ export class Breadcrumb extends ContainerComponent
                 arrowColor: [@style.breadcrumb_arrowColor_r, @style.breadcrumb_arrowColor_g, @style.breadcrumb_arrowColor_b]
 
             breadcrumbItem = (item) =>
-                cons: TextContainer
+                cons: FramedText
                 align:      'left'
                 border:     @style.breadcrumb_border
                 color:      [@style.text_color_r, @style.text_color_g, @style.text_color_b]

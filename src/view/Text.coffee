@@ -4,7 +4,8 @@ import {RectangleShape}     from 'shape/Rectangle'
 import * as color           from 'shape/Color'
 import {Widget}             from 'widget/Widget'
 
-export class TextContainer extends Widget
+
+export class FramedText extends Widget
     initModel: =>
         model = super()
         model.text = ''

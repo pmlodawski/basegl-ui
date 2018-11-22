@@ -1,6 +1,6 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {Searcher}           from 'view/Searcher'
-import {TextContainer}      from 'view/Text'
+import {FramedText}         from 'view/Text'
 
 import * as basegl from 'basegl'
 import * as style  from 'style'
@@ -40,7 +40,7 @@ export class EditableText extends ContainerComponent
             inputSelection: @model.inputSelection
             selected:       @model.selected
             entries:        @model.entries
-        @autoUpdateDef 'text', TextContainer, unless @model.edited
+        @autoUpdateDef 'text', FramedText, unless @model.edited
             text:  @model.text
             align: 'center'
             color: @model.color
