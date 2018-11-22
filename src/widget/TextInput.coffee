@@ -14,6 +14,8 @@ export class TextInput extends Widget
         model
 
     prepare: =>
+        @__minHeight = 20
+        @__minWidth = 10
         @addDef 'root', HtmlShape, element: 'div'
         @input = document.createElement 'input'
         @input.className = 'native-key-bindings'

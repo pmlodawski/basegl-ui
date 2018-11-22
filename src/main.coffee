@@ -188,18 +188,14 @@ runExample = -> main (nodeEditor) ->
                 4:
                     controls:
                         [
-                            cls: 'Real'
-                            min: -10
-                            max: 10
-                            value: 5
+                            cls: 'Text'
+                            value: 'test2'
                         ]
                 5:
                     controls:
                         [
-                            cls: 'Real'
-                            min: -10
-                            max: 10
-                            value: 5
+                            cls: 'Bool'
+                            value: true
                         ]
                 6:
                     controls:

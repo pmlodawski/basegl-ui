@@ -182,6 +182,8 @@ export class NodeEditor extends EventEmitter
             @openSearcher.hideSearcher()
         @openSearcher = searcher
 
+    focus: => @mountPoint.focus()
+
     log: (msg) => console.log "[NodeEditor]", msg
 
     nodeByName: (name) => #added for debug purposes

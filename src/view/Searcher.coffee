@@ -4,7 +4,6 @@ import {HtmlShape} from 'shape/Html'
 import * as basegl from 'basegl'
 import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
-import * as focus  from 'view/Focus'
 
 searcherId = 'searcher-input'
 
@@ -39,7 +38,7 @@ export class Searcher extends ContainerComponent
         setTimeout => @__focusInput()
 
     dispose: =>
-        focus.focusNodeEditor()
+        @root.focus()
         super()
 
     __focusInput: =>
