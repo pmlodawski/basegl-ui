@@ -74,13 +74,13 @@ export class NodeEditor extends EventEmitter
         undefined
 
     setBreadcrumb: (breadcrumb) =>
-        @genericSetComponent 'breadcrumb', Breadcrumb, breadcrumb
+        @__genericSetComponent 'breadcrumb', Breadcrumb, breadcrumb
     setHalfConnections: (halfConnections) =>
-        @genericSetComponents 'halfConnections', HalfConnection, halfConnections
+        @__genericSetComponents 'halfConnections', HalfConnection, halfConnections
     setInputNode: (inputNode) =>
-        @genericSetComponent 'inputNode', InputNode, inputNode
+        @__genericSetComponent 'inputNode', InputNode, inputNode
     setOutputNode: (outputNode) =>
-        @genericSetComponent 'outputNode', OutputNode, outputNode
+        @__genericSetComponent 'outputNode', OutputNode, outputNode
 
     setVisualizerLibraries: (visLib) =>
         unless _.isEqual(@visualizerLibraries, visLib)
@@ -122,7 +122,7 @@ export class NodeEditor extends EventEmitter
     unsetDebugLayer: =>
         @scene._symbolRegistry.materials.uniforms.displayMode = 0
 
-    genericSetComponent: (name, constructor, value) =>
+    __genericSetComponent: (name, constructor, value) =>
         if value?
             if @[name]?
                 @[name].set value
@@ -133,7 +133,7 @@ export class NodeEditor extends EventEmitter
                 @[name].dispose()
                 @[name] = null
 
-    genericSetComponents: (name, constructor, values = []) =>
+    __genericSetComponents: (name, constructor, values = []) =>
         @[name] ?= []
         if values.length != @[name].length
             for oldValue in @[name]
