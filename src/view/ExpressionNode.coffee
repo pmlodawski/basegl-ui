@@ -21,11 +21,7 @@ selectedNode = null
 
 bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
     style.node_headerOffset - style.node_widgetOffset_v
-testEntries = [
-    { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
-    { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
-    { name: 'baz', doc: 'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
-]
+
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -39,6 +35,7 @@ export class ExpressionNode extends ContainerComponent
         controls:   {}
         newPortKey: null
         position:   [0, 0]
+        searcher:   null
         selected:   false
         expanded:   false
         hovered:    false
@@ -75,10 +72,10 @@ export class ExpressionNode extends ContainerComponent
             controls: @model.controls
             newPortKey: @model.newPortKey
             expanded: @model.expanded
+            searcher: @model.searcher
             value: @model.value
             visualizers: @model.visualizations?.visualizers
             visualizations: @model.visualizations?.visualizations
-
         @autoUpdateDef 'newPort', NewPort, if @model.newPortKey? then key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             @updateInPorts()
@@ -96,9 +93,6 @@ export class ExpressionNode extends ContainerComponent
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
-
-    setSearcher: (searcherModel) =>
-        @def(searcherModel.targetField)?.setSearcher searcherModel
 
     adjust: (view) =>
         if @changed.once

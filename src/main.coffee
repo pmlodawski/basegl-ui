@@ -328,6 +328,9 @@ runExample = -> main (nodeEditor) ->
                 visualizerName: 'base: json'
                 visualizerType: 'LunaVisualizer'
         ]
+    nodeEditor.setSearcher
+        key: 3
+
 
     # nodeEditor.setHalfConnections [
     #         srcNode: 1

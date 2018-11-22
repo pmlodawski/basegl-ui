@@ -159,27 +159,18 @@ export class NodeEditor extends EventEmitter
             @nodes[nodeKey].dispose()
 
     setSearcher: (searcherModel) =>
-        unless searcherModel?
-            @unregisterSearcher()
-            return
-
-        node = @node(searcherModel.key)
+        if @searcher?.key != searcherModel?.key
+            @__unregisterSearcher()
+        return unless searcherModel?
+        node = @node searcherModel.key
         unless node?
             @warn "No node to attatch the Searcher to."
             return
+        node.set searcher: searcherModel
 
-        node.setSearcher searcherModel
-
-    unregisterSearcher: =>
-        if @openSearcher?
-            closingSearcher = @openSearcher
-            @openSearcher = null
-            closingSearcher.hideSearcher()
-
-    registerSearcher: (searcher) =>
-        if @openSearcher? and searcher.key != @openSearcher.key
-            @openSearcher.hideSearcher()
-        @openSearcher = searcher
+    __unregisterSearcher: =>
+        @searcher?.dispose()
+        @searcher = null
 
     focus: => @mountPoint.focus()
 

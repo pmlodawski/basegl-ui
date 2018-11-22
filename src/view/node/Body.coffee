@@ -2,6 +2,7 @@ import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {Expression}          from 'view/node/Expression'
 import {Parameters}          from 'view/node/Parameters'
+import {Searcher}            from 'view/node/Searcher'
 import {FramedText}          from 'view/Text'
 import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
@@ -13,6 +14,7 @@ export class NodeBody extends ContainerComponent
         expanded: false
         inPorts: {}
         controls: {}
+        searcher: null
         newPortKey: null
         visualizers : null
         visualizations: {}
@@ -27,38 +29,38 @@ export class NodeBody extends ContainerComponent
         if @changed.value
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
-        if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.controls or @changed.newPortKey or @changed.expanded or @changed.value
-            body = []
-            modules = []
-            if @model.expanded
-                modules.push
-                    id: 'expression'
-                    cons: Expression
-                    expression: @model.expression
-                modules.push
-                    id: 'parameters'
-                    cons: Parameters
-                    inPorts: @model.inPorts
-                    controls: @model.controls
-                    newPortKey: @model.newPortKey
-            for own k, visualization of @model.visualizations
-                visualization.cons = Visualization
-                visualization.visualizers = @model.visualizers
-                modules.push visualization
+        body = []
+        modules = []
+        if @model.expanded or @model.searcher?
+            modules.push
+                id: 'expression'
+                cons: Expression
+                expression: @model.expression
+            modules.push
+                id: 'parameters'
+                cons: Parameters
+                inPorts: @model.inPorts
+                controls: @model.controls
+                newPortKey: @model.newPortKey
+        for own k, visualization of @model.visualizations
+            visualization.cons = Visualization
+            visualization.visualizers = @model.visualizers
+            modules.push visualization
+        body.push
+            id: 'modules'
+            cons: VerticalLayout
+            children: modules
+        if @__shortValue()?
             body.push
-                id: 'modules'
-                cons: VerticalLayout
-                children: modules
-            if @__shortValue()?
-                body.push
-                    id: 'value'
-                    cons: FramedText
-                    textAlign: 'center'
-                    valign: 'top'
-                    color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
-                    text: @__shortValue()
+                id: 'value'
+                cons: FramedText
+                textAlign: 'center'
+                valign: 'top'
+                color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+                text: @__shortValue()
+        @updateDef 'body', children: body
+        @autoUpdateDef 'searcher', Searcher, @model.searcher
 
-            @updateDef 'body', children: body
 
     adjust: =>
         @view('valueToggler').position.xy =
