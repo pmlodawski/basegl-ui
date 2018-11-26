@@ -9,7 +9,6 @@ import {ExpressionNode}     from 'view/ExpressionNode'
 import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
-import {Searcher}           from 'view/Searcher'
 import {Styles}             from 'view/Styles'
 
 import * as _ from 'underscore'

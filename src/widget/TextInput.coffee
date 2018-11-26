@@ -11,6 +11,7 @@ export class TextInput extends Widget
         model.value = ''
         model.color = null
         model.frameColor = [@style.bgColor_h, @style.bgColor_s, @style.bgColor_l]
+        model.textAlign = 'center'
         model
 
     prepare: =>
@@ -25,28 +26,31 @@ export class TextInput extends Widget
         @def('root').getDomElement().appendChild @input
         @addDef 'background', RectangleShape,
             color: @model.frameColor
+
     update: =>
         @updateDef 'background',
-            height: @model.height
-            width: @model.width
+            height: @height()
+            width: @width()
             corners:
                 topLeft    : not (@model.siblings.top    or @model.siblings.left)
                 topRight   : not (@model.siblings.top    or @model.siblings.right)
                 bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
                 bottomRight: not (@model.siblings.bottom or @model.siblings.right)
-                round: @model.height/2
+                round: @height()/2
+        if @changed.textAlign
+            @input.style.textAlign = @model.textAlign
         if @changed.width
-            @input.style.width = @model.width + 'px'
+            @input.style.width = @width() + 'px'
         if @changed.height
-            @input.style.height = @model.height + 'px'
+            @input.style.height = @height() + 'px'
         if @changed.value
             @input.value = @model.value
         if @changed.color
             @input.style.color = @model.color
 
     adjust: (view) =>
-        @view('root').position.xy = [@model.width/2, 0]
-        @view('background').position.y = -@model.height/2
+        @view('root').position.xy = [@width()/2, 0]
+        @view('background').position.y = -@height()/2
 
     registerEvents: (view) =>
         @input.addEventListener 'input', (e) =>

@@ -1,89 +1,42 @@
-import {ContainerComponent} from 'abstract/ContainerComponent'
-import {Searcher}           from 'view/Searcher'
-import {FramedText}         from 'view/Text'
-
-import * as basegl from 'basegl'
-import * as style  from 'style'
-import * as shape  from 'shape/node/Base'
+import {Widget}     from 'widget/Widget'
+import {FramedText} from 'view/Text'
+import {TextInput}  from 'widget/TextInput'
 
 
-export class EditableText extends ContainerComponent
 
-    @NAME:       'editable-name'
-    @EXPRESSION: 'editable-expr'
-
-    ################################
-    ### Initialize the component ###
-    ################################
-
+export class EditableText extends Widget
     initModel: =>
-        key: null
-        input: null
-        text: ''
-        color: null
-        frameColor: null
-        inputSelection: null
-        selected: 0
-        entries: []
-        position: [0, 0]
-        edited: false
-        kind: EditableText.NAME
-
-    #############################
-    ### Create/update the DOM ###
-    #############################
+        model = super()
+        model.text = ''
+        model.color = null
+        model.frameColor = null
+        model.editing = true
+        model.textAlign = 'center'
+        model
 
     update: =>
-        @autoUpdateDef 'searcher', Searcher, if @model.edited
-            key:            @model.key
-            input:          @model.input || ""
-            inputSelection: @model.inputSelection
-            selected:       @model.selected
-            entries:        @model.entries
-        @autoUpdateDef 'text', FramedText, unless @model.edited
-            text:  @model.text
-            align: 'center'
-            color: @model.color
+        @autoUpdateDef 'input', TextInput, if @model.editing
+            value:      @model.text
+            color:      @model.color
             frameColor: @model.frameColor
-    hideSearcher: =>
-        @set edited: false
-        @root.unregisterSearcher()
+            height:     @model.height
+            width:      @model.width
+            textAlign:  @model.textAlign
+        @autoUpdateDef 'text', FramedText, unless @model.editing
+            text:       @model.text
+            color:      @model.color
+            frameColor: @model.frameColor
+            height:     @model.height
+            width:      @model.width
+            textAlign:  @model.textAlign
 
-    showSearcher: (notify = true) =>
-        @set edited: true
-        @root.registerSearcher @
-        tag = if (@model.kind == EditableText.NAME)
-                'EditNodeNameEvent'
-            else
-                'EditNodeExpressionEvent'
-        if notify
-            @pushEvent tag: tag
+        if @model.editing
+            @__minHeight = @def('input').__minHeight
+            @__minWidth  = @def('input').__minWidth
+        else
+            @__minHeight = @def('text').__minHeight
+            @__minWidth  = @def('text').__minWidth
 
-    height: =>
-        20 # TODO implement Widget
-
-    setSearcher: (searcherModel) =>
-        @set
-            key:            searcherModel.key
-            input:          searcherModel.input
-            inputSelection: searcherModel.inputSelection
-            selected:       searcherModel.selected
-            entries:        searcherModel.entries
-            edited:         true
-        @showSearcher false
-
-    ###################################
-    ### Register the event handlers ###
-    ###################################
-
-    registerEvents: (view) =>
-        __makeEdited = (e) =>
-            @addDisposableListener window, 'keyup', __makeUnedited
-            @showSearcher()
-
-        __makeUnedited = (e) =>
-            if e.code == 'Escape'
-                window.removeEventListener 'keyup', __makeUnedited
-                @hideSearcher()
-
-        @addDisposableListener view, 'dblclick', __makeEdited
+    adjust: =>
+        @view('input')?.position.x = - @width()/2
+        @view('text')?.position.x = - @width()/2

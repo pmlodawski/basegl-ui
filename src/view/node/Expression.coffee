@@ -11,8 +11,8 @@ export class Expression extends Widget
 
     prepare: =>
         @addDef 'expression', EditableText,
-            entries: []
-            kind:    EditableText.EXPRESSION
+            color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+            width: @style.node_bodyWidth
         @addDef 'background', Background,
             width: @style.node_bodyWidth
 
@@ -20,7 +20,6 @@ export class Expression extends Widget
         if @changed.expression
             @updateDef 'expression',
                 text:  @model.expression
-                color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
 
             @__minHeight = @def('expression').height() + 2*@style.node_widgetOffset_v
 

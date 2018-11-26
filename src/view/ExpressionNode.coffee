@@ -44,13 +44,12 @@ export class ExpressionNode extends ContainerComponent
     prepare: =>
         @addDef 'node', NodeShape
         @addDef 'name', EditableText,
-            entries:  []
-            kind:     EditableText.NAME
             color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             frameColor:
                 [ @style.port_borderColor_h, @style.port_borderColor_s
                 , @style.port_borderColor_l, @style.port_borderColor_a
                 ]
+            width: @style.node_bodyWidth
         @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
@@ -58,13 +57,7 @@ export class ExpressionNode extends ContainerComponent
 
     update: =>
         @updateDef 'icon', icon: @model.icon
-        @updateDef 'name',
-            text:     @model.name
-            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
-            frameColor:
-                [ @style.port_borderColor_h, @style.port_borderColor_s
-                , @style.port_borderColor_l, @style.port_borderColor_a
-                ]
+        @updateDef 'name', text: @model.name
 
         @updateDef 'body',
             expression: @model.expression
