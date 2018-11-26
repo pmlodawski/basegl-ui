@@ -17,13 +17,13 @@ export class TextInput extends Widget
     prepare: =>
         @__minHeight = 20
         @__minWidth = 10
-        @addDef 'root', HtmlShape, element: 'div'
+        @addDef 'div', HtmlShape, element: 'div'
         @input = document.createElement 'input'
         @input.className = 'native-key-bindings'
         @input.style.background = 'none'
         @input.style.border = 'none'
         @input.style.outline = 'none'
-        @def('root').getDomElement().appendChild @input
+        @def('div').getDomElement().appendChild @input
         @addDef 'background', RectangleShape,
             color: @model.frameColor
 
@@ -49,10 +49,12 @@ export class TextInput extends Widget
             @input.style.color = @model.color
 
     adjust: (view) =>
-        @view('root').position.xy = [@width()/2, 0]
+        @view('div').position.xy = [@width()/2, 0]
         @view('background').position.y = -@height()/2
 
     registerEvents: (view) =>
+        view.addEventListener 'mousedown', (e) =>
+            e.stopPropagation()
         @input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'PortControlEvent'
