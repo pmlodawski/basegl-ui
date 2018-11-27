@@ -55,9 +55,17 @@ export class TextInput extends Widget
     registerEvents: (view) =>
         view.addEventListener 'mousedown', (e) =>
             e.stopPropagation()
+        @input.addEventListener 'blur', =>
+            @emitProperty 'blur', @input.value
+        @input.addEventListener 'keydown', (e) =>
+            switch e.key
+                when 'Escape' then @emitProperty 'escape', @input.value
+                when 'Enter'  then @emitProperty 'enter', @input.value
         @input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'PortControlEvent'
                 content:
                     cls: 'Text'
                     value: @input.value
+
+    focus: => @input.focus()

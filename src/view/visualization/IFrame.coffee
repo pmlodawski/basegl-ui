@@ -76,5 +76,6 @@ export class VisualizationIFrame extends ContainerComponent
         if url?
             iframe           = document.createElement 'iframe'
             iframe.className = style.luna ['basegl-visualization-iframe']
+            iframe.style.userSelect = 'none'
             iframe.src       = url
             iframe

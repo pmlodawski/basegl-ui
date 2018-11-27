@@ -10,7 +10,7 @@ export class EditableText extends Widget
         model.text = ''
         model.color = null
         model.frameColor = null
-        model.editing = true
+        model.editing = false
         model.textAlign = 'center'
         model
 
@@ -29,13 +29,21 @@ export class EditableText extends Widget
             height:     @model.height
             width:      @model.width
             textAlign:  @model.textAlign
-
-        if @model.editing
-            @__minHeight = @def('input').__minHeight
-            @__minWidth  = @def('input').__minWidth
-        else
-            @__minHeight = @def('text').__minHeight
-            @__minWidth  = @def('text').__minWidth
+        if @changed.editing
+            if @model.editing
+                @__minHeight = @def('input').__minHeight
+                @__minWidth  = @def('input').__minWidth
+                @def('input').addEventListener 'escape', =>
+                    @set editing: false
+                @def('input').addEventListener 'blur', =>
+                    @set editing: false
+                setTimeout => @def('input').focus()
+            else
+                @__minHeight = @def('text').__minHeight
+                @__minWidth  = @def('text').__minWidth
+                @view('text').addEventListener 'dblclick', (e) =>
+                    e.stopPropagation()
+                    @set editing: true
 
     adjust: =>
         @view('input')?.position.x = - @width()/2
