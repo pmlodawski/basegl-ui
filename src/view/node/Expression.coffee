@@ -7,6 +7,7 @@ export class Expression extends Widget
     initModel: =>
         model = super()
         model.expression = ''
+        model.editing = false
         model
 
     prepare: =>
@@ -17,12 +18,12 @@ export class Expression extends Widget
             width: @style.node_bodyWidth
 
     update: =>
+        if @changed.editing
+            @updateDef 'expression', editing: @model.editing
         if @changed.expression
             @updateDef 'expression',
                 text:  @model.expression
-
             @__minHeight = @def('expression').height() + 2*@style.node_widgetOffset_v
-
             @updateDef 'background', height: @__minHeight
         if @changed.siblings
             @updateDef 'background',

@@ -36,6 +36,7 @@ export class NodeBody extends ContainerComponent
                 id: 'expression'
                 cons: Expression
                 expression: @model.expression
+                editing: @model.searcher?
             modules.push
                 id: 'parameters'
                 cons: Parameters
