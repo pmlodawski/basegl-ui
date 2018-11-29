@@ -45,3 +45,28 @@ export class Expression extends Widget
             @setScale @view('expression'), [1, 1]
             @setScale @view('background'), [1, 1]
             @view('expression').position.xy = [@style.node_bodyWidth/2, - @__minHeight/2]
+
+    registerEvents: =>
+        @def('expression').addEventListener 'editing', (e) =>
+            input = @def('expression').model
+            @pushEvent \
+                if e.detail
+                    tag: 'EditNodeExpressionEvent'
+                else
+                    tag: 'SearcherAcceptEvent'
+                    acceptSelectionStart: 0
+                    acceptSelectionEnd:   0
+                    acceptValue:          input.text
+        @def('expression').addEventListener 'text', =>
+            @__pushSearcherEdit()
+        @def('expression').addEventListener 'selection', =>
+            @__pushSearcherEdit()
+
+    __pushSearcherEdit: =>
+        input = @def('expression').model
+        if input.editing
+            @pushEvent
+                tag: 'SearcherEditEvent'
+                editSelectionStart: input.selection[0]
+                editSelectionEnd:   input.selection[1]
+                editValue:          input.text

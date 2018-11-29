@@ -12,11 +12,13 @@ export class EditableText extends Widget
         model.frameColor = null
         model.editing = false
         model.textAlign = 'center'
+        model.selection = null
         model
 
     update: =>
         @autoUpdateDef 'input', TextInput, if @model.editing
             value:      @model.text
+            selection:  @model.selection
             color:      @model.color
             frameColor: @model.frameColor
             height:     @model.height
@@ -34,9 +36,17 @@ export class EditableText extends Widget
                 @__minHeight = @def('input').__minHeight
                 @__minWidth  = @def('input').__minWidth
                 @def('input').addEventListener 'escape', =>
-                    @set editing: false
+                    @set
+                        editing: false
+                        selection: null
                 @def('input').addEventListener 'blur', =>
-                    @set editing: false
+                    @set
+                        editing: false
+                        selection: null
+                @def('input').addEventListener 'value', (e) =>
+                    @__setInput()
+                @def('input').addEventListener 'selection', (e) =>
+                    @__setInput()
                 setTimeout => @def('input').focus()
             else
                 @__minHeight = @def('text').__minHeight
@@ -48,3 +58,9 @@ export class EditableText extends Widget
     adjust: =>
         @view('input')?.position.x = - @width()/2
         @view('text')?.position.x = - @width()/2
+
+    __setInput: =>
+        input = @def('input').model
+        @set
+            selection: input.selection
+            text: input.value

@@ -9,6 +9,7 @@ export class TextInput extends Widget
     initModel: ->
         model = super()
         model.value = ''
+        model.selection = null
         model.color = null
         model.frameColor = [@style.bgColor_h, @style.bgColor_s, @style.bgColor_l]
         model.textAlign = 'center'
@@ -28,15 +29,16 @@ export class TextInput extends Widget
             color: @model.frameColor
 
     update: =>
-        @updateDef 'background',
-            height: @height()
-            width: @width()
-            corners:
-                topLeft    : not (@model.siblings.top    or @model.siblings.left)
-                topRight   : not (@model.siblings.top    or @model.siblings.right)
-                bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
-                bottomRight: not (@model.siblings.bottom or @model.siblings.right)
-                round: @height()/2
+        if @changed.siblings or @changed.width or @changed.height
+            @updateDef 'background',
+                height: @height()
+                width: @width()
+                corners:
+                    topLeft    : not (@model.siblings.top    or @model.siblings.left)
+                    topRight   : not (@model.siblings.top    or @model.siblings.right)
+                    bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
+                    bottomRight: not (@model.siblings.bottom or @model.siblings.right)
+                    round: @height()/2
         if @changed.textAlign
             @input.style.textAlign = @model.textAlign
         if @changed.width
@@ -44,7 +46,13 @@ export class TextInput extends Widget
         if @changed.height
             @input.style.height = @height() + 'px'
         if @changed.value
-            @input.value = @model.value
+            if @input.value != @model.value
+                @input.value = @model.value
+        if @changed.selection && @model.selection?
+            if @input.selectionStart != @model.selection[0]
+                @input.selectionStart = @model.selection[0]
+            if @input.selectionEnd != @model.selection[1]
+                @input.selectionEnd = @model.selection[1]
         if @changed.color
             @input.style.color = @model.color
 
@@ -55,17 +63,20 @@ export class TextInput extends Widget
     registerEvents: (view) =>
         view.addEventListener 'mousedown', (e) =>
             e.stopPropagation()
+            @__setInput()
         @input.addEventListener 'blur', =>
+            @__setInput()
             @emitProperty 'blur', @input.value
         @input.addEventListener 'keydown', (e) =>
+            @__setInput()
             switch e.key
                 when 'Escape' then @emitProperty 'escape', @input.value
                 when 'Enter'  then @emitProperty 'enter', @input.value
         @input.addEventListener 'input', (e) =>
-            @pushEvent
-                tag: 'PortControlEvent'
-                content:
-                    cls: 'Text'
-                    value: @input.value
+            @__setInput()
+
+    __setInput: => @set
+        selection: [@input.selectionStart, @input.selectionEnd]
+        value: @input.value
 
     focus: => @input.focus()
