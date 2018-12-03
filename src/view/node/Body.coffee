@@ -26,11 +26,6 @@ export class NodeBody extends ContainerComponent
             width: @style.node_bodyWidth
 
     update: =>
-        if @changed.searcher
-            if @model.searcher?
-                @root.keyboard.setContext 'searcher'
-            else
-                @root.keyboard.unsetContext()
         if @changed.value
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'

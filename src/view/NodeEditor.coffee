@@ -157,19 +157,23 @@ export class NodeEditor extends EventEmitter
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
 
-    setSearcher: (searcherModel) =>
-        if @searcher?.key != searcherModel?.key
+    setSearcher: (newSearcher) =>
+        if @searcher?.key != newSearcher?.key
             @__unregisterSearcher()
-        return unless searcherModel?
-        node = @node searcherModel.key
-        unless node?
-            @warn "No node to attatch the Searcher to."
-            return
-        node.set searcher: searcherModel
+        if newSearcher?
+            @keyboard.setContext 'searcher'
+            @searcher = newSearcher
+            node = @node @searcher.key
+            node.set searcher: @searcher
+        else
+            @keyboard.unsetContext()
 
     __unregisterSearcher: =>
-        @searcher?.dispose()
-        @searcher = null
+        if @searcher?
+            node = @node @searcher.key
+            @searcher = null
+            node?.set searcher: null
+
 
     focus: => @mountPoint.focus()
 
