@@ -15,7 +15,7 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    cons: (@scene, @mountPointName) ->
+    cons: (@scene, @mountPointName, @keyboard) ->
         super()
 
     init: (args...) =>

@@ -24,13 +24,13 @@ removeChildren = (name) =>
     while element.firstChild
         element.removeChild element.firstChild
 
-export install = (name, fontRootPath = '', callback) ->
+export install = (name, fontRootPath = '', keyboard, callback) ->
     removeChildren name
     scene = basegl.scene {domElement: name}
     basegl.fontManager.register 'SourceCodePro', fontRootPath + 'SourceCodeVariable-Roman.ttf'
     basegl.fontManager.load('SourceCodePro').then (atlas) =>
         atlas._letterDef.defaultZIndex = layers.text
-        nodeEditor = new NodeEditor scene, name
+        nodeEditor = new NodeEditor scene, name, keyboard
         window.n = nodeEditor
         callback nodeEditor
 

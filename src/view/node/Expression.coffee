@@ -57,14 +57,12 @@ export class Expression extends Widget
                     acceptSelectionStart: 0
                     acceptSelectionEnd:   0
                     acceptValue:          input.text
-        @def('expression').addEventListener 'text', =>
-            @__pushSearcherEdit()
-        @def('expression').addEventListener 'selection', =>
+        @def('expression').addEventListener 'modelUpdated', =>
             @__pushSearcherEdit()
 
     __pushSearcherEdit: =>
         input = @def('expression').model
-        if input.editing
+        if input.editing && input.selection?
             @pushEvent
                 tag: 'SearcherEditEvent'
                 editSelectionStart: input.selection[0]
