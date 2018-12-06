@@ -166,7 +166,7 @@ export class NodeEditor extends EventEmitter
             node = @node @searcher.key
             node.set searcher: @searcher
         else
-            @keyboard.unsetContext()
+            @keyboard.setContext()
 
     __unregisterSearcher: =>
         if @searcher?

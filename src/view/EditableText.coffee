@@ -35,18 +35,11 @@ export class EditableText extends Widget
             if @model.editing
                 @__minHeight = @def('input').__minHeight
                 @__minWidth  = @def('input').__minWidth
-                @def('input').addEventListener 'escape', =>
-                    @set
-                        editing: false
-                        selection: null
-                @def('input').addEventListener 'blur', =>
-                    @set
-                        editing: false
-                        selection: null
-                @def('input').addEventListener 'value', (e) =>
-                    @__setInput()
-                @def('input').addEventListener 'selection', (e) =>
-                    @__setInput()
+                @def('input').addEventListener 'escape', => @__exitEditing()
+                @def('input').addEventListener 'enter',  => @__exitEditing()
+                @def('input').addEventListener 'blur',   => @__exitEditing()
+                @def('input').addEventListener 'value',     => @__setInput()
+                @def('input').addEventListener 'selection', => @__setInput()
                 setTimeout => @def('input').focus()
             else
                 @__minHeight = @def('text').__minHeight
@@ -64,3 +57,8 @@ export class EditableText extends Widget
         @set
             selection: input.selection
             text: input.value
+
+    __exitEditing: =>
+        @set
+            editing: false
+            selection: null
