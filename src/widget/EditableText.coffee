@@ -1,5 +1,5 @@
 import {Widget}     from 'widget/Widget'
-import {FramedText} from 'view/Text'
+import {FramedText} from 'widget/FramedText'
 import {TextInput}  from 'widget/TextInput'
 
 

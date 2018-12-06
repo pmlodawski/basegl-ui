@@ -1,6 +1,6 @@
 import {Background}       from 'shape/node/Background'
+import {EditableText}     from 'widget/EditableText'
 import {Widget}           from 'widget/Widget'
-import {EditableText}        from 'view/EditableText'
 
 
 export class Expression extends Widget

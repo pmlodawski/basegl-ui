@@ -1,5 +1,5 @@
 import {Background}       from 'shape/node/Background'
-import {FramedText}       from 'view/Text'
+import {FramedText}       from 'widget/FramedText'
 import {Widget}           from 'widget/Widget'
 import {VerticalLayout}   from 'widget/VerticalLayout'
 

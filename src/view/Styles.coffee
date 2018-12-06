@@ -1,7 +1,7 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 import {VerticalLayout}     from 'widget/VerticalLayout'
-import {FramedText}         from 'view/Text'
+import {FramedText}         from 'widget/FramedText'
 import {ContinousSlider}    from 'widget/Slider'
 
 

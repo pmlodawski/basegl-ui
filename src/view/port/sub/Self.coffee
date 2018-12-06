@@ -1,7 +1,7 @@
 import {SelfPortShape} from 'shape/port/Self'
 import {Subport}       from 'view/port/sub/Base'
 import * as subport    from 'view/port/sub/Base'
-import {FramedText}    from 'view/Text'
+import {FramedText}    from 'widget/FramedText'
 
 
 export class Self extends Subport

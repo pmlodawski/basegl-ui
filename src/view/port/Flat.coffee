@@ -1,7 +1,7 @@
 import * as shape       from 'shape/port/Base'
 
 import {FlatPortShape}      from 'shape/port/Flat'
-import {FramedText}         from 'view/Text'
+import {FramedText}         from 'widget/FramedText'
 import {Port, defaultColor} from 'view/port/Base'
 
 

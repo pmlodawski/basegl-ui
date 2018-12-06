@@ -3,7 +3,7 @@ import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {Expression}          from 'view/node/Expression'
 import {Parameters}          from 'view/node/Parameters'
 import {Searcher}            from 'view/node/Searcher'
-import {FramedText}          from 'view/Text'
+import {FramedText}          from 'widget/FramedText'
 import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
@@ -26,6 +26,10 @@ export class NodeBody extends ContainerComponent
             width: @style.node_bodyWidth
 
     update: =>
+        if @changed.searcher
+            console.log 'searcher', @model.searcher
+        if @changed.expression
+            console.log 'expression', @model.expression
         if @changed.value
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'

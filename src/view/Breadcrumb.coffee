@@ -2,7 +2,7 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import {HtmlShape}          from 'shape/Html'
 import * as style           from 'style'
 import {BreadcrumbArrow}    from 'view/BreadcrumbArrow'
-import {FramedText}         from 'view/Text'
+import {FramedText}         from 'widget/FramedText'
 import {HorizontalLayout}   from 'widget/HorizontalLayout'
 
 

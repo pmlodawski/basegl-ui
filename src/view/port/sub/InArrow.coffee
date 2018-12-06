@@ -1,6 +1,6 @@
 import {animateComponent} from 'shape/Animation'
 import {InPortShape}      from 'shape/port/In'
-import {FramedText}       from 'view/Text'
+import {FramedText}       from 'widget/FramedText'
 import {Subport}          from 'view/port/sub/Base'
 import * as subport       from 'view/port/sub/Base'
 

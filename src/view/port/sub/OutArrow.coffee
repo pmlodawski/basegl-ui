@@ -1,7 +1,7 @@
 import {OutPortShape}  from 'shape/port/Out'
 import {Subport}       from 'view/port/sub/Base'
 import * as subport    from 'view/port/sub/Base'
-import {FramedText}    from 'view/Text'
+import {FramedText}    from 'widget/FramedText'
 
 
 export class OutArrow extends Subport

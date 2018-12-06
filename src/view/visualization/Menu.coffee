@@ -2,7 +2,7 @@ import * as _ from 'underscore'
 
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {VisualizerButton}   from 'shape/visualization/Button'
-import {FramedText}         from 'view/Text'
+import {FramedText}         from 'widget/FramedText'
 import {VerticalLayout}     from 'widget/VerticalLayout'
 
 
