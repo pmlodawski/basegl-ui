@@ -18,7 +18,7 @@ export class Searcher extends ContainerComponent
             width: @style.node_bodyWidth
 
     update: =>
-        if @changed.entries
+        if @changed.entries or @changed.selected
             @updateDef 'body', children: [
                 id: 'hints'
                 cons: Hints

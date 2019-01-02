@@ -26,10 +26,6 @@ export class NodeBody extends ContainerComponent
             width: @style.node_bodyWidth
 
     update: =>
-        if @changed.searcher
-            console.log 'searcher', @model.searcher
-        if @changed.expression
-            console.log 'expression', @model.expression
         if @changed.value
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'

@@ -17,7 +17,7 @@ export class EditableText extends Widget
 
     update: =>
         @autoUpdateDef 'input', TextInput, if @model.editing
-            value:      @model.text
+            value:      if @changed.editing then @model.text
             selection:  @model.selection
             color:      @model.color
             frameColor: @model.frameColor

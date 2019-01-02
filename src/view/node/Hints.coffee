@@ -18,16 +18,18 @@ export class Hints extends Widget
             width: @style.node_bodyWidth
 
     update: =>
-        if @changed.entries
+        if @changed.entries or @changed.selected
             hints = []
             @model.entries.forEach (entry, i) =>
-                if i == @model.selected
-                    frameColor = [@style.bgColor_h, @style.bgColor_s, @style.bgColor_l]
                 hints.push
                     cons:       FramedText
                     text:       entry.name
                     color:      [@style.text_color_r, @style.text_color_g, @style.text_color_b]
-                    frameColor: frameColor
+                    frameColor:
+                        if (i == 0) and (@model.selected != 0)
+                            [@style.bgColor_h, @style.bgColor_s, @style.bgColor_l]
+                        else
+                            null
             @updateDef 'entries', children: hints
 
             @__minHeight = @def('entries').height() + 2*@style.node_widgetOffset_v
