@@ -1,4 +1,4 @@
-**basegl-ui** is build out of 3 classes of objects, which can be displayed on scene:
+**basegl-ui** is build out of 3 classes of components, which can be displayed on scene:
 
 1. [shapes](shape) - are the most basic components that can contain their own state. They are extending [BasicComponent](abstract/BasicComponent.coffee) class. Shape can be built only of **one** basegl symbol and cannot contain other components. If their model is changed, `redefineRequired` method decides if they should be re-rendered. `adjust` method is called to make model changes visible.
 1. [views](view) - are more advanced, which are extending  [ContainerComponent](abstract/ContainerComponent.coffee) class. They cannot contain directly any basegl symbols, but can be build out of other components, like **shapes**, **views** and **widgets**. If their model changes, `update` method is called, where changes can be propagated to sub-components. After that `adjust` method is called, which allows to rotate, change position, etc of whole container.
